@@ -480,7 +480,7 @@ select.fselect:focus{border-color:var(--blue);}
   .page.active { display: block !important; }
   .main { padding: 14px; margin: 10px auto; width: calc(100% - 20px); }
 
-  /* 4. 거래 내역 표 정렬 (금액 겹침 방지 및 불필요한 열 숨김) */
+  /* 4. 거래 내역 표 정렬 (금액 겹침 방지 및 3번째 열 숨김) */
   .lhd, .lrow, .install-group-main { 
     grid-template-columns: 58px 1fr 95px 35px !important; 
     gap: 4px;
@@ -488,7 +488,7 @@ select.fselect:focus{border-color:var(--blue);}
   }
   .lhd>*:nth-child(3), .lrow>*:nth-child(3), .install-group-main>*:nth-child(3) { display: none; }
 
-  /* 5. 기타 요소 모바일 맞춤 크기 조정 */
+  /* 5. 기타 요소 모바일 최적화 */
   .sgrid { grid-template-columns: 1fr 1fr; }
   .sgrid .scard:last-child { grid-column: 1/-1; }
   .sval { font-size: 17px; }

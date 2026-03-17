@@ -357,23 +357,40 @@ select.fselect:focus{border-color:var(--blue);}
 .cover-overlay{position:absolute;inset:0;pointer-events:none;}
 
 /* ── 스티커 레이어 ── */
-#stickerLayer{
-  position:fixed;inset:0;pointer-events:none;z-index:50;overflow:hidden;
+#stickerLayer {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  z-index: 9000;
+  pointer-events: none; /* [핵심] 레이어 자체는 마우스 신호를 통과시킵니다. */
 }
-.sticker-item{
-  position:absolute;pointer-events:auto;cursor:move;
-  user-select:none;line-height:1;
+
+.sticker-item {
+  position: absolute;
+  pointer-events: auto; /* [핵심] 스티커 이미지만 마우스 신호를 받습니다. */
+  cursor: move;
 }
-.sticker-item img{display:block;pointer-events:none;}
-.sticker-item .sticker-del{
-  position:absolute;top:-8px;right:-8px;
-  width:18px;height:18px;border-radius:50%;
-  background:var(--red);color:#fff;
-  font-size:11px;border:none;cursor:pointer;
-  display:none;align-items:center;justify-content:center;
-  line-height:1;font-weight:700;
+.sticker-item img {
+  display: block; width: 100%; height: 100%; object-fit: contain;
+  pointer-events: none; /* 이미지 드래그 방지 */
 }
-.sticker-item:hover .sticker-del{display:flex;}
+/* 스티커 삭제 버튼 */
+.sticker-item .sticker-del {
+  position: absolute; top: -12px; right: -12px;
+  width: 24px; height: 24px; border-radius: 50%;
+  background: var(--red); color: #fff; border: 2px solid #fff;
+  font-size: 14px; cursor: pointer; display: none;
+  align-items: center; justify-content: center; z-index: 11;
+}
+/* 크기 조절/회전 핸들 */
+.sticker-item .sticker-handle {
+  position: absolute; bottom: -8px; right: -8px;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--blue); border: 2px solid #fff;
+  cursor: nwse-resize; display: none; z-index: 11;
+}
+.sticker-item:hover .sticker-del,
+.sticker-item:hover .sticker-handle { display: flex; }
 
 /* ── 로고 아이콘 ── */
 .logo-icon-img{width:28px;height:28px;border-radius:6px;object-fit:cover;flex-shrink:0;}
@@ -494,9 +511,6 @@ select.fselect:focus{border-color:var(--blue);}
 <div class="cover-area" id="coverArea">
   <div class="cover-overlay" id="coverOverlay"></div>
 </div>
-
-<!-- 스티커 레이어 -->
-<div id="stickerLayer"></div>
 
 <!-- HEADER -->
 <div class="header" id="mainHeader">
@@ -1118,27 +1132,32 @@ function monthTxs(){return S.txs.filter(t=>t.date.startsWith(mk()));}
 function chM(d){S.month+=d;if(S.month>12){S.month=1;S.year++;}if(S.month<1){S.month=12;S.year--;}renderAll();}
 
 function showPage(el){
-// 1. 모든 페이지를 일단 다 숨깁니다.
-  document.querySelectorAll('.page').forEach(p => {
-    p.classList.remove('active');
-  });
-  
-  // 2. 모든 네비 탭의 하이라이트를 끕니다.
-  document.querySelectorAll('.nav-tab').forEach(t => {
-    t.classList.remove('active');
-  });
-  
-  // 3. 클릭한 탭의 데이터(pageId)를 가져와서 해당 페이지만 보여줍니다.
+  // 1. 모든 페이지와 탭의 active 클래스 제거
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+
+  // 2. 클릭한 탭의 데이터 가져오기
   const pageId = el.dataset.page;
   const targetPage = document.getElementById('page-' + pageId);
+  
   if(targetPage) {
     targetPage.classList.add('active');
   }
-  
-  // 4. 클릭한 탭에 하이라이트를 켭니다.
   el.classList.add('active');
-  
-  // 전환 시 화면을 맨 위로 올리고 데이터를 다시 그립니다.
+
+  // 3. [핵심] 대시보드일 때만 스티커 레이어 보이기
+  const stickerLayer = document.getElementById('stickerLayer');
+  if(stickerLayer) {
+    // 일구님의 대시보드 ID인 'dashboard'와 정확히 매칭시킵니다.
+    if(pageId === 'dashboard') { 
+      stickerLayer.style.display = 'block';
+    } else {
+      stickerLayer.style.display = 'none';
+      // 다른 페이지로 이동하면 마우스에 붙은 스티커를 강제로 떼어냅니다.
+      if(typeof stopDrag === 'function') stopDrag(); 
+    }
+  }
+
   window.scrollTo(0, 0);
   renderAll();
 }
@@ -2636,88 +2655,171 @@ function removeCoverImage(){
 }
 
 /* ── 스티커 ── */
-let stickers=[]; // [{id, src, x, y, size}]
-let dragState=null;
+let stickers = []; 
+let currentSticker = null;
+let dragMode = null; 
+let startX, startY, startW, startH, startXpos, startYpos;
 
 function addSticker(e){
-  const file=e.target.files[0]; if(!file) return;
-  const reader=new FileReader();
-  reader.onload=ev=>{
-    const id='stk_'+Date.now();
-    const s={id, src:ev.target.result, x:Math.round(window.innerWidth/2-40), y:120, size:80};
+  const file = e.target.files[0]; 
+  if(!file) return;
+  
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const id = 'stk_' + Date.now();
+    const s = {id, src: ev.target.result, x: 100, y: 120, size: 150};
+    
     stickers.push(s);
     renderStickerDOM(s);
     renderStickerThumbs();
-    saveDeco({stickers:[...stickers]});
+    
+    const layer = document.getElementById('stickerLayer');
+    if(layer) {
+      layer.style.display = 'block';
+    }
+    
+    saveDeco({stickers: [...stickers]});
   };
   reader.readAsDataURL(file);
-  e.target.value='';
+  e.target.value = ""; 
 }
 
+// 1. 동작 완료 처리 함수
+const stopDrag = () => {
+  if (currentSticker) {
+    // [중요] try-catch로 감싸서 저장 에러가 나도 뒷줄 코드가 실행되게 합니다.
+    try {
+      saveDeco({ stickers: [...stickers] });
+    } catch (e) {
+      console.error("저장 공간 부족! 하지만 배치는 강제로 완료합니다.", e);
+    }
+  }
+  
+  // 에러 여부와 상관없이 무조건 상태를 초기화해서 스티커를 떼어냅니다.
+  currentSticker = null;
+  dragMode = null;
+  
+  const layer = document.getElementById('stickerLayer');
+  if (layer) {
+    layer.style.pointerEvents = 'none';
+  }
+};
+
+// 2. 스티커 생성 및 모드 분리 (위치: 클릭토글 / 크기: 드래그)
 function renderStickerDOM(s){
-  const layer=document.getElementById('stickerLayer');
-  const div=document.createElement('div');
-  div.className='sticker-item';
-  div.id=s.id;
-  div.style.cssText=`left:${s.x}px;top:${s.y}px;width:${s.size}px;`;
-  div.innerHTML=`<img src="${s.src}" style="width:${s.size}px;height:${s.size}px;object-fit:contain;" draggable="false">
-    <button class="sticker-del" onclick="removeSticker('${s.id}')">✕</button>`;
-  // 드래그
-  div.addEventListener('mousedown', stickerDragStart);
-  div.addEventListener('touchstart', stickerDragStart, {passive:false});
+  const layer = document.getElementById('stickerLayer');
+  if(!layer) return;
+  const div = document.createElement('div');
+  div.className = 'sticker-item';
+  div.id = s.id;
+  div.style.cssText = `left:${s.x}px;top:${s.y}px;width:${s.size}px;height:${s.size}px;z-index:9999;`;
+  
+  div.innerHTML = `
+    <div class="click-catcher" style="position:absolute;inset:0;z-index:5;cursor:move;"></div>
+    <img src="${s.src}" style="width:100%;height:100%;object-fit:contain;pointer-events:none;" draggable="false">
+    <button class="sticker-del" onclick="removeSticker('${s.id}')" style="z-index:20;">✕</button>
+    <div class="sticker-handle" style="z-index:20;"></div>`;
+    
+  // [A] 본체 클릭: 위치 이동 전용 (딸깍 딸깍)
+  div.addEventListener('click', (e) => {
+    // 핸들이나 삭제 버튼 클릭 시에는 이동 모드 발동 금지
+    if(e.target.classList.contains('sticker-del') || e.target.classList.contains('sticker-handle')) return;
+    e.stopPropagation();
+
+    // 이미 이동 중이었다면? -> 놓기
+    if (currentSticker && dragMode === 'move') {
+      stopDrag();
+      return;
+    }
+
+    // 이동 시작
+    currentSticker = s;
+    dragMode = 'move';
+    startX = e.clientX;
+    startY = e.clientY;
+    startXpos = s.x;
+    startYpos = s.y;
+    layer.style.pointerEvents = 'auto';
+    console.log("위치 이동 시작 (딸깍)");
+  });
+
+  // [B] 핸들 드래그: 크기 조절 전용 (누르고 당기기)
+  const handle = div.querySelector('.sticker-handle');
+  handle.addEventListener('mousedown', (e) => {
+    e.stopPropagation();
+    e.preventDefault(); 
+
+    currentSticker = s;
+    dragMode = 'resize';
+    startX = e.clientX;
+    startW = parseInt(div.style.width);
+    
+    layer.style.pointerEvents = 'auto';
+    console.log("크기 조절 시작 (누름)");
+
+    // 핸들에서 마우스를 떼는 순간을 감시하는 전용 이벤트
+    const onceMouseUp = () => {
+      stopDrag();
+      window.removeEventListener('mouseup', onceMouseUp);
+    };
+    window.addEventListener('mouseup', onceMouseUp);
+  });
+
   layer.appendChild(div);
 }
 
-function stickerDragStart(e){
-  if(e.target.classList.contains('sticker-del')) return;
-  e.preventDefault();
-  const div=e.currentTarget;
-  const touch=e.touches?e.touches[0]:e;
-  dragState={id:div.id, startX:touch.clientX-parseInt(div.style.left), startY:touch.clientY-parseInt(div.style.top)};
-}
-document.addEventListener('mousemove', stickerDragMove);
-document.addEventListener('touchmove', stickerDragMove, {passive:false});
-function stickerDragMove(e){
-  if(!dragState) return;
-  e.preventDefault();
-  const touch=e.touches?e.touches[0]:e;
-  const div=document.getElementById(dragState.id);
+// 3. 마우스 이동 처리 (통합)
+window.addEventListener('mousemove', (e) => {
+  if(!currentSticker || !dragMode) return;
+  const div = document.getElementById(currentSticker.id);
   if(!div) return;
-  const x=touch.clientX-dragState.startX, y=touch.clientY-dragState.startY;
-  div.style.left=x+'px'; div.style.top=y+'px';
-}
-document.addEventListener('mouseup', stickerDragEnd);
-document.addEventListener('touchend', stickerDragEnd);
-function stickerDragEnd(){
-  if(!dragState) return;
-  const s=stickers.find(s=>s.id===dragState.id);
-  if(s){
-    const div=document.getElementById(s.id);
-    if(div){ s.x=parseInt(div.style.left); s.y=parseInt(div.style.top); }
-    saveDeco({stickers:[...stickers]});
+
+  const dx = e.clientX - startX;
+  const dy = e.clientY - startY;
+
+  if(dragMode === 'move'){
+    currentSticker.x = startXpos + dx;
+    currentSticker.y = startYpos + dy;
+    div.style.left = currentSticker.x + 'px';
+    div.style.top = currentSticker.y + 'px';
+  } 
+  else if(dragMode === 'resize'){
+    const newSize = Math.max(40, startW + dx);
+    currentSticker.size = newSize;
+    div.style.width = newSize + 'px';
+    div.style.height = newSize + 'px';
   }
-  dragState=null;
-}
+});
+
+// 4. 전역 해제 장치 (이동 모드 전용)
+window.addEventListener('click', (e) => {
+  // 위치 이동 중일 때만 빈 공간 클릭 시 놓기
+  if (currentSticker && dragMode === 'move') {
+    if (!e.target.closest('.sticker-item') && !e.target.classList.contains('sticker-del')) {
+      stopDrag();
+    }
+  }
+}, { capture: true });
+
+window.addEventListener('keydown', (e) => { if(e.key === 'Escape') stopDrag(); });
+
 
 function removeSticker(id){
-  stickers=stickers.filter(s=>s.id!==id);
-  const el=document.getElementById(id); if(el) el.remove();
+  // 1. 데이터 삭제
+  stickers = stickers.filter(s => s.id !== id);
+  
+  // 2. 화면에서 삭제
+  const el = document.getElementById(id); 
+  if(el) el.remove();
+  
+  // 3. 썸네일 갱신 및 저장
   renderStickerThumbs();
-  saveDeco({stickers:[...stickers]});
+  saveDeco({stickers: [...stickers]});
+  
+  // 4. 혹시 드래그 중이었다면 상태 초기화
+  stopDrag();
 }
 
-function renderStickerThumbs(){
-  const grid=document.getElementById('stickerThumbGrid');
-  const msg=document.getElementById('noStickerMsg');
-  if(!grid) return;
-  if(!stickers.length){ grid.innerHTML=''; if(msg)msg.style.display='block'; return; }
-  if(msg) msg.style.display='none';
-  grid.innerHTML=stickers.map(s=>`
-    <div class="img-thumb" title="클릭해서 삭제">
-      <img src="${s.src}" alt="sticker">
-      <button class="thumb-del" onclick="removeSticker('${s.id}')">✕</button>
-    </div>`).join('');
-}
 
 /* ── 꾸미기 저장/불러오기 ── */
 function loadDeco(){
@@ -2940,5 +3042,9 @@ window.injectSample = function() {
   setTimeout(() => { location.reload(); }, 1000);
 };
 </script>
+
+<!-- 스티커 레이어 -->
+<div id="stickerLayer"></div>
+
 </body>
 </html>

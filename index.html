@@ -234,7 +234,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-page);color:var(-
 .xbtn:hover{color:var(--red);}
 .empty{padding:36px;text-align:center;color:var(--g300);font-size:13px;}
 
-.asset-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;}
+.asset-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
 .acard{background:var(--bg-card);border:1px solid var(--border-col);border-radius:var(--rlg);padding:14px 16px;}
 .acard-label{font-size:11px;color:var(--g500);font-weight:500;margin-bottom:4px;}
 .acard-val{font-size:18px;font-weight:700;}
@@ -300,6 +300,17 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-page);color:var(-
 .fg{margin-bottom:14px;}
 .flabel{display:block;font-size:11px;font-weight:600;color:var(--g500);margin-bottom:5px;letter-spacing:.3px;}
 .finput,.fselect{width:100%;padding:9px 12px;border:1px solid var(--border-col);border-radius:6px;font-size:13px;font-family:inherit;background:var(--bg-input);color:var(--text-primary);outline:none;transition:border-color .15s;}
+select.fselect{
+  padding-left:10px;
+  padding-right:28px;
+  -webkit-appearance:none;
+  appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236b6b6b' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:right 9px center;
+  cursor:pointer;
+}
+select.fselect:focus{border-color:var(--blue);}
 .finput:focus,.fselect:focus{border-color:var(--blue);}
 .frow{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 
@@ -316,7 +327,8 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-page);color:var(-
 /* ── Google 동기화 버튼 ── */
 .btn-google{background:#fff;color:#3d3d3d;border:1px solid var(--border);display:inline-flex;align-items:center;}
 .btn-google:hover{background:var(--g50);border-color:var(--g300);}
-.btn-google.signed-in{border-color:#34A853;color:#1b7a3e;}
+.btn-google.signed-in{border-color:#34A853;color:#1b7a3e;background:#f0faf4;}
+.btn-google.signed-in:hover{background:#e2f5ea;border-color:#2e9e57;}
 
 /* ── Google 동기화 모달 ── */
 .google-user-card{display:flex;align-items:center;gap:12px;padding:14px;background:var(--bg-row-hover);border-radius:var(--r);margin-bottom:16px;}
@@ -331,6 +343,90 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-page);color:var(-
 .sync-btn.download{border-color:#4285F4;color:#1a56db;}
 .sync-btn.download:hover{background:var(--blue-lt);}
 .sync-warn{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:8px;line-height:1.6;}
+
+
+/* ── 꾸미기 탭 구조 ── */
+.setting-tabs{display:flex;gap:2px;border-bottom:1px solid var(--border-col);margin-bottom:20px;}
+.setting-tab{padding:8px 14px;font-size:12px;font-weight:500;font-family:inherit;color:var(--text-secondary);background:none;border:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s;}
+.setting-tab:hover{color:var(--text-primary);}
+.setting-tab.active{color:var(--blue);border-bottom-color:var(--blue);font-weight:700;}
+.setting-pane{display:none;}.setting-pane.active{display:block;}
+
+/* ── 커버 이미지 영역 ── */
+.cover-area{
+  width:100%;height:0;overflow:hidden;
+  position:relative;transition:height .3s;
+  background-size:cover;background-position:center;
+}
+.cover-area.visible{height:160px;}
+.cover-overlay{position:absolute;inset:0;pointer-events:none;}
+
+/* ── 스티커 레이어 ── */
+#stickerLayer{
+  position:fixed;inset:0;pointer-events:none;z-index:50;overflow:hidden;
+}
+.sticker-item{
+  position:absolute;pointer-events:auto;cursor:move;
+  user-select:none;line-height:1;
+}
+.sticker-item img{display:block;pointer-events:none;}
+.sticker-item .sticker-del{
+  position:absolute;top:-8px;right:-8px;
+  width:18px;height:18px;border-radius:50%;
+  background:var(--red);color:#fff;
+  font-size:11px;border:none;cursor:pointer;
+  display:none;align-items:center;justify-content:center;
+  line-height:1;font-weight:700;
+}
+.sticker-item:hover .sticker-del{display:flex;}
+
+/* ── 로고 아이콘 ── */
+.logo-icon-img{width:28px;height:28px;border-radius:6px;object-fit:cover;flex-shrink:0;}
+
+/* ── 설정 섹션 제목 ── */
+.deco-section-title{font-size:11px;font-weight:600;color:var(--text-secondary);margin-bottom:10px;letter-spacing:.4px;}
+
+/* ── 업로드 드롭존 ── */
+.upload-zone{
+  border:2px dashed var(--border-col);border-radius:8px;
+  padding:20px;text-align:center;cursor:pointer;
+  transition:border-color .15s,background .15s;
+  background:var(--bg-row-hover);
+}
+.upload-zone:hover{border-color:var(--blue);background:var(--blue-lt);}
+.upload-zone p{font-size:12px;color:var(--text-secondary);margin-top:6px;}
+
+/* ── 이미지 미리보기 썸네일 ── */
+.img-thumb{
+  position:relative;display:inline-block;
+  width:64px;height:64px;border-radius:6px;
+  overflow:hidden;border:1px solid var(--border-col);
+  cursor:pointer;flex-shrink:0;
+}
+.img-thumb img{width:100%;height:100%;object-fit:cover;}
+.img-thumb .thumb-del{
+  position:absolute;top:2px;right:2px;
+  width:16px;height:16px;border-radius:50%;
+  background:rgba(0,0,0,.6);color:#fff;
+  font-size:10px;border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+}
+.sticker-grid{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
+
+/* ── 이모지 그리드 ── */
+.emoji-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:4px;margin-top:8px;}
+.emoji-btn{
+  padding:6px 2px;border:1px solid transparent;border-radius:6px;
+  background:none;cursor:pointer;font-size:18px;text-align:center;
+  transition:all .15s;
+}
+.emoji-btn:hover{background:var(--bg-row-hover);border-color:var(--border-col);}
+.emoji-btn.selected{border-color:var(--blue);background:var(--blue-lt);}
+
+/* ── 오퍼시티 슬라이더 ── */
+.opacity-row{display:flex;align-items:center;gap:10px;margin-top:8px;}
+.opacity-row input[type=range]{flex:1;}
+.opacity-val{font-size:12px;font-weight:600;color:var(--text-primary);min-width:32px;text-align:right;}
 
 /* ── 테마 버튼 ── */
 .theme-btn{
@@ -380,7 +476,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-page);color:var(-
   .lhd,.lrow{grid-template-columns:58px 1fr 90px 28px;}
   .lhd>*:nth-child(3),.lrow>*:nth-child(3){display:none;}
   .stats-2col{grid-template-columns:1fr;}
-  .asset-grid{grid-template-columns:1fr 1fr;}
+  /* asset-grid mobile: already 1fr 1fr */
   .loan-info-grid{grid-template-columns:1fr 1fr;}
   .frow{grid-template-columns:1fr;}
   .nav-wrapper{padding:8px 12px;}
@@ -392,10 +488,18 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-page);color:var(-
 </head>
 <body>
 
+<!-- 커버 이미지 영역 -->
+<div class="cover-area" id="coverArea">
+  <div class="cover-overlay" id="coverOverlay"></div>
+</div>
+
+<!-- 스티커 레이어 -->
+<div id="stickerLayer"></div>
+
 <!-- HEADER -->
-<div class="header">
+<div class="header" id="mainHeader">
   <div class="logo">
-    <div class="logo-icon">₩</div>
+    <div class="logo-icon" id="logoIcon">₩</div>
     <span>가계부</span>
     <button class="theme-btn" onclick="openThemeModal()" title="테마 설정">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -418,8 +522,17 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-page);color:var(-
     <input type="file" id="impFile" accept=".json" style="display:none" onchange="importData(event)">
     <div class="hdr-divider"></div>
     <button class="btn btn-google" id="googleSyncBtn" onclick="openGoogleModal()">
-      <svg width="14" height="14" viewBox="0 0 24 24" style="display:inline-block;vertical-align:middle;margin-right:4px;pointer-events:none;" fill="none"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
-      <span id="googleBtnLabel">Google 동기화</span>
+      <!-- 비로그인: G 로고 + 텍스트 -->
+      <span id="googleBtnDefault" style="display:inline-flex;align-items:center;gap:4px;">
+        <svg width="14" height="14" viewBox="0 0 24 24" style="pointer-events:none;flex-shrink:0;" fill="none"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+        <span>Google 동기화</span>
+      </span>
+      <!-- 로그인 후: 아바타 + 이름 -->
+      <span id="googleBtnSignedIn" style="display:none;align-items:center;gap:6px;">
+        <img id="googleBtnAvatar" src="" alt="" style="width:18px;height:18px;border-radius:50%;pointer-events:none;display:none;">
+        <span id="googleBtnAvatarPlaceholder" style="width:18px;height:18px;border-radius:50%;background:var(--blue);color:#fff;font-size:10px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;pointer-events:none;flex-shrink:0;">G</span>
+        <span id="googleBtnLabel" style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
+      </span>
     </button>
     <div class="hdr-divider"></div>
     <button class="btn btn-blue" onclick="openAdd()">+ 추가</button>
@@ -489,10 +602,10 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-page);color:var(-
     </div>
     <!-- 필터 -->
     <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;">
-      <select class="fselect" id="fType" onchange="renderLedger()" style="width:auto;padding:6px 10px;font-size:12px;">
+      <select class="fselect" id="fType" onchange="renderLedger()" style="width:auto;font-size:12px;">
         <option value="">전체</option><option value="income">수입</option><option value="expense">지출</option>
       </select>
-      <select class="fselect" id="fCat" onchange="renderLedger()" style="width:auto;padding:6px 10px;font-size:12px;"></select>
+      <select class="fselect" id="fCat" onchange="renderLedger()" style="width:auto;font-size:12px;"></select>
     </div>
     <!-- 기간 합계 배너 -->
     <div class="ledger-summary-bar">
@@ -529,8 +642,8 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-page);color:var(-
     <div class="section">
       <div class="sec-hdr"><div class="sec-title">순자산 요약</div></div>
       <div class="asset-grid">
-        <div class="acard"><div class="acard-label">총 자산</div><div class="acard-val pos" id="totAsset">₩0</div></div>
-        <div class="acard"><div class="acard-label">총 부채</div><div class="acard-val neg" id="totDebt">₩0</div></div>
+        <div class="acard" style="grid-column:1/2;"><div class="acard-label">총 자산</div><div class="acard-val pos" id="totAsset">₩0</div></div>
+        <div class="acard" style="grid-column:2/3;"><div class="acard-label">총 부채</div><div class="acard-val neg" id="totDebt">₩0</div></div>
         <div class="acard net-card"><div class="acard-label">순자산 (자산 - 부채)</div><div class="acard-val" id="netWorth">₩0</div><div class="acard-sub" id="netWorthSub"></div></div>
       </div>
     </div>
@@ -552,7 +665,16 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-page);color:var(-
         <div class="section"><div class="sec-title" style="margin-bottom:10px;">지출 카테고리</div><div class="chart-wrap sm"><canvas id="expDonut"></canvas></div></div>
         <div class="section"><div class="sec-title" style="margin-bottom:10px;">수입 카테고리</div><div class="chart-wrap sm"><canvas id="incDonut"></canvas></div></div>
       </div>
-      <div class="section"><div class="sec-title" style="margin-bottom:10px;">일별 지출</div><div class="chart-wrap"><canvas id="dailyChart"></canvas></div></div>
+      <div class="section">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+          <div class="sec-title">기간별 지출</div>
+          <div style="display:flex;gap:4px;">
+            <button class="period-tab active" data-daily="week" onclick="setDailyMode(this)" style="padding:4px 12px;font-size:11px;">주별</button>
+            <button class="period-tab" data-daily="day" onclick="setDailyMode(this)" style="padding:4px 12px;font-size:11px;">일별</button>
+          </div>
+        </div>
+        <div class="chart-wrap"><canvas id="dailyChart"></canvas></div>
+      </div>
     </div>
     <!-- 연간 통계 -->
     <div id="statsYearView" style="display:none;">
@@ -678,66 +800,130 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-page);color:var(-
 
 <!-- 테마 설정 모달 -->
 <div class="overlay" id="themeModal">
-  <div class="modal" style="max-width:440px;">
+  <div class="modal" style="max-width:480px;">
     <div class="modal-title" style="display:flex;align-items:center;gap:8px;">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-      테마 설정
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg> 설정
     </div>
 
-    <!-- 다크모드 토글 -->
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border-col);margin-bottom:20px;">
-      <div>
-        <div style="font-size:13px;font-weight:600;color:var(--text-primary);">다크모드</div>
-        <div style="font-size:11px;color:var(--text-secondary);margin-top:2px;">어두운 배경으로 전환</div>
-      </div>
-      <label class="toggle-sw">
-        <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()">
-        <div class="toggle-track"></div>
-        <div class="toggle-thumb"></div>
-      </label>
+    <!-- 탭 -->
+    <div class="setting-tabs">
+      <button class="setting-tab active" data-pane="pane-theme" onclick="switchSettingTab(this)">🎨 테마 컬러</button>
+      <button class="setting-tab" data-pane="pane-deco" onclick="switchSettingTab(this)">✨ 꾸미기</button>
     </div>
 
-    <!-- 프리셋 컬러 -->
-    <div style="font-size:11px;font-weight:600;color:var(--text-secondary);margin-bottom:12px;letter-spacing:.4px;">프리셋 컬러</div>
-    <div class="theme-color-grid" id="themeColorGrid"></div>
-
-    <!-- 구분선 -->
-    <div style="border-top:1px solid var(--border-col);margin:20px 0;"></div>
-
-    <!-- 커스텀 컬러 -->
-    <div style="font-size:11px;font-weight:600;color:var(--text-secondary);margin-bottom:14px;letter-spacing:.4px;">커스텀 컬러</div>
-    <div style="display:flex;flex-direction:column;gap:12px;">
-
-      <!-- 컬러 피커 -->
-      <div style="display:flex;align-items:center;gap:12px;">
-        <label style="font-size:13px;color:var(--text-secondary);width:80px;flex-shrink:0;">컬러 선택</label>
-        <div style="display:flex;align-items:center;gap:8px;flex:1;">
-          <input type="color" id="customColorPicker" value="#1a56db"
-            style="width:44px;height:36px;border:1px solid var(--border-col);border-radius:6px;cursor:pointer;padding:2px;background:var(--bg-input);"
-            oninput="syncColorInput(this.value)">
-          <input type="text" id="customColorHex" class="finput" value="#1a56db" placeholder="#000000"
-            style="flex:1;font-family:monospace;font-size:13px;"
-            oninput="syncColorPicker(this.value)" maxlength="7">
-          <button class="btn btn-blue" style="white-space:nowrap;padding:7px 14px;" onclick="applyCustomColor()">적용</button>
-        </div>
-      </div>
-
-      <!-- 미리보기 -->
-      <div style="background:var(--bg-row-hover);border-radius:8px;padding:12px 14px;display:flex;align-items:center;gap:10px;">
-        <div id="customPreviewSwatch" style="width:28px;height:28px;border-radius:6px;background:#1a56db;flex-shrink:0;"></div>
+    <!-- 테마 컬러 탭 -->
+    <div class="setting-pane active" id="pane-theme">
+      <!-- 다크모드 -->
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border-col);margin-bottom:18px;">
         <div>
-          <div style="font-size:12px;font-weight:600;color:var(--text-primary);" id="customPreviewLabel">미리보기</div>
-          <div style="font-size:11px;color:var(--text-secondary);">선택한 색상이 메인 컬러로 적용됩니다</div>
+          <div style="font-size:13px;font-weight:600;color:var(--text-primary);">다크모드</div>
+          <div style="font-size:11px;color:var(--text-secondary);margin-top:2px;">어두운 배경으로 전환</div>
         </div>
-        <div style="margin-left:auto;">
-          <div style="display:flex;gap:4px;">
-            <div id="prev1" style="width:18px;height:18px;border-radius:4px;background:#1a56db;"></div>
-            <div id="prev2" style="width:18px;height:18px;border-radius:4px;opacity:.4;background:#1a56db;"></div>
-            <div id="prev3" style="width:18px;height:18px;border-radius:4px;opacity:.15;background:#1a56db;"></div>
-          </div>
+        <label class="toggle-sw">
+          <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()">
+          <div class="toggle-track"></div><div class="toggle-thumb"></div>
+        </label>
+      </div>
+      <!-- 프리셋 -->
+      <div class="deco-section-title">프리셋 컬러</div>
+      <div class="theme-color-grid" id="themeColorGrid"></div>
+      <div style="border-top:1px solid var(--border-col);margin:18px 0;"></div>
+      <!-- 커스텀 컬러 -->
+      <div class="deco-section-title">커스텀 컬러</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+        <input type="color" id="customColorPicker" value="#1a56db"
+          style="width:40px;height:36px;border:1px solid var(--border-col);border-radius:6px;cursor:pointer;padding:2px;background:var(--bg-input);"
+          oninput="syncColorInput(this.value)">
+        <input type="text" id="customColorHex" class="finput" value="#1a56db" placeholder="#000000"
+          style="flex:1;font-family:monospace;font-size:13px;" oninput="syncColorPicker(this.value)" maxlength="7">
+        <button class="btn btn-blue" style="white-space:nowrap;" onclick="applyCustomColor()">적용</button>
+      </div>
+      <div style="background:var(--bg-row-hover);border-radius:8px;padding:10px 14px;display:flex;align-items:center;gap:10px;">
+        <div id="customPreviewSwatch" style="width:28px;height:28px;border-radius:6px;background:#1a56db;flex-shrink:0;"></div>
+        <div style="flex:1;font-size:11px;color:var(--text-secondary);">선택한 색상이 메인 컬러로 적용됩니다</div>
+        <div style="display:flex;gap:4px;">
+          <div id="prev1" style="width:16px;height:16px;border-radius:4px;background:#1a56db;"></div>
+          <div id="prev2" style="width:16px;height:16px;border-radius:4px;opacity:.4;background:#1a56db;"></div>
+          <div id="prev3" style="width:16px;height:16px;border-radius:4px;opacity:.15;background:#1a56db;"></div>
         </div>
       </div>
+    </div>
 
+    <!-- 꾸미기 탭 -->
+    <div class="setting-pane" id="pane-deco">
+
+      <!-- 로고 아이콘 변경 -->
+      <div class="deco-section-title">로고 아이콘</div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+        <div id="logoPreview" style="width:40px;height:40px;background:var(--blue);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;flex-shrink:0;overflow:hidden;"></div>
+        <div style="flex:1;">
+          <div style="font-size:12px;color:var(--text-secondary);margin-bottom:6px;">이모지 선택</div>
+          <div class="emoji-grid" id="logoEmojiGrid"></div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:8px;align-items:center;">
+        <button class="btn" style="font-size:12px;" onclick="document.getElementById('logoImgInput').click()">이미지 업로드</button>
+        <input type="file" id="logoImgInput" accept="image/*" style="display:none" onchange="applyLogoImage(event)">
+        <button class="btn" style="font-size:12px;color:var(--red);" onclick="resetLogo()">기본값으로</button>
+      </div>
+      <div style="border-top:1px solid var(--border-col);margin:16px 0;"></div>
+
+      <!-- 배경 이미지 -->
+      <div class="deco-section-title">앱 배경 이미지</div>
+      <div class="upload-zone" onclick="document.getElementById('bgImgInput').click()">
+        <div style="font-size:24px;">🖼️</div>
+        <p>클릭해서 배경 이미지 업로드</p>
+        <p style="font-size:11px;color:var(--text-muted);">JPG, PNG, WebP 지원</p>
+      </div>
+      <input type="file" id="bgImgInput" accept="image/*" style="display:none" onchange="applyBgImage(event)">
+      <div id="bgImgControls" style="display:none;margin-top:10px;">
+        <div style="font-size:12px;color:var(--text-secondary);margin-bottom:4px;">오버레이 색상</div>
+        <div style="display:flex;gap:8px;margin-bottom:8px;">
+          <button class="btn" id="bgOverlayWhite" style="flex:1;font-size:12px;" onclick="setBgOverlay('white')">흰색</button>
+          <button class="btn" id="bgOverlayBlack" style="flex:1;font-size:12px;" onclick="setBgOverlay('black')">검정</button>
+          <button class="btn" id="bgOverlayNone" style="flex:1;font-size:12px;" onclick="setBgOverlay('none')">없음</button>
+        </div>
+        <div class="opacity-row">
+          <span style="font-size:12px;color:var(--text-secondary);">오버레이 강도</span>
+          <input type="range" id="bgOpacitySlider" min="0" max="90" value="50" step="5" oninput="updateBgOpacity(this.value)">
+          <span class="opacity-val" id="bgOpacityVal">50%</span>
+        </div>
+        <button class="btn" style="width:100%;margin-top:8px;color:var(--red);" onclick="removeBgImage()">배경 이미지 제거</button>
+      </div>
+      <div style="border-top:1px solid var(--border-col);margin:16px 0;"></div>
+
+      <!-- 커버 이미지 -->
+      <div class="deco-section-title">커버 이미지 (헤더 위)</div>
+      <div class="upload-zone" onclick="document.getElementById('coverImgInput').click()">
+        <div style="font-size:24px;">📷</div>
+        <p>클릭해서 커버 이미지 업로드</p>
+      </div>
+      <input type="file" id="coverImgInput" accept="image/*" style="display:none" onchange="applyCoverImage(event)">
+      <div id="coverImgControls" style="display:none;margin-top:10px;">
+        <div style="font-size:12px;color:var(--text-secondary);margin-bottom:4px;">오버레이 색상</div>
+        <div style="display:flex;gap:8px;margin-bottom:8px;">
+          <button class="btn" style="flex:1;font-size:12px;" onclick="setCoverOverlay('white')">흰색</button>
+          <button class="btn" style="flex:1;font-size:12px;" onclick="setCoverOverlay('black')">검정</button>
+          <button class="btn" style="flex:1;font-size:12px;" onclick="setCoverOverlay('none')">없음</button>
+        </div>
+        <div class="opacity-row">
+          <span style="font-size:12px;color:var(--text-secondary);">오버레이 강도</span>
+          <input type="range" id="coverOpacitySlider" min="0" max="90" value="50" step="5" oninput="updateCoverOpacity(this.value)">
+          <span class="opacity-val" id="coverOpacityVal">50%</span>
+        </div>
+        <button class="btn" style="width:100%;margin-top:8px;color:var(--red);" onclick="removeCoverImage()">커버 이미지 제거</button>
+      </div>
+      <div style="border-top:1px solid var(--border-col);margin:16px 0;"></div>
+
+      <!-- 스티커 -->
+      <div class="deco-section-title">스티커</div>
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;">
+        <button class="btn" style="font-size:12px;" onclick="document.getElementById('stickerInput').click()">PNG 스티커 업로드</button>
+        <input type="file" id="stickerInput" accept="image/png,image/gif,image/webp" style="display:none" onchange="addSticker(event)">
+        <span style="font-size:11px;color:var(--text-muted);">드래그로 위치 이동 가능</span>
+      </div>
+      <div class="sticker-grid" id="stickerThumbGrid"></div>
+      <div id="noStickerMsg" style="font-size:12px;color:var(--text-muted);">등록된 스티커가 없어요.</div>
     </div>
 
     <div class="mfoot" style="margin-top:20px;">
@@ -746,7 +932,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-page);color:var(-
   </div>
 </div>
 
-<!-- Google 동기화 모달 -->
+<!-- Google 동기화 모달 --><!-- Google 동기화 모달 -->
 <div class="overlay" id="googleModal">
   <div class="modal" style="max-width:400px;">
     <div class="modal-title" style="display:flex;align-items:center;gap:8px;">
@@ -795,6 +981,70 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-page);color:var(-
     </div>
 
     <div class="mfoot"><button class="btn" onclick="closeOverlay('googleModal')">닫기</button></div>
+  </div>
+</div>
+
+<!-- 자산 삭제 확인 모달 -->
+<div class="overlay" id="assetDelModal">
+  <div class="modal" style="max-width:380px;">
+    <div class="modal-title" style="color:var(--red);">자산 삭제</div>
+    <p style="font-size:14px;color:var(--text-secondary);line-height:1.7;margin-bottom:6px;">
+      아래 자산을 삭제할까요?<br>
+      <strong id="assetDelName" style="color:var(--text-primary);"></strong>
+    </p>
+    <p style="font-size:12px;color:var(--g300);">삭제 후에는 복구할 수 없습니다.</p>
+    <div class="mfoot">
+      <button class="btn" onclick="closeOverlay('assetDelModal')">취소</button>
+      <button class="btn" style="background:var(--red);color:#fff;border-color:var(--red);" onclick="execDelAsset()">삭제</button>
+    </div>
+  </div>
+</div>
+
+<!-- 대출 삭제 확인 모달 -->
+<div class="overlay" id="loanDelModal">
+  <div class="modal" style="max-width:380px;">
+    <div class="modal-title" style="color:var(--red);">대출·부채 삭제</div>
+    <p style="font-size:14px;color:var(--text-secondary);line-height:1.7;margin-bottom:6px;">
+      아래 대출을 삭제할까요?<br>
+      <strong id="loanDelName" style="color:var(--text-primary);"></strong>
+    </p>
+    <p style="font-size:12px;color:var(--g300);">삭제 후에는 복구할 수 없습니다.</p>
+    <div class="mfoot">
+      <button class="btn" onclick="closeOverlay('loanDelModal')">취소</button>
+      <button class="btn" style="background:var(--red);color:#fff;border-color:var(--red);" onclick="execDelLoan()">삭제</button>
+    </div>
+  </div>
+</div>
+
+<!-- 카테고리 삭제 확인 모달 -->
+<div class="overlay" id="catDelModal">
+  <div class="modal" style="max-width:380px;">
+    <div class="modal-title" style="color:var(--red);">카테고리 삭제</div>
+    <p style="font-size:14px;color:var(--text-secondary);line-height:1.7;margin-bottom:8px;">
+      <strong id="catDelName" style="color:var(--text-primary);"></strong> 카테고리를 삭제할까요?
+    </p>
+    <div id="catDelInfo" style="background:var(--blue-lt);border:1px solid var(--blue-md);border-radius:8px;padding:12px 14px;font-size:13px;color:var(--blue);line-height:1.7;margin-bottom:4px;"></div>
+    <p style="font-size:12px;color:var(--g300);margin-top:8px;">기존 데이터는 유지되며, 이후 선택 목록에서만 제거됩니다.</p>
+    <div class="mfoot">
+      <button class="btn" onclick="closeOverlay('catDelModal')">취소</button>
+      <button class="btn" style="background:var(--red);color:#fff;border-color:var(--red);" onclick="execDelCat()">삭제</button>
+    </div>
+  </div>
+</div>
+
+<!-- 고정지출 삭제 확인 모달 -->
+<div class="overlay" id="fixedDelModal">
+  <div class="modal" style="max-width:380px;">
+    <div class="modal-title" style="color:var(--red);">고정지출 삭제</div>
+    <p style="font-size:14px;color:var(--text-secondary);line-height:1.7;margin-bottom:6px;">
+      아래 고정지출을 삭제할까요?<br>
+      <strong id="fixedDelName" style="color:var(--text-primary);"></strong>
+    </p>
+    <p style="font-size:12px;color:var(--g300);">이번 달 자동 생성된 거래 내역도 함께 삭제됩니다.</p>
+    <div class="mfoot">
+      <button class="btn" onclick="closeOverlay('fixedDelModal')">취소</button>
+      <button class="btn" style="background:var(--red);color:#fff;border-color:var(--red);" onclick="execDelFixed()">삭제</button>
+    </div>
   </div>
 </div>
 
@@ -1152,7 +1402,7 @@ function renderFixed(){
     <div class="fi-icon">📌</div>
     <div class="fi-info"><div class="fi-name">${f.name}</div><div class="fi-sub">${f.category} · 매월 ${f.day}일${f.memo?' · '+f.memo:''}</div></div>
     <div class="fi-amt">${fmt(f.amount)}</div>
-    <button class="xbtn" style="margin-left:8px;width:auto" onclick="delFixed('${f.id}')">✕</button>
+    <button class="xbtn" style="margin-left:8px;width:auto" onclick="confirmDelFixed('${f.id}','${f.name}')">✕</button>
   </div>`).join('');
 }
 function openFixedModal(){['fxName','fxAmt','fxDay','fxMemo'].forEach(id=>document.getElementById(id).value='');document.getElementById('fxCat').innerHTML=S.cats.expense.map(c=>`<option>${c}</option>`).join('');openOverlay('fixedModal');}
@@ -1167,7 +1417,18 @@ function autoFixed(item){
   if(!S.txs.some(t=>t.fixedId===item.id&&t.date.startsWith(mk())))
     S.txs.push({id:Date.now().toString()+'f',type:'expense',date:mk()+'-'+d,desc:item.name,amount:item.amount,category:item.category,memo:'고정지출',fixedId:item.id});
 }
-function delFixed(id){S.fixedItems=S.fixedItems.filter(f=>f.id!==id);save();renderAll();toast('삭제됐어요.');}
+function confirmDelFixed(id, name){
+  S._pendingFixedId = id;
+  document.getElementById('fixedDelName').textContent = name;
+  openOverlay('fixedDelModal');
+}
+function execDelFixed(){
+  if(!S._pendingFixedId) return;
+  S.fixedItems = S.fixedItems.filter(f=>f.id!==S._pendingFixedId);
+  S.txs = S.txs.filter(t=>t.fixedId!==S._pendingFixedId);
+  S._pendingFixedId = null;
+  save(); closeOverlay('fixedDelModal'); renderAll(); toast('고정지출이 삭제됐어요.');
+}
 
 function renderAssets(){
   const totA=S.assets.reduce((s,a)=>s+a.amount,0),totD=S.loans.reduce((s,l)=>s+l.remain,0),net=totA-totD;
@@ -1180,7 +1441,7 @@ function renderAssets(){
     <div class="ai-icon ${AICLS[a.type]||'ai-cash'}">${AICON[a.type]||'💼'}</div>
     <div class="asset-item-info"><div class="asset-item-name">${a.name}</div><div class="asset-item-sub">${ALBL[a.type]||'기타'}${a.memo?' · '+a.memo:''}</div></div>
     <div class="asset-item-amt">${fmt(a.amount)}</div>
-    <button class="xbtn" style="margin-left:8px;width:auto" onclick="delAsset('${a.id}')">✕</button>
+    <button class="xbtn" style="margin-left:8px;width:auto" onclick="confirmDelAsset('${a.id}')">✕</button>
   </div>`).join(''):'<div class="empty" style="background:#fff;border:1px solid var(--border);border-radius:var(--rlg);">등록된 자산이 없습니다.</div>';
   const ll=document.getElementById('loanList');
   ll.innerHTML=S.loans.length?S.loans.map(l=>{
@@ -1188,7 +1449,7 @@ function renderAssets(){
     const dS=new Date(l.start),dE=new Date(l.end),tpct=Math.min(100,Math.max(0,Math.round((Date.now()-dS)/(dE-dS)*100)));
     const mi=Math.round(l.remain*(l.rate/100)/12);
     return`<div class="loan-card">
-      <div class="loan-hdr"><div><div class="loan-name">🏦 ${l.name}</div><div class="loan-sub">${l.bank||''} · 연 ${l.rate}%${l.memo?' · '+l.memo:''}</div></div><button class="xbtn" style="width:auto" onclick="delLoan('${l.id}')">✕</button></div>
+      <div class="loan-hdr"><div><div class="loan-name">🏦 ${l.name}</div><div class="loan-sub">${l.bank||''} · 연 ${l.rate}%${l.memo?' · '+l.memo:''}</div></div><button class="xbtn" style="width:auto" onclick="confirmDelLoan('${l.id}')">✕</button></div>
       <div class="loan-info-grid">
         <div class="loan-info-item"><label>원금</label><span>${fmt(l.principal)}</span></div>
         <div class="loan-info-item"><label>잔여 원금</label><span style="color:var(--red)">${fmt(l.remain)}</span></div>
@@ -1208,14 +1469,36 @@ function saveAsset(){
   if(!name||!amt||amt<=0){toast('이름과 금액을 입력해주세요.');return;}
   S.assets.push({id:Date.now().toString(),type,name,amount:amt,memo});save();closeOverlay('assetModal');renderAssets();toast('자산이 등록됐어요.');
 }
-function delAsset(id){S.assets=S.assets.filter(a=>a.id!==id);save();renderAssets();toast('삭제됐어요.');}
+function confirmDelAsset(id){
+  const a=S.assets.find(a=>a.id===id); if(!a) return;
+  S._pendingAssetId=id;
+  document.getElementById('assetDelName').textContent=a.name;
+  openOverlay('assetDelModal');
+}
+function execDelAsset(){
+  if(!S._pendingAssetId) return;
+  S.assets=S.assets.filter(a=>a.id!==S._pendingAssetId);
+  S._pendingAssetId=null;
+  save();closeOverlay('assetDelModal');renderAssets();toast('자산이 삭제됐어요.');
+}
 function openLoanModal(){['loanName','loanPrincipal','loanRemain','loanStart','loanEnd','loanRate','loanBank','loanMemo'].forEach(id=>document.getElementById(id).value='');openOverlay('loanModal');}
 function saveLoan(){
   const name=document.getElementById('loanName').value.trim(),principal=parseFloat(document.getElementById('loanPrincipal').value),remain=parseFloat(document.getElementById('loanRemain').value)||principal,start=document.getElementById('loanStart').value,end=document.getElementById('loanEnd').value,rate=parseFloat(document.getElementById('loanRate').value)||0,bank=document.getElementById('loanBank').value.trim(),memo=document.getElementById('loanMemo').value.trim();
   if(!name||!principal||!start||!end){toast('이름, 원금, 대출일, 만기일을 입력해주세요.');return;}
   S.loans.push({id:Date.now().toString(),name,principal,remain,start,end,rate,bank,memo});save();closeOverlay('loanModal');renderAssets();toast('대출이 등록됐어요.');
 }
-function delLoan(id){S.loans=S.loans.filter(l=>l.id!==id);save();renderAssets();toast('삭제됐어요.');}
+function confirmDelLoan(id){
+  const l=S.loans.find(l=>l.id===id); if(!l) return;
+  S._pendingLoanId=id;
+  document.getElementById('loanDelName').textContent=l.name+(l.bank?' ('+l.bank+')':'');
+  openOverlay('loanDelModal');
+}
+function execDelLoan(){
+  if(!S._pendingLoanId) return;
+  S.loans=S.loans.filter(l=>l.id!==S._pendingLoanId);
+  S._pendingLoanId=null;
+  save();closeOverlay('loanDelModal');renderAssets();toast('대출이 삭제됐어요.');
+}
 
 function renderBudget(){
   const spent={};monthTxs().filter(t=>t.type==='expense').forEach(t=>{spent[t.category]=(spent[t.category]||0)+t.amount;});
@@ -1233,13 +1516,40 @@ function saveBudget(){
 }
 
 function renderCatSettings(){
-  const mk2=(type,cats)=>cats.length?cats.map(c=>`<div class="cat-row-item"><span class="cat-row-name">${c}</span><button class="xbtn" style="width:auto" onclick="delCat('${type}','${c}')">✕</button></div>`).join(''):'<div class="empty">카테고리가 없습니다.</div>';
+  const mk2=(type,cats)=>cats.length?cats.map(c=>{
+    const cnt=S.txs.filter(t=>t.category===c).length;
+    return`<div class="cat-row-item">
+      <span class="cat-row-name">${c}</span>
+      <span style="font-size:11px;color:var(--text-muted);margin-right:8px;">${cnt>0?cnt+'건':''}</span>
+      <button class="xbtn" style="width:auto" onclick="confirmDelCat('${type}','${c}')">✕</button>
+    </div>`;
+  }).join(''):'<div class="empty">카테고리가 없습니다.</div>';
   document.getElementById('expCatList').innerHTML=mk2('expense',S.cats.expense);
   document.getElementById('incCatList').innerHTML=mk2('income',S.cats.income);
 }
 function openCatModal(type){S.catEditType=type;document.getElementById('catModalTitle').textContent=(type==='expense'?'지출':'수입')+' 카테고리 추가';document.getElementById('catName').value='';openOverlay('catModal');}
 function addCategory(){const name=document.getElementById('catName').value.trim();if(!name){toast('이름을 입력해주세요.');return;}if(S.cats[S.catEditType].includes(name)){toast('이미 존재해요.');return;}S.cats[S.catEditType].push(name);save();closeOverlay('catModal');renderCatSettings();toast('추가됐어요.');}
-function delCat(type,name){S.cats[type]=S.cats[type].filter(c=>c!==name);save();renderCatSettings();}
+function confirmDelCat(type, name){
+  S._pendingCatType = type;
+  S._pendingCatName = name;
+  document.getElementById('catDelName').textContent = name;
+  const cnt = S.txs.filter(t=>t.category===name).length;
+  const info = document.getElementById('catDelInfo');
+  if(cnt > 0){
+    info.textContent = '이 카테고리로 등록된 거래가 '+cnt+'건 있어요. 카테고리만 삭제되며 기존 데이터는 유지됩니다.';
+    info.style.display = 'block';
+  } else {
+    info.textContent = '이 카테고리로 등록된 거래가 없어요.';
+    info.style.display = 'block';
+  }
+  openOverlay('catDelModal');
+}
+function execDelCat(){
+  if(!S._pendingCatType || !S._pendingCatName) return;
+  S.cats[S._pendingCatType] = S.cats[S._pendingCatType].filter(c=>c!==S._pendingCatName);
+  S._pendingCatType = null; S._pendingCatName = null;
+  save(); closeOverlay('catDelModal'); renderCatSettings(); toast('카테고리가 삭제됐어요.');
+}
 
 let editingTxId=null;
 
@@ -1404,11 +1714,7 @@ function renderCharts(){
   charts.trend=new Chart(document.getElementById('trendChart'),{type:'bar',data:{labels:months,datasets:[{label:'수입',data:incs,backgroundColor:'#2e7d3250',borderColor:'#2e7d32',borderWidth:1},{label:'지출',data:exps,backgroundColor:'#d32f2f50',borderColor:'#d32f2f',borderWidth:1}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'top',labels:{boxWidth:10,font:{size:11}}}},scales:{y:{beginAtZero:true,ticks:{callback:v=>'₩'+Math.round(v/10000)+'만',font:{size:11}},grid:{color:'#f0f0f0'}},x:{ticks:{font:{size:11}},grid:{display:false}}}}});
   charts.expDonut=mkDonut('expDonut','expense',charts.expDonut);
   charts.incDonut=mkDonut('incDonut','income',charts.incDonut);
-  const dtxs=monthTxs().filter(t=>t.type==='expense'),days={};
-  dtxs.forEach(t=>{const d=parseInt(t.date.slice(8));days[d]=(days[d]||0)+t.amount;});
-  const dl=Object.keys(days).sort((a,b)=>a-b).map(d=>d+'일'),dv=Object.keys(days).sort((a,b)=>a-b).map(d=>days[d]);
-  if(charts.daily)charts.daily.destroy();
-  charts.daily=new Chart(document.getElementById('dailyChart'),{type:'bar',data:{labels:dl,datasets:[{data:dv,backgroundColor:'#1a56db50',borderColor:'#1a56db',borderWidth:1}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{callback:v=>'₩'+Math.round(v/10000)+'만',font:{size:11}},grid:{color:'#f0f0f0'}},x:{ticks:{font:{size:11},autoSkip:false,maxRotation:45},grid:{display:false}}}}});
+  renderDailyChart();
 }
 
 function exportJSON(){dl2(new Blob([JSON.stringify({txs:S.txs,budgets:S.budgets,fixedItems:S.fixedItems,assets:S.assets,loans:S.loans,cats:S.cats,installPlans:S.installPlans||[]},null,2)],{type:'application/json'}),'가계부_'+new Date().toISOString().slice(0,10)+'.json');toast('JSON 저장됐어요.');}
@@ -1844,24 +2150,45 @@ function updateGoogleUI(signedIn){
   const btn = document.getElementById('googleSyncBtn');
   const lbl = document.getElementById('googleBtnLabel');
   if(signedIn && gUserInfo){
-    if(lbl) lbl.textContent = gUserInfo.name || 'Google 동기화';
     if(btn) btn.classList.add('signed-in');
+    // 버튼: 로그인 상태 표시
+    const defaultSpan = document.getElementById('googleBtnDefault');
+    const signedInSpan = document.getElementById('googleBtnSignedIn');
+    if(defaultSpan) defaultSpan.style.display = 'none';
+    if(signedInSpan) signedInSpan.style.display = 'inline-flex';
+    // 버튼 아바타
+    if(gUserInfo.picture){
+      const ba = document.getElementById('googleBtnAvatar');
+      const bp = document.getElementById('googleBtnAvatarPlaceholder');
+      if(ba){ ba.src = gUserInfo.picture; ba.style.display = 'inline-block'; }
+      if(bp) bp.style.display = 'none';
+    } else {
+      const bp = document.getElementById('googleBtnAvatarPlaceholder');
+      if(bp) bp.textContent = (gUserInfo.name||'G')[0].toUpperCase();
+    }
+    // 버튼 텍스트: 이름 우선, 없으면 이메일
+    if(lbl) lbl.textContent = gUserInfo.name || gUserInfo.email || 'Google 동기화';
+    // 모달 내 사용자 정보
     document.getElementById('googleUserName').textContent = gUserInfo.name || '';
     document.getElementById('googleUserEmail').textContent = gUserInfo.email || '';
-    // 아바타
+    // 모달 아바타
     if(gUserInfo.picture){
       const av = document.getElementById('googleAvatar');
       const ph = document.getElementById('googleAvatarPlaceholder');
-      av.src = gUserInfo.picture;
-      av.style.display = 'block';
-      ph.style.display = 'none';
+      if(av){ av.src = gUserInfo.picture; av.style.display = 'block'; }
+      if(ph) ph.style.display = 'none';
     }
     // 마지막 동기화 시간
     const lastSync = localStorage.getItem('lastSync');
-    if(lastSync) document.getElementById('syncStatus').textContent = '마지막 동기화: ' + lastSync;
+    const ss = document.getElementById('syncStatus');
+    if(ss) ss.textContent = lastSync ? '마지막 동기화: ' + lastSync : '마지막 동기화: 없음';
   } else {
-    if(lbl) lbl.textContent = 'Google 동기화';
     if(btn) btn.classList.remove('signed-in');
+    // 버튼: 기본 상태 복원
+    const defaultSpan = document.getElementById('googleBtnDefault');
+    const signedInSpan = document.getElementById('googleBtnSignedIn');
+    if(defaultSpan) defaultSpan.style.display = 'inline-flex';
+    if(signedInSpan) signedInSpan.style.display = 'none';
   }
 }
 
@@ -2004,6 +2331,411 @@ function loadTheme(){
       applyTheme(saved.id, saved.dark||false);
     }
   } catch(e){}
+}
+
+
+let dailyMode = 'week'; // 'week' | 'day'
+
+function setDailyMode(el){
+  document.querySelectorAll('[data-daily]').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  dailyMode = el.dataset.daily;
+  renderDailyChart();
+}
+
+function renderDailyChart(){
+  const txs = monthTxs().filter(t=>t.type==='expense');
+  const [y,m] = mk().split('-').map(Number);
+  const lastDay = new Date(y,m,0).getDate();
+  let labels=[], values=[], chartType='bar';
+
+  if(dailyMode==='day'){
+    // 1일~말일 전체 표시 (거래 없는 날은 0)
+    const days={};
+    txs.forEach(t=>{const d=parseInt(t.date.slice(8));days[d]=(days[d]||0)+t.amount;});
+    for(let d=1;d<=lastDay;d++){
+      labels.push(d+'일');
+      values.push(days[d]||0);
+    }
+    chartType='line'; // 일별은 라인 차트 (날짜 많아서 막대 불편)
+  } else {
+    // 주별: 1~7 / 8~14 / 15~21 / 22~28 / 29~말일
+    const weeks=[0,0,0,0,0];
+    txs.forEach(t=>{
+      const d=parseInt(t.date.slice(8));
+      const w=d<=7?0:d<=14?1:d<=21?2:d<=28?3:4;
+      weeks[w]+=t.amount;
+    });
+    const ranges=['1~7일','8~14일','15~21일','22~28일','29~'+lastDay+'일'];
+    ranges.forEach((r,i)=>{
+      if(i===4&&lastDay<29) return;
+      labels.push(r);
+      values.push(weeks[i]);
+    });
+    chartType='bar';
+  }
+
+  if(charts.daily)charts.daily.destroy();
+
+  const isLine = chartType==='line';
+  charts.daily=new Chart(document.getElementById('dailyChart'),{
+    type: chartType,
+    data:{
+      labels,
+      datasets:[{
+        data:values,
+        backgroundColor: isLine ? '#1a56db20' : '#1a56db50',
+        borderColor:'#1a56db',
+        borderWidth: isLine ? 2 : 1,
+        fill: isLine ? true : false,
+        tension: isLine ? 0.3 : 0,
+        pointRadius: isLine ? 3 : 0,
+        pointHoverRadius: isLine ? 5 : 0,
+        pointBackgroundColor:'#1a56db',
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{
+        y:{
+          beginAtZero:true,
+          ticks:{callback:v=>v>0?'₩'+Math.round(v/10000)+'만':'0',font:{size:11}},
+          grid:{color:'#f0f0f0'}
+        },
+        x:{
+          ticks:{
+            font:{size:10},
+            autoSkip: isLine ? true : false,
+            maxTicksLimit: isLine ? 15 : 31,
+            maxRotation: isLine ? 0 : 0
+          },
+          grid:{display:false}
+        }
+      }
+    }
+  });
+}
+
+
+/* ══════════════════════════════
+   꾸미기 기능
+══════════════════════════════ */
+
+/* 설정 탭 전환 */
+function switchSettingTab(el){
+  document.querySelectorAll('.setting-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.setting-pane').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById(el.dataset.pane).classList.add('active');
+}
+
+/* ── 로고 아이콘 ── */
+const LOGO_EMOJIS = ['💰', '💵', '💳', '🏦', '📊', '📈', '📉', '🪙', '💎', '🏠', '🚗', '✈️', '🎯', '⭐', '🌟', '💡', '🎨', '🌈', '🍀', '🦋'];
+let currentLogoType = 'text'; // 'text' | 'emoji' | 'image'
+let currentLogoVal  = '₩';
+
+function renderLogoEmojiGrid(){
+  const saved = (loadDeco().logo)||{};
+  const grid = document.getElementById('logoEmojiGrid');
+  if(!grid) return;
+  grid.innerHTML = LOGO_EMOJIS.map(e=>`
+    <button class="emoji-btn${saved.val===e?' selected':''}" onclick="applyLogoEmoji('${e}')">${e}</button>
+  `).join('');
+}
+
+function applyLogoEmoji(emoji){
+  currentLogoType='emoji'; currentLogoVal=emoji;
+  updateLogoDOM(emoji, null);
+  saveDeco({logo:{type:'emoji',val:emoji}});
+  renderLogoEmojiGrid();
+}
+
+function applyLogoImage(e){
+  const file=e.target.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    currentLogoType='image'; currentLogoVal=ev.target.result;
+    updateLogoDOM(null, ev.target.result);
+    saveDeco({logo:{type:'image',val:ev.target.result}});
+  };
+  reader.readAsDataURL(file);
+  e.target.value='';
+}
+
+function resetLogo(){
+  currentLogoType='text'; currentLogoVal='₩';
+  updateLogoDOM('₩', null);
+  saveDeco({logo:{type:'text',val:'₩'}});
+  renderLogoEmojiGrid();
+}
+
+function updateLogoDOM(text, imgSrc){
+  const el=document.getElementById('logoIcon');
+  const prev=document.getElementById('logoPreview');
+  if(!el) return;
+  if(imgSrc){
+    el.innerHTML=`<img src="${imgSrc}" class="logo-icon-img" alt="logo">`;
+    el.style.background='transparent';
+    if(prev){ prev.innerHTML=`<img src="${imgSrc}" style="width:100%;height:100%;object-fit:cover;">`; prev.style.background='transparent'; }
+  } else {
+    el.innerHTML=text||'₩';
+    el.style.background='';
+    if(prev){ prev.innerHTML=text||'₩'; prev.style.background=''; }
+  }
+}
+
+/* ── 배경 이미지 ── */
+let bgOverlayColor='white';
+
+function applyBgImage(e){
+  const file=e.target.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    document.body.style.backgroundImage=`url('${ev.target.result}')`;
+    document.body.style.backgroundSize='cover';
+    document.body.style.backgroundAttachment='fixed';
+    document.body.style.backgroundPosition='center';
+    document.getElementById('bgImgControls').style.display='block';
+    setBgOverlay(bgOverlayColor);
+    saveDeco({bg:{src:ev.target.result,overlay:bgOverlayColor,opacity:document.getElementById('bgOpacitySlider').value}});
+  };
+  reader.readAsDataURL(file);
+  e.target.value='';
+}
+
+function setBgOverlay(color){
+  bgOverlayColor=color;
+  const opacity=parseInt(document.getElementById('bgOpacitySlider').value)/100;
+  applyBgOverlayStyle(color, opacity);
+  ['bgOverlayWhite','bgOverlayBlack','bgOverlayNone'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.style.borderColor = (id==='bgOverlay'+color.charAt(0).toUpperCase()+color.slice(1)) ? 'var(--blue)' : '';
+  });
+  const saved=loadDeco(); if(saved.bg) { saved.bg.overlay=color; saveDeco(saved); }
+}
+
+function applyBgOverlayStyle(color, opacity){
+  if(color==='none'||opacity===0){
+    document.body.style.setProperty('--bg-overlay','transparent');
+  } else {
+    const rgba=color==='white'?`rgba(255,255,255,${opacity})`:`rgba(0,0,0,${opacity})`;
+    document.body.style.setProperty('--bg-overlay',rgba);
+  }
+  // body::before로 구현하기 어려우니 fixed pseudo div 활용
+  let overlay=document.getElementById('bodyBgOverlay');
+  if(!overlay){
+    overlay=document.createElement('div');
+    overlay.id='bodyBgOverlay';
+    overlay.style.cssText='position:fixed;inset:0;pointer-events:none;z-index:0;transition:background .2s;';
+    document.body.appendChild(overlay);
+  }
+  if(color==='none'||opacity===0){ overlay.style.background='transparent'; }
+  else { overlay.style.background=color==='white'?`rgba(255,255,255,${opacity})`:`rgba(0,0,0,${opacity})`; }
+}
+
+function updateBgOpacity(val){
+  document.getElementById('bgOpacityVal').textContent=val+'%';
+  applyBgOverlayStyle(bgOverlayColor, parseInt(val)/100);
+  const saved=loadDeco(); if(saved.bg){ saved.bg.opacity=val; saveDeco(saved); }
+}
+
+function removeBgImage(){
+  document.body.style.backgroundImage='';
+  document.body.style.backgroundSize='';
+  document.body.style.backgroundAttachment='';
+  const o=document.getElementById('bodyBgOverlay'); if(o) o.style.background='transparent';
+  document.getElementById('bgImgControls').style.display='none';
+  const saved=loadDeco(); delete saved.bg; saveDeco(saved);
+}
+
+/* ── 커버 이미지 ── */
+let coverOverlayColor='black';
+
+function applyCoverImage(e){
+  const file=e.target.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    const area=document.getElementById('coverArea');
+    area.style.backgroundImage=`url('${ev.target.result}')`;
+    area.classList.add('visible');
+    setCoverOverlay(coverOverlayColor);
+    document.getElementById('coverImgControls').style.display='block';
+    saveDeco({cover:{src:ev.target.result,overlay:coverOverlayColor,opacity:document.getElementById('coverOpacitySlider').value}});
+  };
+  reader.readAsDataURL(file);
+  e.target.value='';
+}
+
+function setCoverOverlay(color){
+  coverOverlayColor=color;
+  const opacity=parseInt(document.getElementById('coverOpacitySlider').value)/100;
+  const overlay=document.getElementById('coverOverlay');
+  if(!overlay) return;
+  overlay.style.background=color==='none'?'transparent':color==='white'?`rgba(255,255,255,${opacity})`:`rgba(0,0,0,${opacity})`;
+  const saved=loadDeco(); if(saved.cover){ saved.cover.overlay=color; saveDeco(saved); }
+}
+
+function updateCoverOpacity(val){
+  document.getElementById('coverOpacityVal').textContent=val+'%';
+  setCoverOverlay(coverOverlayColor);
+  const saved=loadDeco(); if(saved.cover){ saved.cover.opacity=val; saveDeco(saved); }
+}
+
+function removeCoverImage(){
+  const area=document.getElementById('coverArea');
+  area.style.backgroundImage='';
+  area.classList.remove('visible');
+  document.getElementById('coverImgControls').style.display='none';
+  const saved=loadDeco(); delete saved.cover; saveDeco(saved);
+}
+
+/* ── 스티커 ── */
+let stickers=[]; // [{id, src, x, y, size}]
+let dragState=null;
+
+function addSticker(e){
+  const file=e.target.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    const id='stk_'+Date.now();
+    const s={id, src:ev.target.result, x:Math.round(window.innerWidth/2-40), y:120, size:80};
+    stickers.push(s);
+    renderStickerDOM(s);
+    renderStickerThumbs();
+    saveDeco({stickers:[...stickers]});
+  };
+  reader.readAsDataURL(file);
+  e.target.value='';
+}
+
+function renderStickerDOM(s){
+  const layer=document.getElementById('stickerLayer');
+  const div=document.createElement('div');
+  div.className='sticker-item';
+  div.id=s.id;
+  div.style.cssText=`left:${s.x}px;top:${s.y}px;width:${s.size}px;`;
+  div.innerHTML=`<img src="${s.src}" style="width:${s.size}px;height:${s.size}px;object-fit:contain;" draggable="false">
+    <button class="sticker-del" onclick="removeSticker('${s.id}')">✕</button>`;
+  // 드래그
+  div.addEventListener('mousedown', stickerDragStart);
+  div.addEventListener('touchstart', stickerDragStart, {passive:false});
+  layer.appendChild(div);
+}
+
+function stickerDragStart(e){
+  if(e.target.classList.contains('sticker-del')) return;
+  e.preventDefault();
+  const div=e.currentTarget;
+  const touch=e.touches?e.touches[0]:e;
+  dragState={id:div.id, startX:touch.clientX-parseInt(div.style.left), startY:touch.clientY-parseInt(div.style.top)};
+}
+document.addEventListener('mousemove', stickerDragMove);
+document.addEventListener('touchmove', stickerDragMove, {passive:false});
+function stickerDragMove(e){
+  if(!dragState) return;
+  e.preventDefault();
+  const touch=e.touches?e.touches[0]:e;
+  const div=document.getElementById(dragState.id);
+  if(!div) return;
+  const x=touch.clientX-dragState.startX, y=touch.clientY-dragState.startY;
+  div.style.left=x+'px'; div.style.top=y+'px';
+}
+document.addEventListener('mouseup', stickerDragEnd);
+document.addEventListener('touchend', stickerDragEnd);
+function stickerDragEnd(){
+  if(!dragState) return;
+  const s=stickers.find(s=>s.id===dragState.id);
+  if(s){
+    const div=document.getElementById(s.id);
+    if(div){ s.x=parseInt(div.style.left); s.y=parseInt(div.style.top); }
+    saveDeco({stickers:[...stickers]});
+  }
+  dragState=null;
+}
+
+function removeSticker(id){
+  stickers=stickers.filter(s=>s.id!==id);
+  const el=document.getElementById(id); if(el) el.remove();
+  renderStickerThumbs();
+  saveDeco({stickers:[...stickers]});
+}
+
+function renderStickerThumbs(){
+  const grid=document.getElementById('stickerThumbGrid');
+  const msg=document.getElementById('noStickerMsg');
+  if(!grid) return;
+  if(!stickers.length){ grid.innerHTML=''; if(msg)msg.style.display='block'; return; }
+  if(msg) msg.style.display='none';
+  grid.innerHTML=stickers.map(s=>`
+    <div class="img-thumb" title="클릭해서 삭제">
+      <img src="${s.src}" alt="sticker">
+      <button class="thumb-del" onclick="removeSticker('${s.id}')">✕</button>
+    </div>`).join('');
+}
+
+/* ── 꾸미기 저장/불러오기 ── */
+function loadDeco(){
+  try{ return JSON.parse(localStorage.getItem('budgetDeco')||'{}'); }catch(e){return {};}
+}
+function saveDeco(partial){
+  const cur=loadDeco();
+  Object.assign(cur, partial);
+  // stickers 병합 아닌 덮어쓰기
+  if(partial.stickers) cur.stickers=partial.stickers;
+  localStorage.setItem('budgetDeco', JSON.stringify(cur));
+}
+
+function applyDecoOnLoad(){
+  const d=loadDeco();
+  // 로고
+  if(d.logo){
+    currentLogoType=d.logo.type; currentLogoVal=d.logo.val;
+    if(d.logo.type==='image') updateLogoDOM(null, d.logo.val);
+    else updateLogoDOM(d.logo.val, null);
+  }
+  // 배경
+  if(d.bg){
+    document.body.style.backgroundImage=`url('${d.bg.src}')`;
+    document.body.style.backgroundSize='cover';
+    document.body.style.backgroundAttachment='fixed';
+    document.body.style.backgroundPosition='center';
+    bgOverlayColor=d.bg.overlay||'white';
+    applyBgOverlayStyle(bgOverlayColor, parseInt(d.bg.opacity||50)/100);
+  }
+  // 커버
+  if(d.cover){
+    const area=document.getElementById('coverArea');
+    area.style.backgroundImage=`url('${d.cover.src}')`;
+    area.classList.add('visible');
+    coverOverlayColor=d.cover.overlay||'black';
+    const overlay=document.getElementById('coverOverlay');
+    if(overlay){ const op=parseInt(d.cover.opacity||50)/100;
+      overlay.style.background=coverOverlayColor==='none'?'transparent':coverOverlayColor==='white'?`rgba(255,255,255,${op})`:`rgba(0,0,0,${op})`; }
+  }
+  // 스티커
+  if(d.stickers && d.stickers.length){
+    stickers=d.stickers;
+    stickers.forEach(s=>renderStickerDOM(s));
+  }
+}
+
+/* openThemeModal 패치: 꾸미기 UI 초기화 */
+const _origOpenThemeModal = openThemeModal;
+function openThemeModal(){
+  _origOpenThemeModal();
+  renderLogoEmojiGrid();
+  renderStickerThumbs();
+  // 로고 미리보기 동기화
+  updateLogoDOM(currentLogoVal, currentLogoType==='image'?currentLogoVal:null);
+  // 커버/배경 컨트롤 표시 여부
+  const d=loadDeco();
+  if(d.bg){ document.getElementById('bgImgControls').style.display='block';
+    document.getElementById('bgOpacitySlider').value=d.bg.opacity||50;
+    document.getElementById('bgOpacityVal').textContent=(d.bg.opacity||50)+'%'; }
+  if(d.cover){ document.getElementById('coverImgControls').style.display='block';
+    document.getElementById('coverOpacitySlider').value=d.cover.opacity||50;
+    document.getElementById('coverOpacityVal').textContent=(d.cover.opacity||50)+'%'; }
 }
 
 function renderAll(){updateLabels();renderSummary();renderRecentRows();renderLedger();renderFixed();renderAssets();renderBudget();renderCatSettings();renderCharts();if(statsMode==='year')renderYearStats();}
@@ -2155,7 +2887,7 @@ function renderAll(){updateLabels();renderSummary();renderRecentRows();renderLed
   localStorage.setItem('budgetApp', JSON.stringify({txs:S.txs,budgets:S.budgets,fixedItems:S.fixedItems,assets:S.assets,loans:S.loans,cats:S.cats,installPlans:S.installPlans}));
 })();
 
-load();loadTheme();setType('expense');P.year=S.year;P.month=S.month;statsYear=S.year;renderAll();
+load();loadTheme();setType('expense');P.year=S.year;P.month=S.month;statsYear=S.year;renderAll();applyDecoOnLoad();
 </script>
 </body>
 </html>

@@ -358,9 +358,8 @@ select.fselect:focus{border-color:var(--blue);}
 .cover-overlay{position:absolute;inset:0;pointer-events:none;}
 
 /* ── 스티커 레이어 ── */
-#stickerLayer{
-  position:fixed;inset:0;pointer-events:none;z-index:50;overflow:hidden;
-}
+<!-- 스티커 레이어가 다른 모든 요소(헤더, 네비 등)보다 무조건 위에 오도록 z-index를 900으로 대폭 상승 -->?
+#stickerLayer{position:fixed;inset:0;pointer-events:none;z-index:900;overflow:visible;}
 .sticker-item{
   position:absolute;pointer-events:auto;cursor:move;
   user-select:none;line-height:1;
@@ -2452,7 +2451,7 @@ function switchSettingTab(el){
 }
 
 /* ── 로고 아이콘 ── */
-const LOGO_EMOJIS = ['💰', '💵', '💳', '🏦', '📊', '📈', '📉', '🪙', '💎', '🏠', '🚗', '✈️', '🎯', '⭐', '🌟', '💡', '🎨', '🌈', '🍀', '🦋'];
+const LOGO_EMOJIS = ['💰', '💵', '💳', '🏦', '📊', '📈', '📉', '🛒', '💎', '🏠', '🚗', '✈️', '🎯', '⭐', '🌟', '💡', '🎨', '🌈', '🍀', '🦋'];
 let currentLogoType = 'text'; // 'text' | 'emoji' | 'image'
 let currentLogoVal  = '₩';
 

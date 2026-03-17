@@ -42,8 +42,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-page);color:var(-
   position:sticky;top:0;z-index:200;
   transition:background .25s;
 }
-/* [수정] flex-shrink:0 을 추가해 로고가 눌리지 않게 고정합니다. */
-.logo{display:flex;align-items:center;gap:8px;font-size:17px;font-weight:700;color:var(--blue);flex-shrink:0;white-space:nowrap;}
+.logo{display:flex;align-items:center;gap:8px;font-size:17px;font-weight:700;color:var(--blue);}
 .logo-icon{width:28px;height:28px;background:var(--blue);border-radius:6px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;}
 .hdr-r{display:flex;align-items:center;gap:8px;}
 .hdr-divider{width:1px;height:20px;background:var(--border);}
@@ -167,8 +166,8 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-page);color:var(-
 }
 
 /* ── LAYOUT ── */
-.main{position:relative;z-index:10;padding:24px;max-width:980px;margin:20px auto;width:100%;background:rgba(255,255,255,0.85);border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,0.1);}
-body.dark-mode .main{background:rgba(26,29,39,0.85);}
+.main{padding:20px 24px;max-width:980px;margin:0 auto;width:100%;}
+.page{display:none;}.page.active{display:block;}
 
 .month-bar{display:flex;align-items:center;gap:10px;margin-bottom:18px;}
 .mbtn{width:30px;height:30px;border-radius:6px;border:1px solid var(--border);background:#fff;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;color:var(--g700);transition:all .15s;}
@@ -354,13 +353,22 @@ select.fselect:focus{border-color:var(--blue);}
 .setting-pane{display:none;}.setting-pane.active{display:block;}
 
 /* ── 커버 이미지 영역 ── */
-.cover-area{z-index:10;width:100%;height:0;overflow:hidden;position:relative;transition:height .3s;background-size:cover;background-position:center;}
+.cover-area{
+  width:100%;height:0;overflow:hidden;
+  position:relative;transition:height .3s;
+  background-size:cover;background-position:center;
+}
 .cover-area.visible{height:160px;}
 .cover-overlay{position:absolute;inset:0;pointer-events:none;}
 
 /* ── 스티커 레이어 ── */
-/* [수정] 스티커 레이어가 다른 모든 요소보다 위에 오도록 z-index를 900으로 설정 */
-#stickerLayer{position:fixed;inset:0;pointer-events:none;z-index:900;overflow:visible;}
+#stickerLayer{
+  position:fixed;inset:0;pointer-events:none;z-index:50;overflow:hidden;
+}
+.sticker-item{
+  position:absolute;pointer-events:auto;cursor:move;
+  user-select:none;line-height:1;
+}
 .sticker-item img{display:block;pointer-events:none;}
 .sticker-item .sticker-del{
   position:absolute;top:-8px;right:-8px;
@@ -459,42 +467,20 @@ select.fselect:focus{border-color:var(--blue);}
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(12px);background:var(--g900);color:#fff;padding:10px 22px;border-radius:24px;font-size:13px;font-weight:500;z-index:9999;opacity:0;transition:all .28s;pointer-events:none;white-space:nowrap;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
-@media (max-width: 640px) {
-  /* 1. 햄버거 메뉴 버튼 노출 및 로고 고정 */
-  .mobile-only-btn { display: block !important; }
-  .logo { flex-shrink: 0; white-space: nowrap !important; }
-  .header { padding: 0 14px; }
-
-  /* 2. 버튼들을 메뉴 안으로 숨김 (드롭다운) */
-  .hdr-btn-group {
-    display: none; position: absolute; top: 56px; right: 14px; 
-    background: var(--bg-card); border: 1px solid var(--border-col);
-    padding: 10px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    flex-direction: column; gap: 8px; z-index: 300;
-  }
-  .hdr-btn-group.open { display: flex; }
-  .hdr-r { overflow-x: visible !important; }
-
-  /* 3. 페이지 전환 및 메인 영역 최적화 */
-  .page { display: none !important; }
-  .page.active { display: block !important; }
-  .main { padding: 14px; margin: 10px auto; width: calc(100% - 20px); }
-
-  /* 4. 거래 내역 표 정렬 (금액 겹침 방지 및 3번째 열 숨김) */
-  .lhd, .lrow, .install-group-main { 
-    grid-template-columns: 58px 1fr 95px 35px !important; 
-    gap: 4px;
-    padding: 11px 8px;
-  }
-  .lhd>*:nth-child(3), .lrow>*:nth-child(3), .install-group-main>*:nth-child(3) { display: none; }
-
-  /* 5. 기타 요소 모바일 최적화 */
-  .sgrid { grid-template-columns: 1fr 1fr; }
-  .sgrid .scard:last-child { grid-column: 1/-1; }
-  .sval { font-size: 17px; }
-  .nav-wrapper { padding: 8px 10px; border-bottom: 1px solid rgba(255,255,255,0.1); }
-  .nav-tab { padding: 6px 14px; font-size: 12px; }
-  .stats-2col, .loan-info-grid, .frow { grid-template-columns: 1fr; }
+@media(max-width:640px){
+  .header{padding:0 14px;}
+  .main{padding:14px;}
+  .sgrid{grid-template-columns:1fr 1fr;}
+  .sgrid .scard:last-child{grid-column:1/-1;}
+  .sval{font-size:17px;}
+  .lhd,.lrow{grid-template-columns:58px 1fr 90px 28px;}
+  .lhd>*:nth-child(3),.lrow>*:nth-child(3){display:none;}
+  .stats-2col{grid-template-columns:1fr;}
+  /* asset-grid mobile: already 1fr 1fr */
+  .loan-info-grid{grid-template-columns:1fr 1fr;}
+  .frow{grid-template-columns:1fr;}
+  .nav-wrapper{padding:8px 12px;}
+  .nav-tab{padding:7px 14px;font-size:12px;}
 }
 </style>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -522,12 +508,10 @@ select.fselect:focus{border-color:var(--blue);}
       </svg>
     </button>
   </div>
- <div class="hdr-r">
-  <button class="theme-btn mobile-only-btn" onclick="toggleMobileMenu()" style="display:none; font-size:20px;">☰</button>
-  
-  <div class="hdr-btn-group" id="hdrBtnGroup">
-    <button class="btn" style="color:var(--blue);border-color:var(--blue-md);background:var(--blue-lt);" onclick="injectSample()">🧪 테스트 데이터 생성</button>
-
+  <div class="hdr-r">
+    <!-- 테스트 데이터 생성 버튼 -->
+<button class="btn" style="color:var(--blue);border-color:var(--blue-md);background:var(--blue-lt);" onclick="injectSample()">🧪 테스트 데이터 생성</button>
+    <!-- 내보내기 드롭다운 -->
     <div class="export-wrap" id="exportWrap">
       <button class="export-trigger" onclick="toggleExport()">내보내기 ▾</button>
       <div class="export-menu" id="exportMenu">
@@ -535,27 +519,26 @@ select.fselect:focus{border-color:var(--blue);}
         <button class="export-menu-item" onclick="exportJSON();toggleExport()">JSON으로 저장</button>
       </div>
     </div>
-
     <button class="btn" onclick="document.getElementById('impFile').click()">불러오기</button>
-    <input type="file" id="impFile" accept=".json" style="display:none" onchange="importData(event)">
-
     <button class="btn btn-reset" onclick="openResetModal()">초기화</button>
-
+    <input type="file" id="impFile" accept=".json" style="display:none" onchange="importData(event)">
+    <div class="hdr-divider"></div>
     <button class="btn btn-google" id="googleSyncBtn" onclick="openGoogleModal()">
+      <!-- 비로그인: G 로고 + 텍스트 -->
       <span id="googleBtnDefault" style="display:inline-flex;align-items:center;gap:4px;">
         <svg width="14" height="14" viewBox="0 0 24 24" style="pointer-events:none;flex-shrink:0;" fill="none"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
         <span>Google 동기화</span>
       </span>
+      <!-- 로그인 후: 아바타 + 이름 -->
       <span id="googleBtnSignedIn" style="display:none;align-items:center;gap:6px;">
         <img id="googleBtnAvatar" src="" alt="" style="width:18px;height:18px;border-radius:50%;pointer-events:none;display:none;">
         <span id="googleBtnAvatarPlaceholder" style="width:18px;height:18px;border-radius:50%;background:var(--blue);color:#fff;font-size:10px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;pointer-events:none;flex-shrink:0;">G</span>
         <span id="googleBtnLabel" style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
       </span>
     </button>
+    <div class="hdr-divider"></div>
+    <button class="btn btn-blue" onclick="openAdd()">+ 추가</button>
   </div>
-
-  <div class="hdr-divider"></div>
-  <button class="btn btn-blue" onclick="openAdd()">+ 추가</button>
 </div>
 
 <!-- NAV -->
@@ -2473,7 +2456,7 @@ function switchSettingTab(el){
 }
 
 /* ── 로고 아이콘 ── */
-const LOGO_EMOJIS = ['💰', '💵', '💳', '🏦', '📊', '📈', '📉', '🛒', '💎', '🏠', '🚗', '✈️', '🎯', '⭐', '🌟', '💡', '🎨', '🌈', '🍀', '🦋'];
+const LOGO_EMOJIS = ['💰', '💵', '💳', '🏦', '📊', '📈', '📉', '🪙', '💎', '🏠', '🚗', '✈️', '🎯', '⭐', '🌟', '💡', '🎨', '🌈', '🍀', '🦋'];
 let currentLogoType = 'text'; // 'text' | 'emoji' | 'image'
 let currentLogoVal  = '₩';
 
@@ -2936,21 +2919,6 @@ window.injectSample = function() {
   renderAll();
   setTimeout(() => { location.reload(); }, 1000);
 };
-
-/* 모바일 햄버거 메뉴 토글 */
-function toggleMobileMenu() {
-  const group = document.getElementById('hdrBtnGroup');
-  if(group) group.classList.toggle('open');
-}
-
-/* 메뉴 열린 상태에서 다른 곳 클릭하면 닫히게 처리 */
-document.addEventListener('click', (e) => {
-  const group = document.getElementById('hdrBtnGroup');
-  const btn = document.querySelector('.mobile-only-btn');
-  if(group && group.classList.contains('open') && !group.contains(e.target) && !btn.contains(e.target)) {
-    group.classList.remove('open');
-  }
-});
 </script>
 </body>
 </html>

@@ -509,6 +509,8 @@ select.fselect:focus{border-color:var(--blue);}
     </button>
   </div>
   <div class="hdr-r">
+    <!-- 테스트 데이터 생성 버튼 -->
+<button class="btn" style="color:var(--blue);border-color:var(--blue-md);background:var(--blue-lt);" onclick="injectSample()">🧪 테스트 데이터 생성</button>
     <!-- 내보내기 드롭다운 -->
     <div class="export-wrap" id="exportWrap">
       <button class="export-trigger" onclick="toggleExport()">내보내기 ▾</button>
@@ -2003,8 +2005,8 @@ function updateCustomPreview(hex){
   if(p3) p3.style.background=hex;
 }
 
+/* [수정사항] 톱니바퀴 버튼 클릭 시 테마 설정 모달창을 띄우는 통합 함수 */
 function openThemeModal(){
-  // 프리셋 그리드 렌더
   const grid = document.getElementById('themeColorGrid');
   if(grid){
     grid.innerHTML = THEMES.map(t=>`
@@ -2013,16 +2015,39 @@ function openThemeModal(){
         <div class="theme-color-name">${t.name}</div>
       </div>`).join('');
   }
-  // 다크모드 토글 동기화
+  
   const dt = document.getElementById('darkModeToggle');
   if(dt) dt.checked = isDark;
-  // 커스텀 입력 초기화 (현재 --blue 값 반영)
+
   const curBlue = getComputedStyle(document.documentElement).getPropertyValue('--blue').trim();
-  const pk = document.getElementById('customColorPicker');
-  const hi = document.getElementById('customColorHex');
+  const pk = document.getElementById('customColorPicker'), hi = document.getElementById('customColorHex');
   if(pk && curBlue) pk.value = curBlue;
   if(hi && curBlue) hi.value = curBlue;
-  updateCustomPreview(curBlue);
+  
+  if(typeof updateCustomPreview === 'function') updateCustomPreview(curBlue);
+  if(typeof renderLogoEmojiGrid === 'function') renderLogoEmojiGrid();
+  if(typeof renderStickerThumbs === 'function') renderStickerThumbs();
+  if(typeof updateLogoDOM === 'function') updateLogoDOM(currentLogoVal, currentLogoType==='image'?currentLogoVal:null);
+
+  // 배경 및 커버 이미지 컨트롤 UI 연동
+  const d = loadDeco();
+  if(d.bg){ 
+    const bgCtrl = document.getElementById('bgImgControls');
+    if(bgCtrl) bgCtrl.style.display='block';
+    const bgOp = document.getElementById('bgOpacitySlider');
+    if(bgOp) bgOp.value = d.bg.opacity || 50;
+    const bgVal = document.getElementById('bgOpacityVal');
+    if(bgVal) bgVal.textContent = (d.bg.opacity || 50) + '%'; 
+  }
+  if(d.cover){ 
+    const cvCtrl = document.getElementById('coverImgControls');
+    if(cvCtrl) cvCtrl.style.display='block';
+    const cvOp = document.getElementById('coverOpacitySlider');
+    if(cvOp) cvOp.value = d.cover.opacity || 50;
+    const cvVal = document.getElementById('coverOpacityVal');
+    if(cvVal) cvVal.textContent = (d.cover.opacity || 50) + '%'; 
+  }
+
   openOverlay('themeModal');
 }
 
@@ -2720,24 +2745,6 @@ function applyDecoOnLoad(){
   }
 }
 
-/* openThemeModal 패치: 꾸미기 UI 초기화 */
-const _origOpenThemeModal = openThemeModal;
-function openThemeModal(){
-  _origOpenThemeModal();
-  renderLogoEmojiGrid();
-  renderStickerThumbs();
-  // 로고 미리보기 동기화
-  updateLogoDOM(currentLogoVal, currentLogoType==='image'?currentLogoVal:null);
-  // 커버/배경 컨트롤 표시 여부
-  const d=loadDeco();
-  if(d.bg){ document.getElementById('bgImgControls').style.display='block';
-    document.getElementById('bgOpacitySlider').value=d.bg.opacity||50;
-    document.getElementById('bgOpacityVal').textContent=(d.bg.opacity||50)+'%'; }
-  if(d.cover){ document.getElementById('coverImgControls').style.display='block';
-    document.getElementById('coverOpacitySlider').value=d.cover.opacity||50;
-    document.getElementById('coverOpacityVal').textContent=(d.cover.opacity||50)+'%'; }
-}
-
 function renderAll(){updateLabels();renderSummary();renderRecentRows();renderLedger();renderFixed();renderAssets();renderBudget();renderCatSettings();renderCharts();if(statsMode==='year')renderYearStats();}
 
 /* ── 샘플 데이터 주입 ── */
@@ -2888,6 +2895,30 @@ function renderAll(){updateLabels();renderSummary();renderRecentRows();renderLed
 })();
 
 load();loadTheme();setType('expense');P.year=S.year;P.month=S.month;statsYear=S.year;renderAll();applyDecoOnLoad();
+
+/* [수정사항] 테스트용 더미 데이터 강제 주입 함수 */
+window.injectSample = function() {
+  const y = new Date().getFullYear();
+  const m = String(new Date().getMonth() + 1).padStart(2,'0');
+  
+  S.txs = [
+    {id:'t01', type:'income', date:`${y}-${m}-05`, desc:'월급', amount:3800000, category:'급여'},
+    {id:'t02', type:'expense', date:`${y}-${m}-03`, desc:'마켓컬리 장보기', amount:87000, category:'식비'},
+    {id:'t03', type:'expense', date:`${y}-${m}-07`, desc:'스타벅스 커피', amount:14500, category:'식비'},
+    {id:'t04', type:'expense', date:`${y}-${m}-12`, desc:'넷플릭스 구독', amount:17000, category:'여가'},
+    {id:'t05', type:'expense', date:`${y}-${m}-15`, desc:'올리브영 쇼핑', amount:63000, category:'쇼핑'},
+    {id:'t06', type:'income', date:`${y}-${m}-20`, desc:'삼성전자 배당금', amount:120000, category:'투자'}
+  ];
+  
+  S.year = new Date().getFullYear();
+  S.month = new Date().getMonth() + 1;
+  
+  save(); 
+  toast('✅ 테스트 데이터가 복구되었습니다. 잠시 후 새로고침 됩니다.');
+  
+  renderAll();
+  setTimeout(() => { location.reload(); }, 1000);
+};
 </script>
 </body>
 </html>

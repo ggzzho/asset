@@ -464,14 +464,22 @@ select.fselect:focus{border-color:var(--blue);}
 
 @media(max-width:640px){
   .header{padding:0 14px;}
+  
+  /* [수정사항 1] 헤더 우측 버튼 그룹에 가로 스크롤을 허용하여 화면 전체가 찢어지는 현상 방지 */
+  .hdr-r { overflow-x: auto; padding-bottom: 2px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .hdr-r::-webkit-scrollbar { display: none; }
+
   .main{padding:14px;}
   .sgrid{grid-template-columns:1fr 1fr;}
   .sgrid .scard:last-child{grid-column:1/-1;}
   .sval{font-size:17px;}
-  .lhd,.lrow{grid-template-columns:58px 1fr 90px 28px;}
-  .lhd>*:nth-child(3),.lrow>*:nth-child(3){display:none;}
+  
+  /* [수정사항 2] 일반 거래 행과 '할부 그룹 행' 모두 좁은 모바일 화면용 비율로 맞춤 */
+  .lhd, .lrow, .install-group-main {grid-template-columns:58px 1fr 90px 28px;}
+  /* 모바일에서는 3번째 열(카테고리 뱃지)을 숨겨서 내용(Desc)이 들어갈 공간 확보 */
+  .lhd>*:nth-child(3), .lrow>*:nth-child(3), .install-group-main>*:nth-child(3) {display:none;}
+
   .stats-2col{grid-template-columns:1fr;}
-  /* asset-grid mobile: already 1fr 1fr */
   .loan-info-grid{grid-template-columns:1fr 1fr;}
   .frow{grid-template-columns:1fr;}
   .nav-wrapper{padding:8px 12px;}

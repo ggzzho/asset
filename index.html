@@ -166,8 +166,8 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-page);color:var(-
 }
 
 /* ── LAYOUT ── */
-.main{position:relative;z-index:10;padding:20px 24px;max-width:980px;margin:0 auto;width:100%;}
-.page{display:none;}.page.active{display:block;}
+.main{position:relative;z-index:10;padding:24px;max-width:980px;margin:20px auto;width:100%;background:rgba(255,255,255,0.85);border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,0.1);}
+body.dark-mode .main{background:rgba(26,29,39,0.85);}
 
 .month-bar{display:flex;align-items:center;gap:10px;margin-bottom:18px;}
 .mbtn{width:30px;height:30px;border-radius:6px;border:1px solid var(--border);background:#fff;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;color:var(--g700);transition:all .15s;}

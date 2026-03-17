@@ -166,7 +166,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-page);color:var(-
 }
 
 /* ── LAYOUT ── */
-.main{padding:20px 24px;max-width:980px;margin:0 auto;width:100%;}
+.main{position:relative;z-index:10;padding:20px 24px;max-width:980px;margin:0 auto;width:100%;}
 .page{display:none;}.page.active{display:block;}
 
 .month-bar{display:flex;align-items:center;gap:10px;margin-bottom:18px;}
@@ -353,11 +353,7 @@ select.fselect:focus{border-color:var(--blue);}
 .setting-pane{display:none;}.setting-pane.active{display:block;}
 
 /* ── 커버 이미지 영역 ── */
-.cover-area{
-  width:100%;height:0;overflow:hidden;
-  position:relative;transition:height .3s;
-  background-size:cover;background-position:center;
-}
+.cover-area{z-index:10;width:100%;height:0;overflow:hidden;position:relative;transition:height .3s;background-size:cover;background-position:center;}
 .cover-area.visible{height:160px;}
 .cover-overlay{position:absolute;inset:0;pointer-events:none;}
 

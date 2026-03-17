@@ -2291,92 +2291,150 @@ async function findDriveFile(){
   return null;
 }
 
-/* Drive 업로드 */
+/* Drive 업로드 - 가계부 + 꾸미기 통합 버전 */
 async function syncUpload(){
   if(!gAccessToken){ toast('먼저 Google 로그인을 해주세요.'); return; }
-  // 토큰 유효 확인 후 실행
+  
   ensureToken(async ()=>{
-  document.getElementById('syncStatus').textContent = '업로드 중...';
-  try{
-    const dataStr = JSON.stringify({
-      txs:S.txs, budgets:S.budgets, fixedItems:S.fixedItems,
-      assets:S.assets, loans:S.loans, cats:S.cats, installPlans:S.installPlans||[]
-    });
-    const blob = new Blob([dataStr], {type:'application/json'});
+    document.getElementById('syncStatus').textContent = '업로드 중...';
+    try{
+      // [핵심 수정] 가계부 데이터(S)와 꾸미기 데이터(deco)를 하나로 묶음
+      const fullData = {
+        txs: S.txs, 
+        budgets: S.budgets, 
+        fixedItems: S.fixedItems,
+        assets: S.assets, 
+        loans: S.loans, 
+        cats: S.cats, 
+        installPlans: S.installPlans || [],
+        deco: JSON.parse(localStorage.getItem('budgetDeco')) || {} // 꾸미기 데이터 추가
+      };
+      
+      const dataStr = JSON.stringify(fullData);
+      const blob = new Blob([dataStr], {type:'application/json'});
 
-    let res;
-    // 기존 파일 있으면 업데이트, 없으면 생성
-    if(!gDriveFileId) await findDriveFile();
+      let res;
+      if(!gDriveFileId) await findDriveFile();
 
-    if(gDriveFileId){
-      // PATCH (업데이트)
-      res = await fetch(
-        `https://www.googleapis.com/upload/drive/v3/files/${gDriveFileId}?uploadType=media`,
-        { method:'PATCH', headers:{ Authorization:'Bearer '+gAccessToken, 'Content-Type':'application/json' }, body:blob }
-      );
-    } else {
-      // POST (새로 생성) — multipart
-      const meta = JSON.stringify({ name: DRIVE_FILE_NAME });
-      const boundary = 'boundary_kageboo_sync';
-      const body = `--${boundary}\r\nContent-Type: application/json\r\n\r\n${meta}\r\n--${boundary}\r\nContent-Type: application/json\r\n\r\n${dataStr}\r\n--${boundary}--`;
-      res = await fetch(
-        'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id',
-        { method:'POST', headers:{ Authorization:'Bearer '+gAccessToken, 'Content-Type':`multipart/related; boundary=${boundary}` }, body }
-      );
-      const created = await res.json();
-      gDriveFileId = created.id;
-      saveGoogleSession();
+      if(gDriveFileId){
+        // PATCH (기존 파일 업데이트)
+        res = await fetch(
+          `https://www.googleapis.com/upload/drive/v3/files/${gDriveFileId}?uploadType=media`,
+          { 
+            method:'PATCH', 
+            headers:{ 
+              Authorization:'Bearer '+gAccessToken, 
+              'Content-Type':'application/json' 
+            }, 
+            body:blob 
+          }
+        );
+      } else {
+        // POST (새 파일 생성)
+        const meta = JSON.stringify({ name: DRIVE_FILE_NAME, mimeType: 'application/json' });
+        const boundary = 'boundary_kageboo_sync';
+        // multipart body 구성 시 metadata와 content(dataStr) 포함
+        const body = `--${boundary}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${meta}\r\n--${boundary}\r\nContent-Type: application/json\r\n\r\n${dataStr}\r\n--${boundary}--`;
+        
+        res = await fetch(
+          'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id',
+          { 
+            method:'POST', 
+            headers:{ 
+              Authorization:'Bearer '+gAccessToken, 
+              'Content-Type':`multipart/related; boundary=${boundary}` 
+            }, 
+            body 
+          }
+        );
+        const created = await res.json();
+        gDriveFileId = created.id;
+        saveGoogleSession();
+      }
+
+      if(res.ok){
+        const now = new Date().toLocaleString('ko-KR');
+        localStorage.setItem('lastSync', now);
+        document.getElementById('syncStatus').textContent = '마지막 동기화: ' + now;
+        toast('✅ 가계부와 꾸미기가 구글에 저장됐어요!');
+      } else {
+        const err = await res.json();
+        if(res.status===401){ 
+          gAccessToken=null; 
+          localStorage.removeItem('gToken'); 
+          updateGoogleUI(false); 
+          toast('로그인이 만료됐어요. 다시 로그인해주세요.'); 
+          return; 
+        }
+        toast('업로드 실패: ' + (err.error?.message||res.status));
+        document.getElementById('syncStatus').textContent = '업로드 실패';
+      }
+    } catch(e){
+      toast('오류가 발생했어요: ' + e.message);
+      document.getElementById('syncStatus').textContent = '오류 발생';
     }
+  }); 
+}
+/* Drive 다운로드 - 가계부 + 꾸미기 통합 버전 */
+async function syncDownload(){
+  if(!gAccessToken){ toast('먼저 Google 로그인을 해주세요.'); return; }
+  
+  ensureToken(async ()=>{
+    document.getElementById('syncStatus').textContent = '다운로드 중...';
+    try{
+      const file = await findDriveFile();
+      if(!file){ 
+        toast('Drive에 저장된 데이터가 없어요. 먼저 업로드해주세요.'); 
+        document.getElementById('syncStatus').textContent = '파일 없음'; 
+        return; 
+      }
 
-    if(res.ok){
+      const res = await fetch(
+        `https://www.googleapis.com/drive/v3/files/${gDriveFileId}?alt=media`,
+        { headers: { Authorization: 'Bearer ' + gAccessToken } }
+      );
+      
+      if(res.status===401){ 
+        gAccessToken=null; 
+        localStorage.removeItem('gToken'); 
+        updateGoogleUI(false); 
+        toast('로그인이 만료됐어요. 다시 로그인해주세요.'); 
+        return; 
+      }
+
+      const data = await res.json();
+
+      // 1. 가계부 데이터 복구 (기존 로직)
+      ['txs','budgets','fixedItems','assets','loans','cats','installPlans'].forEach(k=>{ 
+        if(data[k]) S[k] = data[k]; 
+      });
+      if(!S.installPlans) S.installPlans = [];
+      
+      // 2. [핵심 추가] 꾸미기 데이터 복구
+      if (data.deco) {
+        localStorage.setItem('budgetDeco', JSON.stringify(data.deco));
+      }
+
+      // 내 컴퓨터(localStorage)에 가계부 데이터 최종 저장
+      save(); 
+
       const now = new Date().toLocaleString('ko-KR');
       localStorage.setItem('lastSync', now);
       document.getElementById('syncStatus').textContent = '마지막 동기화: ' + now;
-      toast('✅ Google Drive에 저장됐어요!');
-    } else {
-      const err = await res.json();
-      // 토큰 만료 처리
-      if(res.status===401){ gAccessToken=null; localStorage.removeItem('gToken'); updateGoogleUI(false); toast('로그인이 만료됐어요. 다시 로그인해주세요.'); return; }
-      toast('업로드 실패: ' + (err.error?.message||res.status));
-      document.getElementById('syncStatus').textContent = '업로드 실패';
+      
+      toast('✅ 가계부와 꾸미기 데이터를 불러왔어요!');
+      closeOverlay('googleModal');
+
+      // [가장 중요] 데이터를 불러온 후 화면을 새로고침하여 꾸미기를 즉시 적용합니다.
+      setTimeout(() => {
+        location.reload();
+      }, 1000);
+
+    } catch(e){
+      toast('오류가 발생했어요: ' + e.message);
+      document.getElementById('syncStatus').textContent = '오류 발생';
     }
-  } catch(e){
-    toast('오류가 발생했어요: ' + e.message);
-    document.getElementById('syncStatus').textContent = '오류 발생';
-  }
-  }); // ensureToken 콜백 끝
-}
-
-/* Drive 다운로드 */
-async function syncDownload(){
-  if(!gAccessToken){ toast('먼저 Google 로그인을 해주세요.'); return; }
-  ensureToken(async ()=>{
-  document.getElementById('syncStatus').textContent = '다운로드 중...';
-  try{
-    const file = await findDriveFile();
-    if(!file){ toast('Drive에 저장된 데이터가 없어요. 먼저 업로드해주세요.'); document.getElementById('syncStatus').textContent = '파일 없음'; return; }
-
-    const res = await fetch(
-      `https://www.googleapis.com/drive/v3/files/${gDriveFileId}?alt=media`,
-      { headers: { Authorization: 'Bearer ' + gAccessToken } }
-    );
-    if(res.status===401){ gAccessToken=null; localStorage.removeItem('gToken'); updateGoogleUI(false); toast('로그인이 만료됐어요. 다시 로그인해주세요.'); return; }
-
-    const data = await res.json();
-    ['txs','budgets','fixedItems','assets','loans','cats','installPlans'].forEach(k=>{ if(data[k]) S[k]=data[k]; });
-    if(!S.installPlans) S.installPlans=[];
-    save();
-    renderAll();
-    const now = new Date().toLocaleString('ko-KR');
-    localStorage.setItem('lastSync', now);
-    document.getElementById('syncStatus').textContent = '마지막 동기화: ' + now;
-    toast('✅ Google Drive에서 불러왔어요!');
-    closeOverlay('googleModal');
-  } catch(e){
-    toast('오류가 발생했어요: ' + e.message);
-    document.getElementById('syncStatus').textContent = '오류 발생';
-  }
-  }); // ensureToken 콜백 끝
+  }); 
 }
 
 /* API 로드 완료 후 초기화 */

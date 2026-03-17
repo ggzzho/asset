@@ -359,12 +359,8 @@ select.fselect:focus{border-color:var(--blue);}
 .cover-overlay{position:absolute;inset:0;pointer-events:none;}
 
 /* ── 스티커 레이어 ── */
-<!-- 스티커 레이어가 다른 모든 요소(헤더, 네비 등)보다 무조건 위에 오도록 z-index를 900으로 대폭 상승 -->?
+/* [수정] 스티커 레이어가 다른 모든 요소보다 위에 오도록 z-index를 900으로 설정 */
 #stickerLayer{position:fixed;inset:0;pointer-events:none;z-index:900;overflow:visible;}
-.sticker-item{
-  position:absolute;pointer-events:auto;cursor:move;
-  user-select:none;line-height:1;
-}
 .sticker-item img{display:block;pointer-events:none;}
 .sticker-item .sticker-del{
   position:absolute;top:-8px;right:-8px;
@@ -474,40 +470,28 @@ select.fselect:focus{border-color:var(--blue);}
   }
   .hdr-btn-group.open { display: flex; }
   
-  /* [문제 2 해결] 모바일에서도 탭별로 페이지만 보이게 강제 고정 */
+  /* 헤더 및 레이아웃 정렬 */
+  .hdr-r { overflow-x: visible; }
+  .header{padding:0 14px;}
+  .main{padding:14px;}
+
+  /* [문제 2 해결] 모바일에서도 탭별로 페이지만 보이게 고정 */
   .page { display: none !important; }
   .page.active { display: block !important; }
 
-  /* [문제 3 해결] 금액(95px)과 수정버튼(35px)의 자리를 더 확보합니다. */
+  /* [문제 3 해결] 거래 내역 금액 겹침 방지 및 열 숨김 */
   .lhd, .lrow, .install-group-main { 
     grid-template-columns: 55px 1fr 105px 35px !important; 
     gap: 4px;
   }
+  .lhd>*:nth-child(3), .lrow>*:nth-child(3), .install-group-main>*:nth-child(3) { display:none; }
   
-  /* 추가 버튼 위치 고정 */
-  .btn-blue { padding: 7px 10px; font-size: 12px; }
-  
-  /* PC에서도 생기던 네비바 스크롤은 그대로 두되, 심미성을 위해 바닥에 딱 붙임 */
-  .nav-wrapper { border-bottom: 1px solid rgba(255,255,255,0.1); }
-}
-  
-  /* [수정사항 1] 헤더 우측 버튼 그룹에 가로 스크롤을 허용하여 화면 전체가 찢어지는 현상 방지 */
-  .hdr-r { overflow-x: auto; padding-bottom: 2px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
-  .hdr-r::-webkit-scrollbar { display: none; }
-
-  .main{padding:14px;}
+  /* 기타 모바일 최적화 */
   .sgrid{grid-template-columns:1fr 1fr;}
   .sgrid .scard:last-child{grid-column:1/-1;}
   .sval{font-size:17px;}
-  
-  /* [수정사항 2] 일반 거래 행과 '할부 그룹 행' 모두 좁은 모바일 화면용 비율로 맞춤 */
-  .lhd, .lrow, .install-group-main {grid-template-columns:58px 1fr 90px 28px;}
-  /* 모바일에서는 3번째 열(카테고리 뱃지)을 숨겨서 내용(Desc)이 들어갈 공간 확보 */
-  .lhd>*:nth-child(3), .lrow>*:nth-child(3), .install-group-main>*:nth-child(3) {display:none;}
-
-  .stats-2col{grid-template-columns:1fr;}
+  .stats-2col, .frow{grid-template-columns:1fr;}
   .loan-info-grid{grid-template-columns:1fr 1fr;}
-  .frow{grid-template-columns:1fr;}
   .nav-wrapper{padding:8px 12px;}
   .nav-tab{padding:7px 14px;font-size:12px;}
 }

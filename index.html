@@ -462,23 +462,15 @@ select.fselect:focus{border-color:var(--blue);}
 @media (max-width: 640px) {
   /* 1. 햄버거 메뉴 버튼 노출 및 로고 고정 */
   .mobile-only-btn { display: block !important; }
-  .logo { flex-shrink: 0; white-space: nowrap; }
+  .logo { flex-shrink: 0; white-space: nowrap !important; }
   .header { padding: 0 14px; }
 
-  /* 2. 모바일용 드롭다운 메뉴 설정 */
+  /* 2. 버튼들을 메뉴 안으로 숨김 (드롭다운) */
   .hdr-btn-group {
-    display: none; 
-    position: absolute; 
-    top: 56px; 
-    right: 14px; 
-    background: var(--bg-card); 
-    border: 1px solid var(--border-col);
-    padding: 10px; 
-    border-radius: 8px; 
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    flex-direction: column; 
-    gap: 8px; 
-    z-index: 300;
+    display: none; position: absolute; top: 56px; right: 14px; 
+    background: var(--bg-card); border: 1px solid var(--border-col);
+    padding: 10px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    flex-direction: column; gap: 8px; z-index: 300;
   }
   .hdr-btn-group.open { display: flex; }
   .hdr-r { overflow-x: visible !important; }
@@ -488,20 +480,19 @@ select.fselect:focus{border-color:var(--blue);}
   .page.active { display: block !important; }
   .main { padding: 14px; margin: 10px auto; width: calc(100% - 20px); }
 
-  /* 4. 거래 내역 표 정렬 (금액 겹침 방지) */
+  /* 4. 거래 내역 표 정렬 (금액 겹침 방지 및 불필요한 열 숨김) */
   .lhd, .lrow, .install-group-main { 
     grid-template-columns: 58px 1fr 95px 35px !important; 
     gap: 4px;
     padding: 11px 8px;
   }
-  /* 카테고리 뱃지 숨김으로 공간 확보 */
   .lhd>*:nth-child(3), .lrow>*:nth-child(3), .install-group-main>*:nth-child(3) { display: none; }
 
-  /* 5. 기타 요소 크기 조정 */
+  /* 5. 기타 요소 모바일 맞춤 크기 조정 */
   .sgrid { grid-template-columns: 1fr 1fr; }
   .sgrid .scard:last-child { grid-column: 1/-1; }
   .sval { font-size: 17px; }
-  .nav-wrapper { padding: 8px 10px; }
+  .nav-wrapper { padding: 8px 10px; border-bottom: 1px solid rgba(255,255,255,0.1); }
   .nav-tab { padding: 6px 14px; font-size: 12px; }
   .stats-2col, .loan-info-grid, .frow { grid-template-columns: 1fr; }
 }

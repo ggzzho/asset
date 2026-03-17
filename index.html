@@ -43,7 +43,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-page);color:var(-
   transition:background .25s;
 }
 /* [수정] flex-shrink:0 을 추가해 로고가 눌리지 않게 고정합니다. */
-.logo { display: flex; align-items: center; gap: 8px; font-size: 17px; font-weight: 700; color: var(--blue); flex-shrink: 0; }
+.logo{display:flex;align-items:center;gap:8px;font-size:17px;font-weight:700;color:var(--blue);flex-shrink:0;white-space:nowrap;}
 .logo-icon{width:28px;height:28px;background:var(--blue);border-radius:6px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;}
 .hdr-r{display:flex;align-items:center;gap:8px;}
 .hdr-divider{width:1px;height:20px;background:var(--border);}
@@ -460,10 +460,12 @@ select.fselect:focus{border-color:var(--blue);}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
 @media (max-width: 640px) {
-  /* 햄버거 메뉴 버튼 표시 */
+  /* 1. 햄버거 메뉴 버튼 노출 및 로고 고정 */
   .mobile-only-btn { display: block !important; }
-  
-  /* 버튼 그룹을 모바일 전용 드롭다운 메뉴로 변경 */
+  .logo { flex-shrink: 0; white-space: nowrap; }
+  .header { padding: 0 14px; }
+
+  /* 2. 모바일용 드롭다운 메뉴 설정 */
   .hdr-btn-group {
     display: none; 
     position: absolute; 
@@ -478,34 +480,30 @@ select.fselect:focus{border-color:var(--blue);}
     gap: 8px; 
     z-index: 300;
   }
-  
-  /* 메뉴가 열렸을 때 표시 */
   .hdr-btn-group.open { display: flex; }
-  
-  /* 헤더 내부 정렬 */
-  .hdr-r { overflow-x: visible; }
-  .header { padding: 0 14px; }
-  .main { padding: 14px; }
+  .hdr-r { overflow-x: visible !important; }
 
-  /* 모바일 탭 페이지 전환 강제 고정 */
+  /* 3. 페이지 전환 및 메인 영역 최적화 */
   .page { display: none !important; }
   .page.active { display: block !important; }
+  .main { padding: 14px; margin: 10px auto; width: calc(100% - 20px); }
 
-  /* 거래 내역 표 정렬 수정 (금액 겹침 방지) */
+  /* 4. 거래 내역 표 정렬 (금액 겹침 방지) */
   .lhd, .lrow, .install-group-main { 
-    grid-template-columns: 55px 1fr 105px 35px !important; 
+    grid-template-columns: 58px 1fr 95px 35px !important; 
     gap: 4px;
+    padding: 11px 8px;
   }
-  .lhd > *:nth-child(3), .lrow > *:nth-child(3), .install-group-main > *:nth-child(3) { display: none; }
-  
-  /* 기타 모바일 최적화 스타일 */
+  /* 카테고리 뱃지 숨김으로 공간 확보 */
+  .lhd>*:nth-child(3), .lrow>*:nth-child(3), .install-group-main>*:nth-child(3) { display: none; }
+
+  /* 5. 기타 요소 크기 조정 */
   .sgrid { grid-template-columns: 1fr 1fr; }
   .sgrid .scard:last-child { grid-column: 1/-1; }
   .sval { font-size: 17px; }
-  .stats-2col, .frow { grid-template-columns: 1fr; }
-  .loan-info-grid { grid-template-columns: 1fr 1fr; }
-  .nav-wrapper { padding: 8px 12px; }
-  .nav-tab { padding: 7px 14px; font-size: 12px; }
+  .nav-wrapper { padding: 8px 10px; }
+  .nav-tab { padding: 6px 14px; font-size: 12px; }
+  .stats-2col, .loan-info-grid, .frow { grid-template-columns: 1fr; }
 }
 </style>
 <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -2961,6 +2959,7 @@ document.addEventListener('click', (e) => {
   if(group && group.classList.contains('open') && !group.contains(e.target) && !btn.contains(e.target)) {
     group.classList.remove('open');
   }
+});
 </script>
 </body>
 </html>

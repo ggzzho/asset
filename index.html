@@ -2596,6 +2596,14 @@ function initGoogleApi(){
       gTokenExpiry = expiry || null;
       updateGoogleUI(true);
       if(gUserInfo) scheduleTokenRefresh();
+      // picture 없거나 토큰 유효하면 userinfo 재확인
+      if(gAccessToken && gUserInfo && !gUserInfo.picture){
+        fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+          headers: { Authorization: 'Bearer ' + gAccessToken }
+        }).then(r=>r.json()).then(info=>{
+          if(info && info.sub){ gUserInfo = info; saveGoogleSession(); updateGoogleUI(true); }
+        }).catch(()=>{});
+      }
     }catch(e){}
   }
 }
@@ -2611,7 +2619,9 @@ function onGoogleTokenReceived(resp){
   const expiresIn = (resp.expires_in || 3600) * 1000;
   gTokenExpiry = Date.now() + expiresIn;
   if(gUserInfo){
+    // 토큰 갱신 시에도 UI 업데이트 보장
     saveGoogleSession();
+    updateGoogleUI(true);
     scheduleTokenRefresh(expiresIn);
     return;
   }
@@ -2926,7 +2936,20 @@ async function syncDownload(){
   }); 
 }
 
-window.addEventListener('load', ()=>{ setTimeout(initGoogleApi, 1500); });
+// Google 스크립트 로드 완료될 때까지 폴링 (최대 15초)
+(function waitForGoogle(){
+  let attempts = 0;
+  const maxAttempts = 30; // 500ms × 30 = 15초
+  const timer = setInterval(()=>{
+    attempts++;
+    if(typeof google !== 'undefined' && google.accounts && google.accounts.oauth2){
+      clearInterval(timer);
+      initGoogleApi();
+    } else if(attempts >= maxAttempts){
+      clearInterval(timer);
+    }
+  }, 500);
+})();
 
 function loadTheme(){
   try{

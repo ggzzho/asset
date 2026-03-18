@@ -4108,6 +4108,82 @@ window.injectSample = function() {
   S.year  = cy;
   S.month = cm;
 
+  /* ── 고정지출 ── */
+  S.fixedItems = [
+    {id:'f01', name:'월세',            amount:700000, category:'주거',   day:1,  memo:'강남구 오피스텔'},
+    {id:'f02', name:'관리비',          amount:80000,  category:'주거',   day:1,  memo:''},
+    {id:'f03', name:'실손보험',        amount:54000,  category:'의료',   day:5,  memo:'KB손해보험'},
+    {id:'f04', name:'종신보험',        amount:120000, category:'의료',   day:5,  memo:'삼성생명'},
+    {id:'f05', name:'넷플릭스',        amount:17000,  category:'여가',   day:10, memo:'스탠다드'},
+    {id:'f06', name:'유튜브 프리미엄', amount:14900,  category:'여가',   day:10, memo:''},
+    {id:'f07', name:'스포티파이',      amount:10900,  category:'여가',   day:15, memo:''},
+    {id:'f08', name:'핸드폰 할부',     amount:45000,  category:'통신',   day:25, memo:'아이폰15 24개월'},
+  ];
+
+  /* ── 이번달 고정지출 자동 추가 ── */
+  const mk0 = `${cy}-${pad(cm)}`;
+  S.fixedItems.forEach(f => {
+    if(!S.txs.some(t=>t.fixedId===f.id && t.date.startsWith(mk0))){
+      S.txs.push({id:'fx_'+f.id, type:'expense', date:d(cy,cm,Math.min(f.day,28)),
+        desc:f.name, amount:f.amount, category:f.category, memo:'고정지출', fixedId:f.id});
+    }
+  });
+
+  /* ── 카드 할부 ── */
+  const laptopPlanId = 'plan_sample_laptop';
+  const laptopTotal = 1490000, laptopMonths = 12, laptopMonthly = Math.round(laptopTotal/laptopMonths);
+  const laptopPayDay = 14;
+  const startYmLaptop = `${py}-${pad(pm)}`;
+  function addMo(ym,n){let[yy,mm]=ym.split('-').map(Number);mm+=n;while(mm>12){mm-=12;yy++;}return yy+'-'+String(mm).padStart(2,'0');}
+  S.installPlans = [{
+    id:laptopPlanId, desc:'노트북 구매', totalAmt:laptopTotal,
+    months:laptopMonths, monthlyAmt:laptopMonthly,
+    payDay:laptopPayDay, card:'신한카드', category:'쇼핑',
+    startYm:startYmLaptop, memo:'삼성 갤럭시북'
+  }];
+  for(let i=1;i<=laptopMonths;i++){
+    const bYm=addMo(startYmLaptop,i);
+    const[by,bm2]=bYm.split('-').map(Number);
+    const bDay=Math.min(laptopPayDay,new Date(by,bm2,0).getDate());
+    const isLast=i===laptopMonths;
+    const thisAmt=isLast?laptopTotal-(laptopMonthly*(laptopMonths-1)):laptopMonthly;
+    S.txs.push({id:laptopPlanId+'_'+i, type:'expense',
+      date:bYm+'-'+String(bDay).padStart(2,'0'),
+      desc:'노트북 구매 ('+i+'/'+laptopMonths+'회)',
+      amount:thisAmt, category:'쇼핑',
+      memo:'신한카드 할부 삼성 갤럭시북',
+      installPlanId:laptopPlanId, installSeq:i, installMonths:laptopMonths});
+  }
+
+  /* ── 자산 ── */
+  S.assets = [
+    {id:'a01', type:'savings',  name:'국민은행 적금',      amount:8000000,   memo:'월 50만 납입 중'},
+    {id:'a02', type:'savings',  name:'토스뱅크 파킹통장',  amount:3200000,   memo:'연 2.0%'},
+    {id:'a03', type:'stock',    name:'삼성전자',           amount:5400000,   memo:'300주'},
+    {id:'a04', type:'stock',    name:'TIGER 미국S&P500',   amount:2800000,   memo:'ETF'},
+    {id:'a05', type:'cash',     name:'현금 및 자유입출금', amount:1500000,   memo:''},
+    {id:'a06', type:'savings',  name:'청약저축',           amount:4200000,   memo:'월 10만 납입'},
+    {id:'a07', type:'property', name:'전세 보증금',        amount:150000000, memo:'서울 강남구'},
+  ];
+
+  /* ── 부채 ── */
+  S.loans = [
+    {id:'l01', name:'전세자금대출', principal:100000000, remain:100000000,
+      start:`${cy-1}-04-15`, end:`${cy+1}-04-14`, rate:3.2, bank:'우리은행', memo:'만기 일시상환'},
+    {id:'l02', name:'신용대출',     principal:10000000,  remain:7500000,
+      start:`${cy-1}-01-10`, end:`${cy+1}-01-09`,  rate:5.8, bank:'카카오뱅크', memo:'월 20만 상환 중'},
+  ];
+
+  /* ── 예산 ── */
+  const budgetKey = `${cy}-${pad(cm)}`;
+  S.budgets = {
+    [budgetKey]: {
+      '식비':   400000, '교통':  100000, '쇼핑':  200000,
+      '의료':    80000, '여가':  150000, '교육':  120000,
+      '통신':    80000, '주거':  800000,
+    }
+  };
+
   save();
   toast('✅ 테스트 데이터(2개월치)가 복구되었습니다. 잠시 후 새로고침 됩니다.');
   renderAll();

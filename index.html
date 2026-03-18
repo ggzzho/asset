@@ -2568,7 +2568,7 @@ function openThemeModal(){
    Google Drive 동기화
 ══════════════════════════════ */
 const GOOGLE_CLIENT_ID = '192024003776-bjcqajkqao7hauasusoncepmu394b78a.apps.googleusercontent.com';
-const GOOGLE_SCOPE = 'https://www.googleapis.com/auth/drive.file';
+const GOOGLE_SCOPE = 'https://www.googleapis.com/auth/drive.file profile email';
 const DRIVE_FILE_NAME = '가계부_sync.json';
 
 let gTokenClient = null;
@@ -2589,20 +2589,30 @@ function initGoogleApi(){
   const saved = localStorage.getItem('gToken');
   if(saved){
     try{
-      const {token, fileId, userInfo, expiry} = JSON.parse(saved);
-      gAccessToken = token;
-      gDriveFileId = fileId;
-      gUserInfo = userInfo;
-      gTokenExpiry = expiry || null;
-      updateGoogleUI(true);
-      if(gUserInfo) scheduleTokenRefresh();
-      // picture 없거나 토큰 유효하면 userinfo 재확인
-      if(gAccessToken && gUserInfo && !gUserInfo.picture){
-        fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
-          headers: { Authorization: 'Bearer ' + gAccessToken }
-        }).then(r=>r.json()).then(info=>{
-          if(info && info.sub){ gUserInfo = info; saveGoogleSession(); updateGoogleUI(true); }
-        }).catch(()=>{});
+      const {token, fileId, userInfo, expiry, scope} = JSON.parse(saved);
+      // scope에 profile이 없는 구버전 세션이면 무효화 → 재로그인 필요
+      if(!scope || !scope.includes('profile')){
+        localStorage.removeItem('gToken');
+        console.log('[Google] 구버전 세션 감지 → 재로그인 필요');
+      } else {
+        gAccessToken = token;
+        gDriveFileId = fileId;
+        gUserInfo = userInfo;
+        gTokenExpiry = expiry || null;
+        updateGoogleUI(true);
+        if(gUserInfo) scheduleTokenRefresh();
+        if(gAccessToken && gUserInfo && !gUserInfo.picture){
+          fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+            headers: { Authorization: 'Bearer ' + gAccessToken }
+          }).then(r=>r.json()).then(info=>{
+            if(info && info.sub){
+              if(!info.name && (info.given_name || info.family_name)){
+                info.name = [info.given_name, info.family_name].filter(Boolean).join(' ');
+              }
+              gUserInfo = info; saveGoogleSession(); updateGoogleUI(true);
+            }
+          }).catch(()=>{});
+        }
       }
     }catch(e){}
   }
@@ -2628,6 +2638,10 @@ function onGoogleTokenReceived(resp){
   fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
     headers: { Authorization: 'Bearer ' + gAccessToken }
   }).then(r=>r.json()).then(info=>{
+    // Google userinfo 응답 필드 정규화 (v3: name/picture/email 또는 given_name/family_name)
+    if(info && !info.name && (info.given_name || info.family_name)){
+      info.name = [info.given_name, info.family_name].filter(Boolean).join(' ');
+    }
     gUserInfo = info;
     saveGoogleSession();
     updateGoogleUI(true);
@@ -2675,7 +2689,8 @@ function saveGoogleSession(){
     token: gAccessToken,
     fileId: gDriveFileId,
     userInfo: gUserInfo,
-    expiry: gTokenExpiry
+    expiry: gTokenExpiry,
+    scope: GOOGLE_SCOPE
   }));
 }
 

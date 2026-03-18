@@ -26,6 +26,8 @@
   --red:#d32f2f;--red-lt:#fdecea;--green:#1b7a3e;--grn-lt:#e8f5ed;
   --amber:#d97706;--amber-lt:#fef3c7;
   --border:#e2e2e2;--r:8px;--rlg:12px;
+  /* ── 좌우 여백 통일 ── */
+  --gutter:24px;
 }
 /* ── 다크모드 ── */
 body.dark-mode{
@@ -42,7 +44,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-page);color:var(-
 .header{
   background:var(--bg-header);
   border-bottom:1px solid var(--border-col);
-  padding:0 24px;
+  padding:0 var(--gutter);
   display:flex;align-items:center;justify-content:space-between;
   height:56px;
   position:sticky;top:0;z-index:200;
@@ -171,7 +173,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-page);color:var(-
 /* ── NAV BAR ── */
 .nav-wrapper{
   background:var(--bg-nav);          
-  padding:10px 20px;
+  padding:10px var(--gutter);
   position:sticky;top:56px;z-index:190;
   display:flex;align-items:center;gap:4px;
   overflow-x:auto;
@@ -205,7 +207,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-page);color:var(-
 }
 
 /* ── LAYOUT ── */
-.main{position:relative;z-index:10;padding:24px;max-width:980px;margin:20px auto;width:100%;background:rgba(255,255,255,0.92);border-radius:16px;overflow-x:hidden;border:1px solid rgba(0,0,0,.04);}
+.main{position:relative;z-index:10;padding:var(--gutter);max-width:980px;margin:20px auto;width:100%;background:rgba(255,255,255,0.92);border-radius:16px;overflow-x:hidden;border:1px solid rgba(0,0,0,.04);}
 body.dark-mode .main{background:rgba(26,29,39,0.92);border-color:rgba(255,255,255,.04);}
 .month-bar{display:flex;align-items:center;gap:10px;margin-bottom:18px;}
 .mbtn{width:30px;height:30px;border-radius:6px;border:1px solid var(--border);background:#fff;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;color:var(--g700);transition:all .15s;}
@@ -531,8 +533,10 @@ select.fselect:focus{border-color:var(--blue);}
 }
 
 @media(max-width:768px){
+  :root{ --gutter:16px; }
+
   /* ── 헤더 ── */
-  .header{padding:0 14px;}
+  .header{padding:0 var(--gutter);}
   .hdr-actions{display:none !important;}
   .hdr-divider{display:none;}
   .hdr-menu-btn{display:flex !important;}
@@ -541,10 +545,9 @@ select.fselect:focus{border-color:var(--blue);}
   .nav-wrapper{display:none !important;}
 
   /* ── 레이아웃 ── */
-  .main{padding:14px;margin:12px 12px;border-radius:12px;}
+  .main{padding:var(--gutter);margin:12px var(--gutter);border-radius:12px;}
 
   /* ── 네비 ── */
-  .nav-wrapper{padding:6px 10px;}
   .nav-tab{padding:7px 12px;font-size:12px;}
 
   /* ── 대시보드 요약 카드 ── */
@@ -612,7 +615,8 @@ select.fselect:focus{border-color:var(--blue);}
 }
 
 @media(max-width:400px){
-  .main{padding:12px;margin:8px 8px;}
+  :root{ --gutter:12px; }
+  .main{padding:var(--gutter);margin:8px var(--gutter);}
   .nav-tab{padding:6px 10px;font-size:11px;}
   .lhd{grid-template-columns:38px 1fr 72px 48px;}
   .lrow{grid-template-columns:38px 1fr 72px 48px;}
@@ -677,6 +681,28 @@ select.fselect:focus{border-color:var(--blue);}
 .search-scope-btn.all-mode{
   background:var(--blue);color:#fff;border-color:var(--blue);
 }
+
+/* ── FOOTER ── */
+.app-footer{
+  display:flex;align-items:center;justify-content:center;
+  gap:8px;flex-wrap:wrap;
+  padding:20px var(--gutter) 28px;
+  font-size:11px;color:var(--text-muted);
+  text-align:center;line-height:1.6;
+  border-top:1px solid var(--border-col);
+  margin-top:8px;
+}
+.app-footer-version{
+  font-weight:700;color:var(--text-secondary);
+  background:var(--bg-row-hover);
+  padding:2px 8px;border-radius:20px;
+  border:1px solid var(--border-col);
+  font-size:10px;letter-spacing:.3px;
+}
+.app-footer-sep{color:var(--border-col);}
+.app-footer-copy{color:var(--text-muted);}
+.app-footer a{color:var(--text-muted);text-decoration:none;border-bottom:1px solid var(--border-col);padding-bottom:1px;transition:color .15s,border-color .15s;}
+.app-footer a:hover{color:var(--blue);border-color:var(--blue-md);}
 </style>
 
 <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -3855,6 +3881,13 @@ window.injectSample = function() {
 
 <!-- 스티커 레이어 -->
 <div id="stickerLayer"></div>
+
+<!-- FOOTER -->
+<footer class="app-footer">
+  <span class="app-footer-version">v1.0.0</span>
+  <span class="app-footer-sep">·</span>
+  <span class="app-footer-copy">© 2026 DOUNTOO. Made with <a href="https://claude.ai" target="_blank" rel="noopener noreferrer">Claude (AI)</a>. All rights reserved.</span>
+</footer>
 
 </body>
 </html>

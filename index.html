@@ -12,7 +12,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
-html{overflow-x:hidden;width:100%;}
+html{width:100%;}
 :root{
   /* ── 테마 컬러 (JS로 동적 교체) ── */
   --blue:#1a56db;--blue-dk:#1342a8;--blue-lt:#e8f0fd;--blue-md:#bfcffa;
@@ -39,7 +39,7 @@ body.dark-mode{
   --g300:#444660;--g100:#1f2235;--g50:#0f1117;--white:#1a1d27;
   --border:#2a2d3e;--red-lt:#2d1515;--grn-lt:#0d1f14;--amber-lt:#1f1a0d;
 }
-body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-page);color:var(--text-primary);font-size:14px;line-height:1.5;transition:background .25s,color .25s;overflow-x:hidden;width:100%;}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-page);color:var(--text-primary);font-size:14px;line-height:1.5;transition:background .25s,color .25s;width:100%;max-width:100vw;}
 
 /* ── HEADER ── */
 .header{
@@ -549,6 +549,7 @@ select.fselect:focus{border-color:var(--blue);}
 
 @media(max-width:768px){
   :root{ --gutter:16px; }
+  body{overflow-x:hidden;}
 
   /* ── 헤더: 모바일에서 fixed로 항상 상단 고정 ── */
   .header{
@@ -816,6 +817,7 @@ select.fselect:focus{border-color:var(--blue);}
           </span>
         </span>
       </button>
+      <button class="btn" style="width:100%;justify-content:flex-start;" onclick="injectSample();closeHdrMenu()">🧪 테스트 데이터</button>
       <button class="btn" style="width:100%;justify-content:flex-start;" onclick="exportJSON();closeHdrMenu()">JSON 내보내기</button>
       <button class="btn" style="width:100%;justify-content:flex-start;" onclick="exportCSV();closeHdrMenu()">CSV 내보내기</button>
       <button class="btn" style="width:100%;justify-content:flex-start;" onclick="document.getElementById('impFile').click();closeHdrMenu()">불러오기</button>
@@ -2249,7 +2251,21 @@ function dl2(blob,name){const url=URL.createObjectURL(blob);const a=document.cre
 function importData(e){
   const file=e.target.files[0];if(!file)return;
   const r=new FileReader();
-  r.onload=ev=>{try{const d=JSON.parse(ev.target.result);['txs','budgets','fixedItems','assets','loans','cats'].forEach(k=>{if(d[k])S[k]=d[k];});save();renderAll();toast('불러왔어요.');}catch{toast('파일 형식이 올바르지 않아요.');}};
+  r.onload=ev=>{
+    try{
+      const d=JSON.parse(ev.target.result);
+      ['txs','budgets','fixedItems','assets','loans','cats','installPlans'].forEach(k=>{if(d[k])S[k]=d[k];});
+      if(!S.installPlans) S.installPlans=[];
+      // 테마 복원
+      if(d.theme && Object.keys(d.theme).length>0){
+        localStorage.setItem('theme', JSON.stringify(d.theme));
+        loadTheme();
+      }
+      save();
+      renderAll();
+      toast('✅ 데이터를 불러왔어요.');
+    }catch{toast('파일 형식이 올바르지 않아요.');}
+  };
   r.readAsText(file);e.target.value='';
 }
 
@@ -2285,10 +2301,11 @@ function checkResetInput(){
   btn.style.cursor=ok?'pointer':'not-allowed';
 }
 function executeReset(){
-  localStorage.removeItem('budgetApp');
+  // 빈 데이터를 저장해 자동 더미 주입 IIFE가 재실행되지 않도록 방지
   S.txs=[];S.budgets={};S.fixedItems=[];S.assets=[];S.loans=[];S.installPlans=[];
   S.cats={expense:['식비','교통','쇼핑','주거','의료','여가','교육','통신','기타'],income:['급여','부수입','투자','용돈','기타']};
   S.year=new Date().getFullYear();S.month=new Date().getMonth()+1;
+  save(); // 빈 budgetApp 키를 저장 → IIFE 조건(localStorage.getItem('budgetApp')) true 유지
 
   localStorage.removeItem('theme');
   applyTheme('blue', false); // 기본 블루 테마, 라이트모드

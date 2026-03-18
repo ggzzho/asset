@@ -39,6 +39,41 @@ body.dark-mode{
   --g300:#444660;--g100:#1f2235;--g50:#0f1117;--white:#1a1d27;
   --border:#2a2d3e;--red-lt:#2d1515;--grn-lt:#0d1f14;--amber-lt:#1f1a0d;
 }
+/* ── 다크모드 전반 하드코딩 색상 재정의 ── */
+body.dark-mode .lhd,
+body.dark-mode .empty { background:var(--bg-card) !important; color:var(--text-secondary); border-color:var(--border-col) !important; }
+body.dark-mode .loan-card { background:var(--bg-card); border-color:var(--border-col); }
+body.dark-mode .loan-name, body.dark-mode .loan-sub { color:var(--text-primary); }
+body.dark-mode .loan-info-item label { color:var(--text-secondary); }
+body.dark-mode .yr-cat-item { color:var(--text-primary); }
+body.dark-mode .yr-cat-amt { color:var(--text-secondary); }
+body.dark-mode .mbtn { background:var(--bg-card); border-color:var(--border-col); color:var(--text-primary); }
+body.dark-mode .fselect, body.dark-mode .finput { background:var(--bg-input); color:var(--text-primary); border-color:var(--border-col); }
+body.dark-mode .modal { background:var(--bg-card); color:var(--text-primary); }
+body.dark-mode .flabel { color:var(--text-secondary); }
+body.dark-mode .ledger-search-input { background:var(--bg-input); color:var(--text-primary); border-color:var(--border-col); }
+body.dark-mode .ledger-search-wrap { background:var(--bg-input); border-color:var(--border-col); }
+body.dark-mode .install-group-detail { background:var(--bg-row-hover); }
+body.dark-mode .install-detail-row { color:var(--text-primary); }
+body.dark-mode .cpill { background:var(--bg-row-hover) !important; }
+body.dark-mode .cpill.installment { background:#3b1f6e !important; color:#c4b5fd !important; }
+body.dark-mode .period-tab:not(.active) { background:transparent; color:var(--text-secondary); border-color:var(--border-col); }
+body.dark-mode .search-scope-btn { background:var(--bg-card); color:var(--text-secondary); border-color:var(--border-col); }
+body.dark-mode .ledger-summary-bar { background:var(--bg-row-hover); color:var(--text-primary); }
+body.dark-mode .ls-sep { color:var(--text-muted); }
+body.dark-mode .asset-item { background:var(--bg-card); border-color:var(--border-col); }
+body.dark-mode .asset-item-name { color:var(--text-primary); }
+body.dark-mode .asset-item-sub { color:var(--text-secondary); }
+body.dark-mode .acard { background:var(--bg-card); border-color:var(--border-col); }
+body.dark-mode .acard-label { color:var(--text-secondary); }
+body.dark-mode .fi-icon { background:var(--bg-row-hover); }
+body.dark-mode .fixed-item { background:var(--bg-card); border-color:var(--border-col); }
+body.dark-mode .budget-item { background:var(--bg-card); border-color:var(--border-col); }
+body.dark-mode .section { background:transparent; }
+body.dark-mode .sec-title { color:var(--text-primary); }
+body.dark-mode .page-title { border-color:var(--border-col); }
+body.dark-mode .upcoming-item { background:var(--bg-card) !important; border-color:var(--border-col); }
+body.dark-mode .img-thumb { background:var(--bg-card); border-color:var(--border-col); }
 body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-page);color:var(--text-primary);font-size:14px;line-height:1.5;transition:background .25s,color .25s;width:100%;max-width:100vw;}
 
 /* ── HEADER ── */
@@ -244,7 +279,8 @@ body.dark-mode .main{background:rgba(26,29,39,0.92);border-color:rgba(255,255,25
 
 .banner{border-radius:var(--rlg);padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
 .banner.blue-b{background:var(--blue-lt);border:1px solid var(--blue-md);}
-.banner.amber-b{background:linear-gradient(135deg,var(--amber-lt) 0%,#fde8a0 100%);border:1px solid #fcd34d;}
+.banner.amber-b{background:var(--amber-lt);border:1px solid #fcd34d;}
+body.dark-mode .banner.amber-b{background:#2a1f00;border-color:#7a5a00;}
 .banner-left{display:flex;align-items:center;gap:10px;}
 .bicon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;flex-shrink:0;}
 .bicon.blue{background:var(--blue);}
@@ -253,6 +289,9 @@ body.dark-mode .main{background:rgba(26,29,39,0.92);border-color:rgba(255,255,25
 .blue-b .btitle{color:var(--blue);}.amber-b .btitle{color:var(--amber);}
 .bval{font-size:18px;font-weight:700;}
 .blue-b .bval{color:var(--blue-dk);}.amber-b .bval{color:#92400e;}
+body.dark-mode .amber-b .btitle{color:#fbbf24;}
+body.dark-mode .amber-b .bval{color:#fde68a;}
+body.dark-mode .amber-b .bsub{color:#a89060;}
 .bsub{font-size:11px;color:var(--g500);}
 
 .section{margin-bottom:22px;}
@@ -324,12 +363,14 @@ body.dark-mode .main{background:rgba(26,29,39,0.92);border-color:rgba(255,255,25
 .loan-pct{font-size:11px;color:var(--g500);margin-top:4px;text-align:right;}
 
 .upcoming-list{display:flex;flex-direction:column;gap:8px;}
-.upcoming-item{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:11px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+.upcoming-item{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r);padding:11px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
 .up-left{display:flex;align-items:center;gap:10px;flex:1;min-width:0;}
 .up-badge{background:#f3e8ff;color:#7c3aed;font-size:11px;font-weight:600;padding:3px 8px;border-radius:10px;flex-shrink:0;}
-.up-name{font-size:13px;font-weight:500;}
-.up-sub{font-size:11px;color:var(--g500);word-break:keep-all;}
+body.dark-mode .up-badge{background:#3b1f6e;color:#c4b5fd;}
+.up-name{font-size:13px;font-weight:500;color:var(--text-primary);}
+.up-sub{font-size:11px;color:var(--text-secondary);word-break:keep-all;}
 .up-amt{font-size:14px;font-weight:700;color:#7c3aed;flex-shrink:0;}
+body.dark-mode .up-amt{color:#a78bfa;}
 
 .fixed-list{display:flex;flex-direction:column;gap:8px;}
 .fixed-item{background:var(--bg-card);border:1px solid var(--border-col);border-radius:var(--r);padding:12px 14px;display:flex;align-items:center;gap:12px;}
@@ -2439,7 +2480,9 @@ function renderCharts(){
   const months=[],incs=[],exps=[];
   for(let i=5;i>=0;i--){let m=S.month-i,y=S.year;while(m<1){m+=12;y--;}const k=y+'-'+String(m).padStart(2,'0');months.push(m+'월');const mt=S.txs.filter(t=>t.date.startsWith(k));incs.push(mt.filter(t=>t.type==='income').reduce((s,t)=>s+t.amount,0));exps.push(mt.filter(t=>t.type==='expense').reduce((s,t)=>s+t.amount,0));}
   if(charts.trend)charts.trend.destroy();
-  charts.trend=new Chart(document.getElementById('trendChart'),{type:'bar',data:{labels:months,datasets:[{label:'수입',data:incs,backgroundColor:'#2e7d3250',borderColor:'#2e7d32',borderWidth:1},{label:'지출',data:exps,backgroundColor:'#d32f2f50',borderColor:'#d32f2f',borderWidth:1}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'top',labels:{boxWidth:10,font:{size:11}}}},scales:{y:{beginAtZero:true,ticks:{callback:v=>'₩'+Math.round(v/10000)+'만',font:{size:11}},grid:{color:'#f0f0f0'}},x:{ticks:{font:{size:11}},grid:{display:false}}}}});
+  const gridColor = document.body.classList.contains('dark-mode') ? '#2a2d3e' : '#f0f0f0';
+  const tickColor = document.body.classList.contains('dark-mode') ? '#8b8fa8' : '#666';
+  charts.trend=new Chart(document.getElementById('trendChart'),{type:'bar',data:{labels:months,datasets:[{label:'수입',data:incs,backgroundColor:'#2e7d3250',borderColor:'#2e7d32',borderWidth:1},{label:'지출',data:exps,backgroundColor:'#d32f2f50',borderColor:'#d32f2f',borderWidth:1}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'top',labels:{boxWidth:10,font:{size:11},color:tickColor}}},scales:{y:{beginAtZero:true,ticks:{callback:v=>'₩'+Math.round(v/10000)+'만',font:{size:11},color:tickColor},grid:{color:gridColor}},x:{ticks:{font:{size:11},color:tickColor},grid:{display:false}}}}});
   charts.expDonut=mkDonut('expDonut','expense',charts.expDonut);
   charts.incDonut=mkDonut('incDonut','income',charts.incDonut);
   renderDailyChart();
@@ -2650,6 +2693,8 @@ function renderYearStats(){
     mExps.push(mt.filter(t=>t.type==='expense').reduce((s,t)=>s+t.amount,0));
   }
   if(charts.yearBar)charts.yearBar.destroy();
+  const ybGrid = document.body.classList.contains('dark-mode') ? '#2a2d3e' : '#f0f0f0';
+  const ybTick = document.body.classList.contains('dark-mode') ? '#8b8fa8' : '#666';
   charts.yearBar=new Chart(document.getElementById('yearBarChart'),{
     type:'bar',
     data:{labels:mLabels,datasets:[
@@ -2657,9 +2702,9 @@ function renderYearStats(){
       {label:'지출',data:mExps,backgroundColor:'#d32f2f50',borderColor:'#d32f2f',borderWidth:1}
     ]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:true,position:'top',labels:{boxWidth:10,font:{size:11}}}},
-      scales:{y:{beginAtZero:true,ticks:{callback:v=>'₩'+Math.round(v/10000)+'만',font:{size:11}},grid:{color:'#f0f0f0'}},
-              x:{ticks:{font:{size:11}},grid:{display:false}}}}
+      plugins:{legend:{display:true,position:'top',labels:{boxWidth:10,font:{size:11},color:ybTick}}},
+      scales:{y:{beginAtZero:true,ticks:{callback:v=>'₩'+Math.round(v/10000)+'만',font:{size:11},color:ybTick},grid:{color:ybGrid}},
+              x:{ticks:{font:{size:11},color:ybTick},grid:{display:false}}}}
   });
 
   const mkYrDonut=(id,type,old)=>{
@@ -2755,6 +2800,9 @@ function setDarkMode(dark){
   isDark = dark;
   const dt = document.getElementById('darkModeToggle');
   if(dt) dt.checked = dark;
+  // 차트 색상 즉시 반영
+  if(typeof renderCharts === 'function') renderCharts();
+  if(typeof renderYearStats === 'function' && statsMode === 'year') renderYearStats();
 }
 
 function toggleDarkMode(){
@@ -3296,20 +3344,23 @@ function renderDailyChart(){
   if(charts.daily)charts.daily.destroy();
 
   const isLine = chartType==='line';
+  const dGrid = document.body.classList.contains('dark-mode') ? '#2a2d3e' : '#f0f0f0';
+  const dTick = document.body.classList.contains('dark-mode') ? '#8b8fa8' : '#666';
+  const blueColor = getComputedStyle(document.documentElement).getPropertyValue('--blue').trim() || '#1a56db';
   charts.daily=new Chart(document.getElementById('dailyChart'),{
     type: chartType,
     data:{
       labels,
       datasets:[{
         data:values,
-        backgroundColor: isLine ? '#1a56db20' : '#1a56db50',
-        borderColor:'#1a56db',
+        backgroundColor: isLine ? blueColor+'33' : blueColor+'80',
+        borderColor: blueColor,
         borderWidth: isLine ? 2 : 1,
         fill: isLine ? true : false,
         tension: isLine ? 0.3 : 0,
         pointRadius: isLine ? 3 : 0,
         pointHoverRadius: isLine ? 5 : 0,
-        pointBackgroundColor:'#1a56db',
+        pointBackgroundColor: blueColor,
       }]
     },
     options:{
@@ -3318,12 +3369,12 @@ function renderDailyChart(){
       scales:{
         y:{
           beginAtZero:true,
-          ticks:{callback:v=>v>0?'₩'+Math.round(v/10000)+'만':'0',font:{size:11}},
-          grid:{color:'#f0f0f0'}
+          ticks:{callback:v=>v>0?'₩'+Math.round(v/10000)+'만':'0',font:{size:11},color:dTick},
+          grid:{color:dGrid}
         },
         x:{
           ticks:{
-            font:{size:10},
+            font:{size:10},color:dTick,
             autoSkip: isLine ? true : false,
             maxTicksLimit: isLine ? 15 : 31,
             maxRotation: isLine ? 0 : 0

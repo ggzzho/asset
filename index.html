@@ -3833,7 +3833,8 @@ function loadDeco(){
 
 async function loadDecoAll(){
   try{
-    const keys=['logo','bg','cover','stickers','bgOverlay','bgOpacity','coverOverlay','coverOpacity'];
+    const keys=['logo','bg','cover','stickers','bgOverlay','bgOpacity','coverOverlay','coverOpacity',
+                'bgImage','bgImageName','headerImage','headerImageName'];
     for(const k of keys){
       const v = await idbGet(k);
       if(v !== undefined) _decoCache[k] = v;
@@ -3922,36 +3923,6 @@ function removeImageInternal(type) {
   applyDecoOnLoad();
   updateUploadUI(type === 'bgImage' ? 'bgImage' : 'headerImage');
   if (window.toast) toast('삭제되었습니다.');
-}
-
-function applyDecoOnLoad() {
-  const deco = _decoCache;
-  
-  const body = document.body;
-  if (deco.bgImage) {
-    body.style.setProperty('background-image', `url(${deco.bgImage})`, 'important');
-    body.style.backgroundSize = 'cover';
-    body.style.backgroundAttachment = 'fixed';
-    body.style.backgroundPosition = 'center';
-  } else {
-    body.style.backgroundImage = 'none';
-  }
-
-  const header = document.querySelector('.header');
-  if (header) {
-    if (deco.headerImage) {
-      header.style.setProperty('background-image', `url(${deco.headerImage})`, 'important');
-      header.style.backgroundSize = 'cover';
-      header.style.backgroundPosition = 'center';
-    } else {
-      header.style.backgroundImage = 'none';
-    }
-  }
-
-  updateUploadUI('bgImage');
-  updateUploadUI('headerImage');
-
-  if (window.renderStickerThumbs) renderStickerThumbs();
 }
 
 function updateUploadUI(type) {

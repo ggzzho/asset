@@ -3498,7 +3498,10 @@ function setBgOverlay(color){
     const el=document.getElementById(id);
     if(el) el.style.borderColor = (id==='bgOverlay'+color.charAt(0).toUpperCase()+color.slice(1)) ? 'var(--blue)' : '';
   });
-  const saved=loadDeco(); if(saved.bg) { saved.bg.overlay=color; saveDeco(saved); }
+  const bg = _decoCache.bg || {};
+  bg.overlay = color;
+  _decoCache.bg = bg;
+  saveDeco({bg});
 }
 
 function applyBgOverlayStyle(color, opacity){
@@ -3522,7 +3525,10 @@ function applyBgOverlayStyle(color, opacity){
 function updateBgOpacity(val){
   document.getElementById('bgOpacityVal').textContent=val+'%';
   applyBgOverlayStyle(bgOverlayColor, parseInt(val)/100);
-  const saved=loadDeco(); if(saved.bg){ saved.bg.opacity=val; saveDeco(saved); }
+  const bg = _decoCache.bg || {};
+  bg.opacity = val;
+  _decoCache.bg = bg;
+  saveDeco({bg});
 }
 
 function removeBgImage(){
@@ -3531,7 +3537,10 @@ function removeBgImage(){
   document.body.style.backgroundAttachment='';
   const o=document.getElementById('bodyBgOverlay'); if(o) o.style.background='transparent';
   document.getElementById('bgImgControls').style.display='none';
-  const saved=loadDeco(); delete saved.bg; saveDeco(saved);
+  delete _decoCache.bg;
+  delete _decoCache.bgImage;
+  delete _decoCache.bgImageName;
+  saveDeco({bg:null, bgImage:null, bgImageName:null});
 }
 
 /* ── 커버 이미지 ── */
@@ -3558,13 +3567,19 @@ function setCoverOverlay(color){
   const overlay=document.getElementById('coverOverlay');
   if(!overlay) return;
   overlay.style.background=color==='none'?'transparent':color==='white'?`rgba(255,255,255,${opacity})`:`rgba(0,0,0,${opacity})`;
-  const saved=loadDeco(); if(saved.cover){ saved.cover.overlay=color; saveDeco(saved); }
+  const cover = _decoCache.cover || {};
+  cover.overlay = color;
+  _decoCache.cover = cover;
+  saveDeco({cover});
 }
 
 function updateCoverOpacity(val){
   document.getElementById('coverOpacityVal').textContent=val+'%';
   setCoverOverlay(coverOverlayColor);
-  const saved=loadDeco(); if(saved.cover){ saved.cover.opacity=val; saveDeco(saved); }
+  const cover = _decoCache.cover || {};
+  cover.opacity = val;
+  _decoCache.cover = cover;
+  saveDeco({cover});
 }
 
 function removeCoverImage(){
@@ -3572,7 +3587,10 @@ function removeCoverImage(){
   area.style.backgroundImage='';
   area.classList.remove('visible');
   document.getElementById('coverImgControls').style.display='none';
-  const saved=loadDeco(); delete saved.cover; saveDeco(saved);
+  delete _decoCache.cover;
+  delete _decoCache.headerImage;
+  delete _decoCache.headerImageName;
+  saveDeco({cover:null, headerImage:null, headerImageName:null});
 }
 
 /* ── 스티커 ── */

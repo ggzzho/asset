@@ -957,6 +957,21 @@ select.fselect:focus{border-color:var(--blue);}
   <!-- 자산·부채 -->
   <div class="page" id="page-assets">
     <div class="page-title">🏦 자산·부채</div>
+    <!-- 이달 납입 예정 + 저축률 -->
+    <div id="assetPaymentSummary" style="display:none;margin-bottom:16px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+        <div class="acard" style="border-left:3px solid var(--blue);">
+          <div class="acard-label">💰 이달 납입 예정</div>
+          <div class="acard-val pos" id="monthlyPaymentTotal" style="font-size:18px;">₩0</div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:4px;" id="monthlyPaymentList"></div>
+        </div>
+        <div class="acard" style="border-left:3px solid #10b981;">
+          <div class="acard-label">📈 이달 저축률</div>
+          <div class="acard-val" id="savingsRateVal" style="font-size:18px;color:#10b981;">0%</div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:4px;" id="savingsRateSub"></div>
+        </div>
+      </div>
+    </div>
     <div class="section">
       <div class="sec-hdr"><div class="sec-title">순자산 요약</div></div>
       <div class="asset-grid">
@@ -1079,9 +1094,29 @@ select.fselect:focus{border-color:var(--blue);}
 <div class="overlay" id="assetModal">
   <div class="modal">
     <div class="modal-title" id="assetModalTitle">현금성 자산 추가</div>
-    <div class="fg"><label class="flabel">자산 종류</label><select class="fselect" id="assetType"><option value="stock">주식</option><option value="savings">예·적금</option><option value="cash">현금</option><option value="property">부동산·전세금</option><option value="other">기타</option></select></div>
+    <div class="fg"><label class="flabel">자산 종류</label><select class="fselect" id="assetType" onchange="toggleAssetPayment()"><option value="stock">주식</option><option value="savings">예·적금</option><option value="cash">현금</option><option value="property">부동산·전세금</option><option value="other">기타</option></select></div>
     <div class="fg"><label class="flabel">이름</label><input type="text" class="finput" id="assetName" placeholder="삼성전자, 국민은행 적금..."></div>
-    <div class="fg"><label class="flabel">금액 (원)</label><input type="number" class="finput" id="assetAmt" placeholder="0"></div>
+    <div class="fg"><label class="flabel">현재 잔액 (원)</label><input type="number" class="finput" id="assetAmt" placeholder="0"></div>
+    <!-- 정기 납입 토글 (예·적금일 때만 표시) -->
+    <div class="fg" id="assetPaymentWrap" style="display:none;">
+      <div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-top:1px solid var(--border-col);margin-top:4px;">
+        <label class="toggle-sw"><input type="checkbox" id="assetPaymentCheck" onchange="toggleAssetPaymentFields()"><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
+        <span style="font-size:13px;color:var(--text-primary);font-weight:500;">정기 납입 설정</span>
+      </div>
+      <div id="assetPaymentFields" style="display:none;background:var(--bg-row-hover);border-radius:8px;padding:12px;margin-top:4px;">
+        <div class="frow" style="margin-bottom:10px;">
+          <div><label class="flabel">월 납입액 (원)</label><input type="number" class="finput" id="assetMonthly" placeholder="500000"></div>
+          <div><label class="flabel">납입일 (매월 N일)</label><input type="number" class="finput" id="assetPayDay" placeholder="25" min="1" max="31"></div>
+        </div>
+        <div class="frow" style="margin-bottom:10px;">
+          <div><label class="flabel">시작월</label><input type="month" class="finput" id="assetStartYm"></div>
+          <div><label class="flabel">만기월</label><input type="month" class="finput" id="assetEndYm"></div>
+        </div>
+        <div style="background:var(--blue-lt);border-radius:6px;padding:8px 12px;font-size:11px;color:var(--blue);line-height:1.6;">
+          📅 납입 진행률·D-day·저축률이 자산 카드에 표시됩니다.
+        </div>
+      </div>
+    </div>
     <div class="fg"><label class="flabel">메모 (선택)</label><input type="text" class="finput" id="assetMemo" placeholder="메모"></div>
     <div class="mfoot"><button class="btn" onclick="closeOverlay('assetModal')">취소</button><button class="btn btn-blue" id="assetModalSaveBtn" onclick="saveAsset()">추가</button></div>
   </div>
@@ -1420,7 +1455,29 @@ let S={
 };
 let charts={};
 
-function load(){try{const d=localStorage.getItem('budgetApp');if(d){const p=JSON.parse(d);Object.assign(S,p);if(!S.installPlans)S.installPlans=[];}}catch(e){}}
+function load(){
+  try{
+    const d=localStorage.getItem('budgetApp');
+    if(d){
+      const p=JSON.parse(d);
+      Object.assign(S,p);
+      if(!S.installPlans)S.installPlans=[];
+      // 마이그레이션: payment 없는 적금 더미 자산에 payment 추가
+      const cy=new Date().getFullYear();
+      const migrations={
+        'a01':{monthly:500000,payDay:25,startYm:(cy-1)+'-01',endYm:(cy+1)+'-12'},
+        'a08':{monthly:100000,payDay:2, startYm:(cy-3)+'-06',endYm:(cy+3)+'-05'},
+      };
+      let changed=false;
+      S.assets.forEach(a=>{
+        if(migrations[a.id] && !a.payment && a.type==='savings'){
+          a.payment=migrations[a.id]; changed=true;
+        }
+      });
+      if(changed) save();
+    }
+  }catch(e){}
+}
 function save(){localStorage.setItem('budgetApp',JSON.stringify({txs:S.txs,budgets:S.budgets,fixedItems:S.fixedItems,assets:S.assets,loans:S.loans,cats:S.cats,installPlans:S.installPlans||[]}));}
 function fmt(n){return'₩'+Math.abs(Math.round(n)).toLocaleString('ko-KR');}
 function mk(){return S.year+'-'+String(S.month).padStart(2,'0');}
@@ -1886,14 +1943,71 @@ function renderAssets(){
   document.getElementById('totDebt').textContent=fmt(totD);
   document.getElementById('netWorth').textContent=(net<0?'-':'')+fmt(net);
   document.getElementById('netWorthSub').textContent='자산 '+fmt(totA)+' - 부채 '+fmt(totD);
+
+  // ── 납입형 자산 요약 ──
+  const today = new Date();
+  const curYm = today.getFullYear()+'-'+String(today.getMonth()+1).padStart(2,'0');
+  const payAssets = S.assets.filter(a=>a.payment && a.payment.startYm <= curYm && a.payment.endYm >= curYm);
+  const monthlyTotal = payAssets.reduce((s,a)=>s+a.payment.monthly,0);
+  const summaryEl = document.getElementById('assetPaymentSummary');
+  if(payAssets.length>0){
+    summaryEl.style.display='block';
+    document.getElementById('monthlyPaymentTotal').textContent=fmt(monthlyTotal);
+    document.getElementById('monthlyPaymentList').textContent=payAssets.map(a=>a.name+' '+fmt(a.payment.monthly)).join(' · ');
+    // 저축률: 이번달 수입 대비
+    const thisInc = monthTxs().filter(t=>t.type==='income').reduce((s,t)=>s+t.amount,0);
+    const rate = thisInc>0 ? Math.round(monthlyTotal/thisInc*100) : 0;
+    document.getElementById('savingsRateVal').textContent=rate+'%';
+    document.getElementById('savingsRateSub').textContent = thisInc>0
+      ? `이달 수입 ${fmt(thisInc)} 중 ${fmt(monthlyTotal)} 납입`
+      : '이달 수입 데이터 없음';
+  } else {
+    summaryEl.style.display='none';
+  }
+
+  // ── 자산 카드 렌더링 ──
   const al=document.getElementById('assetList');
-  al.innerHTML=S.assets.length?S.assets.map(a=>`<div class="asset-item">
-    <div class="ai-icon ${AICLS[a.type]||'ai-cash'}">${AICON[a.type]||'💼'}</div>
-    <div class="asset-item-info"><div class="asset-item-name">${a.name}</div><div class="asset-item-sub">${ALBL[a.type]||'기타'}${a.memo?' · '+a.memo:''}</div></div>
-    <div class="asset-item-amt">${fmt(a.amount)}</div>
-    <button class="row-action-btn edit-btn" style="margin-left:4px;width:auto;" onclick="openEditAsset('${a.id}')" title="수정">✎</button>
-    <button class="xbtn" style="margin-left:4px;width:auto" onclick="confirmDelAsset('${a.id}')">✕</button>
-  </div>`).join(''):'<div class="empty" style="background:#fff;border:1px solid var(--border);border-radius:var(--rlg);">등록된 자산이 없습니다.</div>';
+  al.innerHTML=S.assets.length?S.assets.map(a=>{
+    let extraHTML='';
+    if(a.payment){
+      const p=a.payment;
+      const sDate=new Date(p.startYm+'-01'), eDate=new Date(p.endYm+'-01');
+      const totalMonths=Math.round((eDate-sDate)/2592000000)+1;
+      const paidMonths=Math.max(0,Math.min(totalMonths,Math.round((today-sDate)/2592000000)));
+      const pct=Math.round(paidMonths/totalMonths*100);
+      // D-day 계산
+      const endFull=new Date(p.endYm+'-01');
+      endFull.setMonth(endFull.getMonth()+1,0); // 만기월 말일
+      const dday=Math.ceil((endFull-today)/86400000);
+      const ddayStr=dday>0?`D-${dday}`:(dday===0?'D-Day':'만기');
+      const ddayColor=dday<=30?'var(--red)':dday<=90?'var(--amber)':'var(--green)';
+      extraHTML=`
+        <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border-col);">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;font-size:11px;">
+            <span style="color:var(--text-secondary);">납입 진행률 <strong style="color:var(--blue)">${paidMonths}/${totalMonths}개월</strong></span>
+            <span style="font-weight:700;color:${ddayColor};">${ddayStr}</span>
+          </div>
+          <div style="height:6px;background:var(--g100);border-radius:3px;overflow:hidden;">
+            <div style="height:100%;border-radius:3px;background:var(--blue);width:${pct}%;transition:width .4s;"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-top:5px;font-size:11px;color:var(--text-muted);">
+            <span>월 ${fmt(p.monthly)} · 매월 ${p.payDay||'-'}일</span>
+            <span>만기 ${p.endYm}</span>
+          </div>
+        </div>`;
+    }
+    return`<div class="asset-item" style="flex-direction:column;align-items:stretch;gap:0;">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <div class="ai-icon ${AICLS[a.type]||'ai-cash'}">${AICON[a.type]||'💼'}</div>
+        <div class="asset-item-info"><div class="asset-item-name">${a.name}</div><div class="asset-item-sub">${ALBL[a.type]||'기타'}${a.memo?' · '+a.memo:''}</div></div>
+        <div class="asset-item-amt">${fmt(a.amount)}</div>
+        <button class="row-action-btn edit-btn" style="margin-left:4px;width:auto;" onclick="openEditAsset('${a.id}')" title="수정">✎</button>
+        <button class="xbtn" style="margin-left:4px;width:auto" onclick="confirmDelAsset('${a.id}')">✕</button>
+      </div>
+      ${extraHTML}
+    </div>`;
+  }).join(''):'<div class="empty" style="background:#fff;border:1px solid var(--border);border-radius:var(--rlg);">등록된 자산이 없습니다.</div>';
+
   const ll=document.getElementById('loanList');
   ll.innerHTML=S.loans.length?S.loans.map(l=>{
     const pct=Math.min(100,Math.round((1-l.remain/l.principal)*100));
@@ -1918,13 +2032,35 @@ function renderAssets(){
     </div>`;
   }).join(''):'<div class="empty" style="background:#fff;border:1px solid var(--border);border-radius:var(--rlg);">등록된 대출이 없습니다.</div>';
 }
+function toggleAssetPayment(){
+  const type = document.getElementById('assetType').value;
+  const wrap = document.getElementById('assetPaymentWrap');
+  if(wrap) wrap.style.display = (type==='savings') ? 'block' : 'none';
+  if(type !== 'savings'){
+    const chk = document.getElementById('assetPaymentCheck');
+    if(chk) chk.checked = false;
+    const fields = document.getElementById('assetPaymentFields');
+    if(fields) fields.style.display = 'none';
+  }
+}
+function toggleAssetPaymentFields(){
+  const chk = document.getElementById('assetPaymentCheck');
+  const fields = document.getElementById('assetPaymentFields');
+  if(fields) fields.style.display = chk.checked ? 'block' : 'none';
+}
+
 let editingAssetId=null;
 function openAssetModal(){
   editingAssetId=null;
   document.getElementById('assetModalTitle').textContent='현금성 자산 추가';
   document.getElementById('assetModalSaveBtn').textContent='추가';
-  ['assetName','assetAmt','assetMemo'].forEach(id=>document.getElementById(id).value='');
+  ['assetName','assetAmt','assetMemo','assetMonthly','assetPayDay','assetStartYm','assetEndYm'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.value='';
+  });
   document.getElementById('assetType').value='stock';
+  document.getElementById('assetPaymentCheck').checked=false;
+  document.getElementById('assetPaymentFields').style.display='none';
+  document.getElementById('assetPaymentWrap').style.display='none';
   openOverlay('assetModal');
 }
 function openEditAsset(id){
@@ -1936,17 +2072,43 @@ function openEditAsset(id){
   document.getElementById('assetName').value=a.name;
   document.getElementById('assetAmt').value=a.amount;
   document.getElementById('assetMemo').value=a.memo||'';
+  // 정기납입 필드 복원
+  toggleAssetPayment();
+  if(a.payment){
+    document.getElementById('assetPaymentCheck').checked=true;
+    document.getElementById('assetPaymentFields').style.display='block';
+    document.getElementById('assetMonthly').value=a.payment.monthly||'';
+    document.getElementById('assetPayDay').value=a.payment.payDay||'';
+    document.getElementById('assetStartYm').value=a.payment.startYm||'';
+    document.getElementById('assetEndYm').value=a.payment.endYm||'';
+  } else {
+    document.getElementById('assetPaymentCheck').checked=false;
+    document.getElementById('assetPaymentFields').style.display='none';
+  }
   openOverlay('assetModal');
 }
 function saveAsset(){
-  const type=document.getElementById('assetType').value,name=document.getElementById('assetName').value.trim(),amt=parseFloat(document.getElementById('assetAmt').value),memo=document.getElementById('assetMemo').value.trim();
+  const type=document.getElementById('assetType').value;
+  const name=document.getElementById('assetName').value.trim();
+  const amt=parseFloat(document.getElementById('assetAmt').value);
+  const memo=document.getElementById('assetMemo').value.trim();
   if(!name||!amt||amt<=0){toast('이름과 금액을 입력해주세요.');return;}
+  // 정기납입 정보
+  let payment=null;
+  const chk=document.getElementById('assetPaymentCheck');
+  if(chk && chk.checked){
+    const monthly=parseFloat(document.getElementById('assetMonthly').value)||0;
+    const payDay=parseInt(document.getElementById('assetPayDay').value)||0;
+    const startYm=document.getElementById('assetStartYm').value;
+    const endYm=document.getElementById('assetEndYm').value;
+    if(monthly>0 && startYm && endYm) payment={monthly,payDay,startYm,endYm};
+  }
   if(editingAssetId){
     const idx=S.assets.findIndex(a=>a.id===editingAssetId); if(idx<0)return;
-    S.assets[idx]={...S.assets[idx],type,name,amount:amt,memo};
+    S.assets[idx]={...S.assets[idx],type,name,amount:amt,memo,payment};
     save();closeOverlay('assetModal');renderAssets();toast('자산이 수정됐어요.');
   } else {
-    S.assets.push({id:Date.now().toString(),type,name,amount:amt,memo});
+    S.assets.push({id:Date.now().toString(),type,name,amount:amt,memo,payment});
     save();closeOverlay('assetModal');renderAssets();toast('자산이 등록됐어요.');
   }
 }
@@ -2678,7 +2840,7 @@ function openThemeModal(){
    Google Drive 동기화
 ══════════════════════════════ */
 const GOOGLE_CLIENT_ID = '192024003776-bjcqajkqao7hauasusoncepmu394b78a.apps.googleusercontent.com';
-const GOOGLE_SCOPE = 'https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email';
+const GOOGLE_SCOPE = 'https://www.googleapis.com/auth/drive.file profile email';
 const DRIVE_FILE_NAME = '가계부_sync.json';
 
 let gTokenClient = null;
@@ -3977,14 +4139,16 @@ function renderAll(){updateLabels();renderSummary();renderRecentRows();renderLed
   });
 
   const assets = [
-    {id:'a01', type:'savings',  name:'국민은행 적금',     amount:8000000,  memo:'월 50만 납입 중'},
+    {id:'a01', type:'savings',  name:'국민은행 적금',     amount:8000000,  memo:'월 50만 납입 중',
+     payment:{monthly:500000, payDay:25, startYm:(y-1)+'-01', endYm:(y+1)+'-12'}},
     {id:'a02', type:'savings',  name:'토스뱅크 파킹통장', amount:3200000,  memo:'연 2.0%'},
     {id:'a03', type:'stock',    name:'삼성전자',          amount:5400000,  memo:'300주'},
     {id:'a04', type:'stock',    name:'TIGER 미국S&P500',  amount:2800000,  memo:'ETF'},
     {id:'a05', type:'stock',    name:'카카오',            amount:980000,   memo:'50주'},
     {id:'a06', type:'cash',     name:'현금 및 자유입출금', amount:1500000,  memo:''},
     {id:'a07', type:'property', name:'전세 보증금',       amount:150000000,memo:'서울 강남구'},
-    {id:'a08', type:'savings',  name:'청약저축',          amount:4200000,  memo:'월 10만 납입'},
+    {id:'a08', type:'savings',  name:'청약저축',          amount:4200000,  memo:'월 10만 납입',
+     payment:{monthly:100000, payDay:2, startYm:(y-3)+'-06', endYm:(y+3)+'-05'}},
   ];
 
   const loans = [
@@ -4158,12 +4322,14 @@ window.injectSample = function() {
 
   /* ── 자산 ── */
   S.assets = [
-    {id:'a01', type:'savings',  name:'국민은행 적금',      amount:8000000,   memo:'월 50만 납입 중'},
+    {id:'a01', type:'savings',  name:'국민은행 적금',      amount:8000000,   memo:'월 50만 납입 중',
+     payment:{monthly:500000, payDay:25, startYm:(cy-1)+'-01', endYm:(cy+1)+'-12'}},
     {id:'a02', type:'savings',  name:'토스뱅크 파킹통장',  amount:3200000,   memo:'연 2.0%'},
     {id:'a03', type:'stock',    name:'삼성전자',           amount:5400000,   memo:'300주'},
     {id:'a04', type:'stock',    name:'TIGER 미국S&P500',   amount:2800000,   memo:'ETF'},
     {id:'a05', type:'cash',     name:'현금 및 자유입출금', amount:1500000,   memo:''},
-    {id:'a06', type:'savings',  name:'청약저축',           amount:4200000,   memo:'월 10만 납입'},
+    {id:'a06', type:'savings',  name:'청약저축',           amount:4200000,   memo:'월 10만 납입',
+     payment:{monthly:100000, payDay:2, startYm:(cy-3)+'-06', endYm:(cy+3)+'-05'}},
     {id:'a07', type:'property', name:'전세 보증금',        amount:150000000, memo:'서울 강남구'},
   ];
 

@@ -424,28 +424,38 @@ select.fselect:focus{border-color:var(--blue);}
 
 .sticker-item {
   position: absolute;
-  pointer-events: auto; 
-  cursor: move;
+  pointer-events: auto;
+  cursor: grab;
+  touch-action: none;
+  user-select: none; -webkit-user-select: none;
 }
+.sticker-item.dragging { cursor: grabbing; }
 .sticker-item img {
   display: block; width: 100%; height: 100%; object-fit: contain;
-  pointer-events: none; 
+  pointer-events: none;
+  user-select: none; -webkit-user-select: none;
 }
-
 .sticker-item .sticker-del {
   position: absolute; top: -12px; right: -12px;
-  width: 24px; height: 24px; border-radius: 50%;
+  width: 28px; height: 28px; border-radius: 50%;
   background: var(--red); color: #fff; border: 2px solid #fff;
-  font-size: 14px; cursor: pointer; display: none;
+  font-size: 14px; cursor: pointer;
+  display: none; /* 기본 숨김 */
   align-items: center; justify-content: center; z-index: 11;
+  transition: transform .15s;
 }
+.sticker-item.active .sticker-del { display: flex; }
+.sticker-item .sticker-del:hover { transform: scale(1.15); }
 
 .sticker-item .sticker-handle {
-  position: absolute; bottom: -8px; right: -8px;
-  width: 16px; height: 16px; border-radius: 50%;
+  position: absolute; bottom: -10px; right: -10px;
+  width: 22px; height: 22px; border-radius: 50%;
   background: var(--blue); border: 2px solid #fff;
-  cursor: nwse-resize; display: none; z-index: 11;
+  cursor: nwse-resize; touch-action: none;
+  display: none; /* 기본 숨김 */
+  z-index: 11;
 }
+.sticker-item.active .sticker-handle { display: flex; }
 /* ── 대시보드 최근거래: 버튼 열 없이 4컬럼 ── */
 .dashboard-lhd{grid-template-columns:72px 1fr 100px 110px;}
 #recentRows .lrow{grid-template-columns:72px 1fr 100px 110px;}
@@ -609,7 +619,6 @@ select.fselect:focus{border-color:var(--blue);}
   }
   .rdesc{font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   .rmemo{font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-  .install-group-detail{display:block !important;}
   .install-detail-row{display:flex !important;width:100%;}
   .install-detail-row>span{display:flex !important;align-items:center;}
   .ledger{overflow:hidden;}
@@ -717,7 +726,13 @@ select.fselect:focus{border-color:var(--blue);}
   background:var(--blue);color:#fff;border-color:var(--blue);
 }
 
-/* ── FOOTER ── */
+.page-title{
+  font-size:18px;font-weight:700;color:var(--text-primary);
+  margin-bottom:18px;padding-bottom:14px;
+  border-bottom:2px solid var(--border-col);
+  letter-spacing:-.3px;
+}
+@media(max-width:768px){.page-title{font-size:16px;margin-bottom:14px;padding-bottom:12px;}}
 .app-footer{
   display:flex;align-items:center;justify-content:center;
   gap:8px;flex-wrap:wrap;
@@ -841,6 +856,7 @@ select.fselect:focus{border-color:var(--blue);}
 
   <!-- 대시보드 -->
   <div class="page active" id="page-dashboard">
+    <div class="page-title">🏠 대시보드</div>
     <div class="month-bar"><button class="mbtn" onclick="chM(-1)">&#8249;</button><span class="mlabel" id="ml1"></span><button class="mbtn" onclick="chM(1)">&#8250;</button></div>
     <div class="sgrid">
       <div class="scard"><div class="slabel">이번 달 수입</div><div class="sval inc" id="sInc">₩0</div></div>
@@ -875,7 +891,7 @@ select.fselect:focus{border-color:var(--blue);}
 
   <!-- 거래내역 -->
   <div class="page" id="page-ledger">
-    
+    <div class="page-title">📋 거래내역</div>
     <div class="period-tab-bar">
       <button class="period-tab active" data-period="week"  onclick="setPeriod(this)">주</button>
       <button class="period-tab" data-period="month" onclick="setPeriod(this)">월</button>
@@ -927,6 +943,7 @@ select.fselect:focus{border-color:var(--blue);}
 
   <!-- 고정지출 -->
   <div class="page" id="page-fixed">
+    <div class="page-title">📌 고정지출</div>
     <div class="month-bar"><button class="mbtn" onclick="chM(-1)">&#8249;</button><span class="mlabel" id="ml3"></span><button class="mbtn" onclick="chM(1)">&#8250;</button></div>
     <div class="banner blue-b" style="margin-bottom:18px;">
       <div class="banner-left"><div class="bicon blue">📌</div><div><div class="btitle">고정지출 합계</div><div class="bval" id="fixPageTotal">₩0</div></div></div>
@@ -938,6 +955,7 @@ select.fselect:focus{border-color:var(--blue);}
 
   <!-- 자산·부채 -->
   <div class="page" id="page-assets">
+    <div class="page-title">🏦 자산·부채</div>
     <div class="section">
       <div class="sec-hdr"><div class="sec-title">순자산 요약</div></div>
       <div class="asset-grid">
@@ -952,7 +970,7 @@ select.fselect:focus{border-color:var(--blue);}
 
   <!-- 통계 -->
   <div class="page" id="page-stats">
-    
+    <div class="page-title">📊 통계</div>
     <div class="period-tab-bar">
       <button class="period-tab active" data-speriod="month" onclick="setStatsPeriod(this)">월별</button>
       <button class="period-tab" data-speriod="year" onclick="setStatsPeriod(this)">연간</button>
@@ -998,6 +1016,7 @@ select.fselect:focus{border-color:var(--blue);}
 
   <!-- 예산 -->
   <div class="page" id="page-budget">
+    <div class="page-title">💰 예산</div>
     <div class="month-bar"><button class="mbtn" onclick="chM(-1)">&#8249;</button><span class="mlabel" id="ml5"></span><button class="mbtn" onclick="chM(1)">&#8250;</button></div>
     <div class="sec-hdr"><div class="sec-title">카테고리별 예산</div><button class="btn btn-blue" onclick="openBudgetModal()">+ 예산 설정</button></div>
     <div class="budget-list" id="budgetList"></div>
@@ -1005,6 +1024,7 @@ select.fselect:focus{border-color:var(--blue);}
 
   
   <div class="page" id="page-settings">
+    <div class="page-title">🏷️ 카테고리</div>
     <div class="section"><div class="sec-hdr"><div class="sec-title">지출 카테고리</div><button class="btn btn-blue" onclick="openCatModal('expense')">+ 추가</button></div><div class="ledger" id="expCatList"></div></div>
     <div class="section"><div class="sec-hdr"><div class="sec-title">수입 카테고리</div><button class="btn btn-blue" onclick="openCatModal('income')">+ 추가</button></div><div class="ledger" id="incCatList"></div></div>
   </div>
@@ -1403,7 +1423,11 @@ function load(){try{const d=localStorage.getItem('budgetApp');if(d){const p=JSON
 function save(){localStorage.setItem('budgetApp',JSON.stringify({txs:S.txs,budgets:S.budgets,fixedItems:S.fixedItems,assets:S.assets,loans:S.loans,cats:S.cats,installPlans:S.installPlans||[]}));}
 function fmt(n){return'₩'+Math.abs(Math.round(n)).toLocaleString('ko-KR');}
 function mk(){return S.year+'-'+String(S.month).padStart(2,'0');}
-function monthTxs(){return S.txs.filter(t=>t.date.startsWith(mk()));}
+// 오늘 날짜 문자열 "YYYY-MM-DD"
+function todayStr(){const n=new Date();return n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0')+'-'+String(n.getDate()).padStart(2,'0');}
+// 할부 미래 회차 제외: 오늘 이후 날짜의 installPlanId 트랜잭션은 집계/표시 안 함
+function isVisibleTx(t){ return !t.installPlanId || t.date <= todayStr(); }
+function monthTxs(){return S.txs.filter(t=>t.date.startsWith(mk()) && isVisibleTx(t));}
 function chM(d){S.month+=d;if(S.month>12){S.month=1;S.year++;}if(S.month<1){S.month=12;S.year--;}renderAll();}
 
 function showPage(el){
@@ -1536,38 +1560,63 @@ function deleteInstallPlan(planId){
 }
 
 function renderInstallBanner(){
-  const charges = getInstallChargeForMonth(mk());
   const b = document.getElementById('installBanner');
-  if(!charges.length){ b.style.display='none'; return; }
+  // installPlans 기반 청구 확인
+  const charges = getInstallChargeForMonth(mk());
+  // installPlans가 없더라도 txs에 이번달 할부 항목이 있으면 배너 표시
+  const installTxsThisMonth = monthTxs().filter(t=>t.installPlanId);
+  if(!charges.length && !installTxsThisMonth.length){ b.style.display='none'; return; }
   b.style.display='flex';
-  const total = charges.reduce((s,c)=>s+c.chargeAmt,0);
-  document.getElementById('installBannerAmt').textContent = fmt(total);
-  document.getElementById('installBannerCnt').textContent =
-    charges.map(c=>`${c.desc} ${fmt(c.chargeAmt)}`).join(' · ');
+  if(charges.length){
+    const total = charges.reduce((s,c)=>s+c.chargeAmt,0);
+    document.getElementById('installBannerAmt').textContent = fmt(total);
+    document.getElementById('installBannerCnt').textContent =
+      charges.map(c=>`${c.desc} ${fmt(c.chargeAmt)}`).join(' · ');
+  } else {
+    // txs 기반 fallback
+    const total = installTxsThisMonth.reduce((s,t)=>s+t.amount,0);
+    document.getElementById('installBannerAmt').textContent = fmt(total);
+    document.getElementById('installBannerCnt').textContent =
+      installTxsThisMonth.map(t=>t.desc).join(' · ');
+  }
 }
 
 function renderUpcoming(){
-  const charges = getInstallChargeForMonth(mk());
   const sec = document.getElementById('upcomingSection');
-  if(!charges.length){ sec.style.display='none'; return; }
+  const charges = getInstallChargeForMonth(mk());
+  const installTxsThisMonth = monthTxs().filter(t=>t.installPlanId);
+  if(!charges.length && !installTxsThisMonth.length){ sec.style.display='none'; return; }
   sec.style.display='block';
   const [y,m] = mk().split('-').map(Number);
-  document.getElementById('upcomingList').innerHTML = charges.map(p=>{
-    const firstBill = addMonths(p.startYm,1);
-    const lastBill  = addMonths(p.startYm,p.months);
-    const paid = monthsBetween(firstBill, mk());        // 지금까지 청구된 회차
-    const remain = monthsBetween(mk(), lastBill);       // 남은 회차
-    return `<div class="upcoming-item">
-      <div class="up-left">
-        <span class="up-badge">할부</span>
-        <div>
-          <div class="up-name">${p.desc}</div>
-          <div class="up-sub">${p.card||''} · ${y}년 ${m}월 ${p.payDay}일 청구 · ${paid}/${p.months}회차 · ${remain}회 남음</div>
+  if(charges.length){
+    document.getElementById('upcomingList').innerHTML = charges.map(p=>{
+      const firstBill = addMonths(p.startYm,1);
+      const lastBill  = addMonths(p.startYm,p.months);
+      const paid = monthsBetween(firstBill, mk());
+      const remain = monthsBetween(mk(), lastBill);
+      return `<div class="upcoming-item">
+        <div class="up-left">
+          <span class="up-badge">할부</span>
+          <div>
+            <div class="up-name">${p.desc}</div>
+            <div class="up-sub">${p.card||''} · ${y}년 ${m}월 ${p.payDay}일 청구 · ${paid}/${p.months}회차 · ${remain}회 남음</div>
+          </div>
         </div>
-      </div>
-      <div class="up-amt">${fmt(p.chargeAmt)}/월</div>
-    </div>`;
-  }).join('');
+        <div class="up-amt">${fmt(p.chargeAmt)}/월</div>
+      </div>`;
+    }).join('');
+  } else {
+    // txs 기반 fallback
+    document.getElementById('upcomingList').innerHTML = installTxsThisMonth.map(t=>{
+      return `<div class="upcoming-item">
+        <div class="up-left">
+          <span class="up-badge">할부</span>
+          <div><div class="up-name">${t.desc}</div></div>
+        </div>
+        <div class="up-amt">${fmt(t.amount)}</div>
+      </div>`;
+    }).join('');
+  }
 }
 
 function monthsBetween(ymA, ymB){
@@ -1607,29 +1656,32 @@ function rowHTML(tx, readOnly=false){
 
 let _igCounter = 0;
 
-function installGroupHTML(groupKey, items, readOnly=false){
-  const gid = 'ig' + (++_igCounter);
+function installGroupHTML(groupKey, items, readOnly=false, defaultOpen=false){
+  // 대시보드(readOnly=true)는 'dash_ig', 거래내역은 'ledg_ig' prefix로 id 충돌 방지
+  const prefix = readOnly ? 'dash_ig' : 'ledg_ig';
+  const gid = prefix + (++_igCounter);
   const total = items.reduce((s,t)=>s+t.amount,0);
   const date = items[0].date.slice(5);
   const plan0 = (S.installPlans||[]).find(p=>p.id===items[0].installPlanId);
   const cardName = plan0 ? (plan0.card||'카드할부') : '카드할부';
   const firstId = items[0].id;
+  const isOpen = readOnly || defaultOpen;
 
   const detailRows = items.map(t=>{
     const plan=(S.installPlans||[]).find(p=>p.id===t.installPlanId);
     const seq=t.installSeq||'?', tot=plan?plan.months:'?';
-    const canEdit = !readOnly && t.installSeq===1;
+    const canEdit = !readOnly && (t.installSeq===1 || !plan);
     return`<div class="install-detail-row">
       <span>${t.desc.replace(/ \(\d+\/\d+회\)/,'')} <span style="opacity:.6">(${seq}/${tot}회)</span></span>
       <span style="display:flex;align-items:center;gap:6px;">
         <span style="font-weight:600;color:var(--red);">-${fmt(t.amount)}</span>
-        ${canEdit?`<button class="row-action-btn edit-btn" data-id="${t.id}" data-action="edit" title="할부 수정" style="font-size:11px;padding:2px 6px;">✎</button>`:''}
+        ${canEdit?`<button class="row-action-btn edit-btn" data-id="${t.id}" data-action="edit" title="할부 수정">✎</button>`:''}
       </span>
     </div>`;
   }).join('');
 
-  return`<div class="lrow-install-group" style="cursor:pointer;" onclick="(function(e,g){if(e.target.closest('button'))return;var d=document.getElementById(g);if(d)d.classList.toggle('open');})(event,'${gid}')">
-    <div class="install-group-main">
+  return`<div class="lrow-install-group">
+    <div class="install-group-main" style="cursor:pointer;" onclick="if(!event.target.closest('button'))toggleInstallDetail('${gid}')">
       <span class="rdate">${date}</span>
       <span>
         <div class="rdesc">${cardName} 할부 청구 <span style="font-size:11px;color:#7c3aed">(${items.length}건)</span></div>
@@ -1641,11 +1693,16 @@ function installGroupHTML(groupKey, items, readOnly=false){
         ${readOnly?'':`<button class="row-action-btn del-btn" data-id="${firstId}" data-action="del" title="할부 삭제">✕</button>`}
       </span>
     </div>
-    <div class="install-group-detail" id="${gid}">
-      <div style="font-size:11px;color:var(--text-muted);margin-bottom:6px;padding:0 2px;">▼ 할부 상세 내역 (✎ 버튼으로 수정 가능)</div>
+    <div class="install-group-detail${isOpen?' open':''}" id="${gid}">
+      <div style="font-size:11px;color:var(--text-muted);margin-bottom:6px;padding:0 2px;">▼ 할부 상세 내역${readOnly?'':' (✎ 수정 가능)'}</div>
       ${detailRows}
     </div>
   </div>`;
+}
+
+function toggleInstallDetail(gid){
+  const d = document.getElementById(gid);
+  if(d) d.classList.toggle('open');
 }
 
 /* ── 거래목록을 그룹핑하여 HTML로 변환 ── */
@@ -1670,8 +1727,9 @@ function buildLedgerHTML(txs){
 
   const allItems=[];
   normalTxs.forEach(t=>allItems.push({date:t.date, html:rowHTML(t)}));
+  const isMobile = window.innerWidth <= 768;
   Object.entries(installGroups).forEach(([key,items])=>{
-    allItems.push({date:items[0].date, html:installGroupHTML(key,items)});
+    allItems.push({date:items[0].date, html:installGroupHTML(key,items,false,isMobile)});
   });
 
   allItems.sort((a,b)=>b.date.localeCompare(a.date));
@@ -2375,9 +2433,9 @@ function getWeekRange(offset){
 }
 
 function periodTxs(){
-  if(P.mode==='month'){const k=S.year+'-'+String(S.month).padStart(2,'0');return S.txs.filter(t=>t.date.startsWith(k));}
-  if(P.mode==='year'){return S.txs.filter(t=>t.date.startsWith(String(P.year)));}
-  if(P.mode==='week'){const{start,end}=getWeekRange(P.weekOffset);return S.txs.filter(t=>{const d=new Date(t.date);return d>=start&&d<=end;});}
+  if(P.mode==='month'){const k=S.year+'-'+String(S.month).padStart(2,'0');return S.txs.filter(t=>t.date.startsWith(k)&&isVisibleTx(t));}
+  if(P.mode==='year'){return S.txs.filter(t=>t.date.startsWith(String(P.year))&&isVisibleTx(t));}
+  if(P.mode==='week'){const{start,end}=getWeekRange(P.weekOffset);return S.txs.filter(t=>{const d=new Date(t.date);return d>=start&&d<=end&&isVisibleTx(t);});}
   return[];
 }
 
@@ -2410,7 +2468,7 @@ function chStatsYear(dir){statsYear+=dir;renderYearStats();}
 
 function renderYearStats(){
   document.getElementById('statsYearLabel').textContent=statsYear+'년';
-  const yTxs=S.txs.filter(t=>t.date.startsWith(String(statsYear)));
+  const yTxs=S.txs.filter(t=>t.date.startsWith(String(statsYear))&&isVisibleTx(t));
   const yInc=yTxs.filter(t=>t.type==='income').reduce((s,t)=>s+t.amount,0);
   const yExp=yTxs.filter(t=>t.type==='expense').reduce((s,t)=>s+t.amount,0);
   const yBal=yInc-yExp;
@@ -2423,7 +2481,7 @@ function renderYearStats(){
   const mLabels=[],mIncs=[],mExps=[];
   for(let m=1;m<=12;m++){
     const k=statsYear+'-'+String(m).padStart(2,'0');
-    const mt=S.txs.filter(t=>t.date.startsWith(k));
+    const mt=S.txs.filter(t=>t.date.startsWith(k)&&isVisibleTx(t));
     mLabels.push(m+'월');
     mIncs.push(mt.filter(t=>t.type==='income').reduce((s,t)=>s+t.amount,0));
     mExps.push(mt.filter(t=>t.type==='expense').reduce((s,t)=>s+t.amount,0));
@@ -2619,7 +2677,7 @@ function openThemeModal(){
    Google Drive 동기화
 ══════════════════════════════ */
 const GOOGLE_CLIENT_ID = '192024003776-bjcqajkqao7hauasusoncepmu394b78a.apps.googleusercontent.com';
-const GOOGLE_SCOPE = 'https://www.googleapis.com/auth/drive.file profile email';
+const GOOGLE_SCOPE = 'https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email';
 const DRIVE_FILE_NAME = '가계부_sync.json';
 
 let gTokenClient = null;
@@ -2634,36 +2692,31 @@ function initGoogleApi(){
   gTokenClient = google.accounts.oauth2.initTokenClient({
     client_id: GOOGLE_CLIENT_ID,
     scope: GOOGLE_SCOPE,
-    prompt: '',               // 이미 동의한 경우 팝업 없이 조용히 갱신
+    prompt: '',
     callback: onGoogleTokenReceived,
   });
   const saved = localStorage.getItem('gToken');
   if(saved){
     try{
-      const {token, fileId, userInfo, expiry, scope} = JSON.parse(saved);
-      // scope에 profile이 없는 구버전 세션이면 무효화 → 재로그인 필요
-      if(!scope || !scope.includes('profile')){
-        localStorage.removeItem('gToken');
-        console.log('[Google] 구버전 세션 감지 → 재로그인 필요');
-      } else {
-        gAccessToken = token;
-        gDriveFileId = fileId;
-        gUserInfo = userInfo;
-        gTokenExpiry = expiry || null;
-        updateGoogleUI(true);
-        if(gUserInfo) scheduleTokenRefresh();
-        if(gAccessToken && gUserInfo && !gUserInfo.picture){
-          fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
-            headers: { Authorization: 'Bearer ' + gAccessToken }
-          }).then(r=>r.json()).then(info=>{
-            if(info && info.sub){
-              if(!info.name && (info.given_name || info.family_name)){
-                info.name = [info.given_name, info.family_name].filter(Boolean).join(' ');
-              }
-              gUserInfo = info; saveGoogleSession(); updateGoogleUI(true);
+      const {token, fileId, userInfo, expiry} = JSON.parse(saved);
+      gAccessToken = token;
+      gDriveFileId = fileId;
+      gUserInfo = userInfo;
+      gTokenExpiry = expiry || null;
+      updateGoogleUI(true);
+      if(gUserInfo) scheduleTokenRefresh();
+      // picture 없으면 userinfo 재시도
+      if(gAccessToken && gUserInfo && !gUserInfo.picture){
+        fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+          headers: { Authorization: 'Bearer ' + gAccessToken }
+        }).then(r=>r.json()).then(info=>{
+          if(info && info.sub){
+            if(!info.name && (info.given_name || info.family_name)){
+              info.name = [info.given_name, info.family_name].filter(Boolean).join(' ');
             }
-          }).catch(()=>{});
-        }
+            gUserInfo = info; saveGoogleSession(); updateGoogleUI(true);
+          }
+        }).catch(()=>{});
       }
     }catch(e){}
   }
@@ -3328,8 +3381,20 @@ function renderStickerThumbs(){
 }
 
 let currentSticker = null;
-let dragMode = null; 
-let startX, startY, startW, startH, startXpos, startYpos;
+let dragMode = null;
+let startX, startY, startW, startXpos, startYpos;
+let _longPressTimer = null;
+let _didDrag = false;
+const LONG_PRESS_MS = 400;
+
+function activateSticker(id){
+  document.querySelectorAll('.sticker-item').forEach(el=>el.classList.remove('active'));
+  const el=document.getElementById(id);
+  if(el) el.classList.add('active');
+}
+function deactivateAllStickers(){
+  document.querySelectorAll('.sticker-item').forEach(el=>el.classList.remove('active'));
+}
 
 function addSticker(e){
   const file = e.target.files[0]; 
@@ -3356,110 +3421,131 @@ function addSticker(e){
 }
 
 const stopDrag = () => {
-  if (currentSticker) {
-    try {
-      saveDeco({ stickers: [...stickers] });
-    } catch (e) {
-      console.error("저장 공간 부족! 하지만 배치는 강제로 완료합니다.", e);
-    }
+  if(_longPressTimer){ clearTimeout(_longPressTimer); _longPressTimer=null; }
+  if(currentSticker){
+    const div=document.getElementById(currentSticker.id);
+    if(div) div.classList.remove('dragging');
+    try{ saveDeco({stickers:[...stickers]}); }catch(e){}
   }
-  
-  currentSticker = null;
-  dragMode = null;
-  
-  const layer = document.getElementById('stickerLayer');
-  if (layer) {
-    layer.style.pointerEvents = 'none';
-  }
+  currentSticker=null; dragMode=null; _didDrag=false;
+  const layer=document.getElementById('stickerLayer');
+  if(layer) layer.style.pointerEvents='none';
 };
 
 function renderStickerDOM(s){
-  const layer = document.getElementById('stickerLayer');
+  const layer=document.getElementById('stickerLayer');
   if(!layer) return;
-  const div = document.createElement('div');
-  div.className = 'sticker-item';
-  div.id = s.id;
-  div.style.cssText = `left:${s.x}px;top:${s.y}px;width:${s.size}px;height:${s.size}px;z-index:9999;`;
-  
-  div.innerHTML = `
-    <div class="click-catcher" style="position:absolute;inset:0;z-index:5;cursor:move;"></div>
+  const div=document.createElement('div');
+  div.className='sticker-item';
+  div.id=s.id;
+  div.style.cssText=`left:${s.x}px;top:${s.y}px;width:${s.size}px;height:${s.size}px;z-index:9999;`;
+  div.innerHTML=`
     <img src="${s.src}" style="width:100%;height:100%;object-fit:contain;pointer-events:none;" draggable="false">
-    <button class="sticker-del" onclick="removeSticker('${s.id}')" style="z-index:20;">✕</button>
+    <button class="sticker-del" onclick="event.stopPropagation();removeSticker('${s.id}')" style="z-index:20;">✕</button>
     <div class="sticker-handle" style="z-index:20;"></div>`;
-    
-  div.addEventListener('click', (e) => {
-    if(e.target.classList.contains('sticker-del') || e.target.classList.contains('sticker-handle')) return;
-    e.stopPropagation();
 
-    if (currentSticker && dragMode === 'move') {
-      stopDrag();
-      return;
+  // 마우스: 꾹 누르기 → 활성화 + 드래그
+  div.addEventListener('mousedown',(e)=>{
+    if(e.target.classList.contains('sticker-del')||e.target.classList.contains('sticker-handle')) return;
+    e.preventDefault(); e.stopPropagation();
+    startX=e.clientX; startY=e.clientY; startXpos=s.x; startYpos=s.y; _didDrag=false;
+    const alreadyActive=div.classList.contains('active');
+    if(alreadyActive){
+      currentSticker=s; dragMode='move';
+      div.classList.add('dragging'); layer.style.pointerEvents='auto';
+    } else {
+      _longPressTimer=setTimeout(()=>{
+        activateSticker(s.id); currentSticker=s; dragMode='move';
+        div.classList.add('dragging'); layer.style.pointerEvents='auto';
+      },LONG_PRESS_MS);
     }
-
-    currentSticker = s;
-    dragMode = 'move';
-    startX = e.clientX;
-    startY = e.clientY;
-    startXpos = s.x;
-    startYpos = s.y;
-    layer.style.pointerEvents = 'auto';
-    console.log("위치 이동 시작 (딸깍)");
   });
 
-  const handle = div.querySelector('.sticker-handle');
-  handle.addEventListener('mousedown', (e) => {
+  // 리사이즈 핸들 마우스
+  const handle=div.querySelector('.sticker-handle');
+  handle.addEventListener('mousedown',(e)=>{
+    e.stopPropagation(); e.preventDefault();
+    currentSticker=s; dragMode='resize';
+    startX=e.clientX; startW=parseInt(div.style.width);
+    layer.style.pointerEvents='auto';
+  });
+
+  // 터치: 꾹 누르기 → 활성화 + 드래그
+  div.addEventListener('touchstart',(e)=>{
+    if(e.target.classList.contains('sticker-del')||e.target.classList.contains('sticker-handle')) return;
     e.stopPropagation();
-    e.preventDefault(); 
+    const t=e.touches[0];
+    startX=t.clientX; startY=t.clientY; startXpos=s.x; startYpos=s.y; _didDrag=false;
+    const alreadyActive=div.classList.contains('active');
+    if(alreadyActive){
+      currentSticker=s; dragMode='move';
+      div.classList.add('dragging'); layer.style.pointerEvents='auto';
+    } else {
+      _longPressTimer=setTimeout(()=>{
+        activateSticker(s.id); currentSticker=s; dragMode='move';
+        div.classList.add('dragging'); layer.style.pointerEvents='auto';
+      },LONG_PRESS_MS);
+    }
+  },{passive:true});
 
-    currentSticker = s;
-    dragMode = 'resize';
-    startX = e.clientX;
-    startW = parseInt(div.style.width);
-    
-    layer.style.pointerEvents = 'auto';
-    console.log("크기 조절 시작 (누름)");
-
-    const onceMouseUp = () => {
-      stopDrag();
-      window.removeEventListener('mouseup', onceMouseUp);
-    };
-    window.addEventListener('mouseup', onceMouseUp);
-  });
+  // 리사이즈 핸들 터치
+  handle.addEventListener('touchstart',(e)=>{
+    e.stopPropagation(); e.preventDefault();
+    const t=e.touches[0];
+    currentSticker=s; dragMode='resize';
+    startX=t.clientX; startW=parseInt(div.style.width);
+    layer.style.pointerEvents='auto';
+  },{passive:false});
 
   layer.appendChild(div);
 }
 
-window.addEventListener('mousemove', (e) => {
-  if(!currentSticker || !dragMode) return;
-  const div = document.getElementById(currentSticker.id);
-  if(!div) return;
-
-  const dx = e.clientX - startX;
-  const dy = e.clientY - startY;
-
-  if(dragMode === 'move'){
-    currentSticker.x = startXpos + dx;
-    currentSticker.y = startYpos + dy;
-    div.style.left = currentSticker.x + 'px';
-    div.style.top = currentSticker.y + 'px';
-  } 
-  else if(dragMode === 'resize'){
-    const newSize = Math.max(40, startW + dx);
-    currentSticker.size = newSize;
-    div.style.width = newSize + 'px';
-    div.style.height = newSize + 'px';
+window.addEventListener('mousemove',(e)=>{
+  if(!currentSticker||!dragMode) return;
+  const div=document.getElementById(currentSticker.id); if(!div) return;
+  const dx=e.clientX-startX, dy=e.clientY-startY;
+  if(Math.abs(dx)>3||Math.abs(dy)>3){
+    if(_longPressTimer){clearTimeout(_longPressTimer);_longPressTimer=null;}
+    _didDrag=true;
+  }
+  if(dragMode==='move'){
+    currentSticker.x=startXpos+dx; currentSticker.y=startYpos+dy;
+    div.style.left=currentSticker.x+'px'; div.style.top=currentSticker.y+'px';
+  } else if(dragMode==='resize'){
+    const ns=Math.max(40,startW+dx);
+    currentSticker.size=ns; div.style.width=ns+'px'; div.style.height=ns+'px';
   }
 });
-
-window.addEventListener('click', (e) => {
-  if (currentSticker && dragMode === 'move') {
-    if (!e.target.closest('.sticker-item') && !e.target.classList.contains('sticker-del')) {
-      stopDrag();
-    }
+window.addEventListener('mouseup',()=>{
+  if(_longPressTimer){clearTimeout(_longPressTimer);_longPressTimer=null;}
+  if(currentSticker) stopDrag();
+});
+window.addEventListener('touchmove',(e)=>{
+  if(!currentSticker||!dragMode) return;
+  const div=document.getElementById(currentSticker.id); if(!div) return;
+  const t=e.touches[0];
+  const dx=t.clientX-startX, dy=t.clientY-startY;
+  if(Math.abs(dx)>3||Math.abs(dy)>3){
+    if(_longPressTimer){clearTimeout(_longPressTimer);_longPressTimer=null;}
+    _didDrag=true;
   }
-}, { capture: true });
-
-window.addEventListener('keydown', (e) => { if(e.key === 'Escape') stopDrag(); });
+  if(dragMode==='move'){
+    currentSticker.x=startXpos+dx; currentSticker.y=startYpos+dy;
+    div.style.left=currentSticker.x+'px'; div.style.top=currentSticker.y+'px';
+  } else if(dragMode==='resize'){
+    const ns=Math.max(40,startW+dx);
+    currentSticker.size=ns; div.style.width=ns+'px'; div.style.height=ns+'px';
+  }
+},{passive:true});
+window.addEventListener('touchend',()=>{
+  if(_longPressTimer){clearTimeout(_longPressTimer);_longPressTimer=null;}
+  if(currentSticker) stopDrag();
+});
+// 바깥 클릭 → 비활성화
+window.addEventListener('click',(e)=>{
+  if(!e.target.closest('.sticker-item')) deactivateAllStickers();
+},{capture:true});
+window.addEventListener('keydown',(e)=>{if(e.key==='Escape'){stopDrag();deactivateAllStickers();}});
 
 function removeSticker(id){
   stickers = stickers.filter(s => s.id !== id);

@@ -4,6 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>가계부</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2032%2032%22%3E%0A%20%20%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%231a56db%22/%3E%0A%20%20%3Ctext%20x%3D%2250%25%22%20y%3D%2254%25%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%0A%20%20%20%20font-family%3D%22system-ui%2Csans-serif%22%20font-size%3D%2218%22%20font-weight%3D%22700%22%20fill%3D%22white%22%3E%E2%82%A9%3C/text%3E%0A%3C/svg%3E">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2032%2032%22%3E%0A%20%20%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%231a56db%22/%3E%0A%20%20%3Ctext%20x%3D%2250%25%22%20y%3D%2254%25%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%0A%20%20%20%20font-family%3D%22system-ui%2Csans-serif%22%20font-size%3D%2218%22%20font-weight%3D%22700%22%20fill%3D%22white%22%3E%E2%82%A9%3C/text%3E%0A%3C/svg%3E">
+<meta name="theme-color" content="#1a56db">
+<meta name="apple-mobile-web-app-title" content="가계부">
+<meta name="apple-mobile-web-app-capable" content="yes">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -45,6 +50,22 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-page);color:var(-
 .logo{display:flex;align-items:center;gap:8px;font-size:17px;font-weight:700;color:var(--blue);flex-shrink:0;white-space:nowrap;}
 .logo-icon{width:28px;height:28px;background:var(--blue);border-radius:6px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;}
 .hdr-r{display:flex;align-items:center;gap:8px;}
+.hdr-menu-btn{
+  display:none;background:none;border:1px solid var(--border-col);
+  border-radius:6px;cursor:pointer;padding:6px 8px;color:var(--text-primary);
+  font-size:18px;line-height:1;transition:all .15s;flex-shrink:0;
+}
+.hdr-menu-btn:hover{background:var(--bg-row-hover);}
+.hdr-actions{display:flex;align-items:center;gap:8px;}
+.hdr-dropdown{
+  position:fixed;top:56px;right:12px;
+  background:var(--bg-card);border:1px solid var(--border-col);
+  border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.12);
+  padding:8px;min-width:190px;z-index:300;
+  display:none;flex-direction:column;gap:4px;
+}
+.hdr-dropdown.open{display:flex;}
+.hdr-dropdown .btn{width:100%;justify-content:flex-start;text-align:left;font-size:13px;}
 .hdr-divider{width:1px;height:20px;background:var(--border);}
 /* ── 기간 탭 (거래내역/통계 공통) ── */
 .period-tab-bar{display:flex;gap:4px;margin-bottom:16px;}
@@ -163,7 +184,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-page);color:var(-
 }
 
 /* ── LAYOUT ── */
-.main{position:relative;z-index:10;padding:24px;max-width:980px;margin:20px auto;width:100%;background:rgba(255,255,255,0.85);border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,0.1);}
+.main{position:relative;z-index:10;padding:24px;max-width:980px;margin:20px auto;width:100%;background:rgba(255,255,255,0.85);border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,0.1);overflow-x:hidden;}
 body.dark-mode .main{background:rgba(26,29,39,0.85);}
 .month-bar{display:flex;align-items:center;gap:10px;margin-bottom:18px;}
 .mbtn{width:30px;height:30px;border-radius:6px;border:1px solid var(--border);background:#fff;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;color:var(--g700);transition:all .15s;}
@@ -197,7 +218,7 @@ body.dark-mode .main{background:rgba(26,29,39,0.85);}
 
 .ledger{background:var(--bg-card);border:1px solid var(--border-col);border-radius:var(--rlg);overflow:hidden;}
 .lhd{display:grid;grid-template-columns:72px 1fr 100px 110px 64px;padding:9px 16px;background:var(--bg-row-hover);border-bottom:1px solid var(--border-col);font-size:11px;color:var(--text-secondary);font-weight:600;}
-.lrow{display:grid;grid-template-columns:72px 1fr 100px 110px 64px;padding:11px 16px;border-bottom:1px solid var(--border);align-items:center;transition:background .1s;}
+.lrow{display:grid;grid-template-columns:72px 1fr 100px 110px 64px;padding:11px 16px;border-bottom:1px solid var(--border);align-items:center;transition:background .1s;min-width:0;}
 .lrow:last-child{border-bottom:none;}
 .lrow:hover{background:var(--bg-row-hover);}
 .rdate{font-size:12px;color:var(--g500);}
@@ -213,6 +234,7 @@ body.dark-mode .main{background:rgba(26,29,39,0.85);}
 .install-group-detail.open{display:block;}
 .install-detail-row{display:flex;justify-content:space-between;align-items:center;padding:3px 0;font-size:12px;color:var(--text-secondary);border-bottom:1px solid var(--border-col);}
 .install-detail-row:last-child{border-bottom:none;}
+.install-detail-row>span{display:flex !important;}
 
 .cpill.fixed{background:#fff3e0;color:#e65100;}
 .cpill.installment{background:#f3e8ff;color:#7c3aed;}
@@ -259,12 +281,12 @@ body.dark-mode .main{background:rgba(26,29,39,0.85);}
 .loan-pct{font-size:11px;color:var(--g500);margin-top:4px;text-align:right;}
 
 .upcoming-list{display:flex;flex-direction:column;gap:8px;}
-.upcoming-item{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:11px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
-.up-left{display:flex;align-items:center;gap:10px;}
-.up-badge{background:#f3e8ff;color:#7c3aed;font-size:11px;font-weight:600;padding:3px 8px;border-radius:10px;}
+.upcoming-item{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:11px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+.up-left{display:flex;align-items:center;gap:10px;flex:1;min-width:0;}
+.up-badge{background:#f3e8ff;color:#7c3aed;font-size:11px;font-weight:600;padding:3px 8px;border-radius:10px;flex-shrink:0;}
 .up-name{font-size:13px;font-weight:500;}
-.up-sub{font-size:11px;color:var(--g500);}
-.up-amt{font-size:14px;font-weight:700;color:#7c3aed;}
+.up-sub{font-size:11px;color:var(--g500);word-break:keep-all;}
+.up-amt{font-size:14px;font-weight:700;color:#7c3aed;flex-shrink:0;}
 
 .fixed-list{display:flex;flex-direction:column;gap:8px;}
 .fixed-item{background:var(--bg-card);border:1px solid var(--border-col);border-radius:var(--r);padding:12px 14px;display:flex;align-items:center;gap:12px;}
@@ -479,20 +501,76 @@ select.fselect:focus{border-color:var(--blue);}
   display: block !important;
 }
 
-@media(max-width:640px){
+@media(max-width:768px){
+  /* ── 헤더 ── */
   .header{padding:0 14px;}
-  .main{padding:14px;}
+  .hdr-actions{display:none !important;}
+  .hdr-divider{display:none;}
+  .hdr-menu-btn{display:flex !important;}
+
+  /* ── 레이아웃 ── */
+  .main{padding:14px;margin:12px 12px;border-radius:12px;}
+
+  /* ── 네비 ── */
+  .nav-wrapper{padding:6px 10px;}
+  .nav-tab{padding:7px 12px;font-size:12px;}
+
+  /* ── 대시보드 요약 카드 ── */
   .sgrid{grid-template-columns:1fr 1fr;}
   .sgrid .scard:last-child{grid-column:1/-1;}
   .sval{font-size:17px;}
-  .lhd,.lrow{grid-template-columns:58px 1fr 90px 28px;}
-  .lhd>*:nth-child(3),.lrow>*:nth-child(3){display:none;}
-  .stats-2col{grid-template-columns:1fr;}
-  
+
+  /* ── 거래내역 테이블 ── */
+  .lhd,.lrow{padding:9px 10px;}
+  .lrow-install-group{padding:9px 10px;}
+  .lhd{grid-template-columns:46px 1fr 88px 40px;}
+  .lrow{grid-template-columns:46px 1fr 88px 40px;}
+  .lhd>*:nth-child(3),.lrow>span:nth-child(3){display:none;}
+  .install-group-main>span:nth-child(3){display:none;}
+  .install-group-detail,.install-group-detail *{display:revert;}
+  .install-detail-row{display:flex !important;}
+  .install-detail-row>span{display:flex !important;}
+  .install-group-main{grid-template-columns:46px 1fr 88px 40px;}
+  .install-group-main>*:nth-child(3){display:none;}
+  .ramt{font-size:12px;white-space:nowrap;text-align:right;}
+  .rdesc{font-size:12px;}
+  .rmemo{font-size:11px;}
+  .ledger,.ledger *{min-width:0;}
+  .ledger{overflow:hidden;}
+
+  /* ── 자산·부채 ── */
+  .asset-grid{grid-template-columns:1fr 1fr;}
   .loan-info-grid{grid-template-columns:1fr 1fr;}
+  .loan-progress-row{flex-direction:column;gap:6px;}
+
+  /* ── 고정지출 ── */
+  .fixed-item{flex-wrap:wrap;gap:8px;}
+
+  /* ── 예산 ── */
+  .bitem-hdr{flex-wrap:wrap;gap:6px;}
+
+  /* ── 통계 ── */
+  .stats-2col{grid-template-columns:1fr;}
+
+  /* ── 모달 ── */
+  .modal{padding:18px 16px;border-radius:12px 12px 0 0;max-height:85vh;}
+  .overlay{align-items:flex-end;padding:0;}
   .frow{grid-template-columns:1fr;}
-  .nav-wrapper{padding:8px 12px;}
-  .nav-tab{padding:7px 14px;font-size:12px;}
+
+  /* ── 폼 ── */
+  .type-toggle{gap:6px;}
+  .tbtn{flex:1;text-align:center;}
+}
+
+@media(max-width:400px){
+  .main{padding:12px;margin:8px 8px;}
+  .nav-tab{padding:6px 10px;font-size:11px;}
+  .lhd{grid-template-columns:40px 1fr 80px 36px;}
+  .lrow{grid-template-columns:40px 1fr 80px 36px;}
+  .install-group-main{grid-template-columns:40px 1fr 80px 36px;}
+  .ramt{font-size:11px;}
+  .ramt{font-size:12px;white-space:nowrap;text-align:right;}
+  .rdesc{font-size:12px;}
 }
 
 .upload-container { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
@@ -501,6 +579,55 @@ select.fselect:focus{border-color:var(--blue);}
 .mini-btn { padding: 4px 8px; font-size: 11px; border-radius: 4px; border: 1px solid #ddd; background: #f8f8f8; cursor: pointer; }
 .mini-btn.delete { color: #ff4d4d; border-color: #ffcccc; }
 
+
+@media(max-width:768px){
+  .overlay{
+    animation:none;
+  }
+  .modal{
+    animation:slideUp .25s ease;
+    transform-origin:bottom;
+  }
+  @keyframes slideUp{
+    from{transform:translateY(100%);}
+    to{transform:translateY(0);}
+  }
+}
+
+.ledger-search-wrap{
+  position:relative;display:flex;align-items:center;
+  flex:1;min-width:140px;
+}
+.ledger-search-icon{
+  position:absolute;left:9px;color:var(--text-muted);flex-shrink:0;
+}
+.ledger-search-input{
+  width:100%;padding:6px 28px 6px 28px;
+  border:1px solid var(--border-col);border-radius:6px;
+  font-size:12px;font-family:inherit;
+  background:var(--bg-input);color:var(--text-primary);
+  outline:none;transition:border-color .15s;
+}
+.ledger-search-input:focus{border-color:var(--blue);}
+.ledger-search-input::placeholder{color:var(--text-muted);}
+.ledger-search-clear{
+  position:absolute;right:7px;
+  background:none;border:none;cursor:pointer;
+  color:var(--text-muted);font-size:11px;padding:2px 4px;
+  line-height:1;transition:color .15s;
+}
+.ledger-search-clear:hover{color:var(--text-primary);}
+
+.search-scope-btn{
+  padding:6px 10px;font-size:11px;font-weight:600;font-family:inherit;
+  border:1px solid var(--border-col);border-radius:6px;
+  background:var(--bg-input);color:var(--text-secondary);
+  cursor:pointer;white-space:nowrap;transition:all .15s;flex-shrink:0;
+}
+.search-scope-btn:hover{border-color:var(--blue);color:var(--blue);}
+.search-scope-btn.all-mode{
+  background:var(--blue);color:#fff;border-color:var(--blue);
+}
 </style>
 
 <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -526,34 +653,46 @@ select.fselect:focus{border-color:var(--blue);}
     </button>
   </div>
   <div class="hdr-r">
-    
-<button class="btn" style="color:var(--blue);border-color:var(--blue-md);background:var(--blue-lt);" onclick="injectSample()">🧪 테스트 데이터 생성</button>
-    
-    <div class="export-wrap" id="exportWrap">
-      <button class="export-trigger" onclick="toggleExport()">내보내기 ▾</button>
-      <div class="export-menu" id="exportMenu">
-        <button class="export-menu-item" onclick="exportCSV();toggleExport()">CSV로 저장</button>
-        <button class="export-menu-item" onclick="exportJSON();toggleExport()">JSON으로 저장</button>
+    <input type="file" id="impFile" accept=".json" style="display:none" onchange="importData(event)">
+    <!-- 데스크탑 버튼 그룹 -->
+    <div class="hdr-actions">
+      <button class="btn" style="color:var(--blue);border-color:var(--blue-md);background:var(--blue-lt);" onclick="injectSample()">🧪 테스트</button>
+      <div class="export-wrap" id="exportWrap">
+        <button class="export-trigger" onclick="toggleExport()">내보내기 ▾</button>
+        <div class="export-menu" id="exportMenu">
+          <button class="export-menu-item" onclick="exportCSV();toggleExport()">CSV로 저장</button>
+          <button class="export-menu-item" onclick="exportJSON();toggleExport()">JSON으로 저장</button>
+        </div>
       </div>
+      <button class="btn" onclick="document.getElementById('impFile').click()">불러오기</button>
+      <button class="btn btn-reset" onclick="openResetModal()">초기화</button>
+      <div class="hdr-divider"></div>
+      <button class="btn btn-google" id="googleSyncBtn" onclick="openGoogleModal()">
+        <span id="googleBtnDefault" style="display:inline-flex;align-items:center;gap:4px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" style="pointer-events:none;flex-shrink:0;" fill="none"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg><span>Google 동기화</span>
+        </span>
+        <span id="googleBtnSignedIn" style="display:none;align-items:center;gap:6px;">
+          <img id="googleBtnAvatar" src="" alt="" style="width:18px;height:18px;border-radius:50%;pointer-events:none;display:none;">
+          <span id="googleBtnAvatarPlaceholder" style="width:18px;height:18px;border-radius:50%;background:var(--blue);color:#fff;font-size:10px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;pointer-events:none;flex-shrink:0;">G</span>
+          <span id="googleBtnLabel" style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
+        </span>
+      </button>
     </div>
-    <button class="btn" onclick="document.getElementById('impFile').click()">불러오기</button>
-    <button class="btn btn-reset" onclick="openResetModal()">초기화</button>
-    <div class="hdr-divider"></div>
-    <button class="btn btn-google" id="googleSyncBtn" onclick="openGoogleModal()">
-      
-      <span id="googleBtnDefault" style="display:inline-flex;align-items:center;gap:4px;">
-        <svg width="14" height="14" viewBox="0 0 24 24" style="pointer-events:none;flex-shrink:0;" fill="none"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
-        <span>Google 동기화</span>
-      </span>
-      
-      <span id="googleBtnSignedIn" style="display:none;align-items:center;gap:6px;">
-        <img id="googleBtnAvatar" src="" alt="" style="width:18px;height:18px;border-radius:50%;pointer-events:none;display:none;">
-        <span id="googleBtnAvatarPlaceholder" style="width:18px;height:18px;border-radius:50%;background:var(--blue);color:#fff;font-size:10px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;pointer-events:none;flex-shrink:0;">G</span>
-        <span id="googleBtnLabel" style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
-      </span>
-    </button>
     <div class="hdr-divider"></div>
     <button class="btn btn-blue" onclick="openAdd()">+ 추가</button>
+    <!-- 모바일 햄버거 버튼 -->
+    <button class="hdr-menu-btn" id="hdrMenuBtn" onclick="toggleHdrMenu()">≡</button>
+    <!-- 모바일 드롭다운 메뉴 -->
+    <div class="hdr-dropdown" id="hdrDropdown">
+      <button class="btn btn-google" style="width:100%;justify-content:flex-start;" onclick="openGoogleModal();closeHdrMenu()">
+        <svg width="14" height="14" viewBox="0 0 24 24" style="pointer-events:none;flex-shrink:0;" fill="none"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>&nbsp;Google 동기화
+      </button>
+      <div style="border-top:1px solid var(--border-col);margin:4px 0;"></div>
+      <button class="btn" style="width:100%;justify-content:flex-start;" onclick="exportJSON();closeHdrMenu()">JSON 내보내기</button>
+      <button class="btn" style="width:100%;justify-content:flex-start;" onclick="exportCSV();closeHdrMenu()">CSV 내보내기</button>
+      <button class="btn" style="width:100%;justify-content:flex-start;" onclick="document.getElementById('impFile').click();closeHdrMenu()">불러오기</button>
+      <button class="btn btn-reset" style="width:100%;justify-content:flex-start;" onclick="openResetModal();closeHdrMenu()">초기화</button>
+    </div>
   </div>
 </div>
 
@@ -619,11 +758,17 @@ select.fselect:focus{border-color:var(--blue);}
       <button class="mbtn" onclick="chPeriod(1)">&#8250;</button>
     </div>
     
-    <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;">
+    <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center;">
       <select class="fselect" id="fType" onchange="renderLedger()" style="width:auto;font-size:12px;">
         <option value="">전체</option><option value="income">수입</option><option value="expense">지출</option>
       </select>
       <select class="fselect" id="fCat" onchange="renderLedger()" style="width:auto;font-size:12px;"></select>
+      <div class="ledger-search-wrap">
+        <svg class="ledger-search-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="fSearch" class="ledger-search-input" placeholder="내용/메모/카테고리 검색..." oninput="renderLedger()">
+        <button class="ledger-search-clear" id="fSearchClear" onclick="clearSearch()" title="검색 지우기" style="display:none;">✕</button>
+      </div>
+      <button class="search-scope-btn" id="searchScopeBtn" onclick="toggleSearchScope()" title="전체 기간 검색 ON/OFF">기간 내</button>
     </div>
     
     <div class="ledger-summary-bar">
@@ -1390,12 +1535,33 @@ function renderRecentRows(){
 }
 
 function renderLedger(){
-  const type=document.getElementById('fType').value,cat=document.getElementById('fCat').value;
+  const type=document.getElementById('fType').value;
+  const cat=document.getElementById('fCat').value;
+  const searchEl=document.getElementById('fSearch');
+  const q=(searchEl?searchEl.value:'').trim().toLowerCase();
   const pl=document.getElementById('periodLabel');if(pl)pl.textContent=periodLabel();
 
-  let txs=periodTxs().sort((a,b)=>b.date.localeCompare(a.date));
-  if(type)txs=txs.filter(t=>t.type===type);
-  if(cat)txs=txs.filter(t=>t.category===cat);
+  const allMode = searchAllMode && q; // 전체 검색 모드이고 검색어 있을 때만 전체 탐색
+
+  // 기간 내 검색이 기본, 전체 검색 모드일 때만 전체 데이터 사용
+  let txs = allMode ? [...S.txs] : periodTxs();
+  txs = txs.sort((a,b)=>b.date.localeCompare(a.date));
+  if(type) txs=txs.filter(t=>t.type===type);
+  if(cat)  txs=txs.filter(t=>t.category===cat);
+  if(q)    txs=txs.filter(t=>
+    t.desc.toLowerCase().includes(q) ||
+    (t.memo||'').toLowerCase().includes(q) ||
+    (t.category||'').toLowerCase().includes(q)
+  );
+
+  // 검색창 X버튼 표시
+  const clearBtn=document.getElementById('fSearchClear');
+  if(clearBtn) clearBtn.style.display=q?'block':'none';
+  // 전체 검색 모드일 때 기간 탭/화살표 흐리게
+  const periodBar=document.querySelector('.period-tab-bar');
+  const monthBar=document.querySelector('#page-ledger .month-bar');
+  if(periodBar) periodBar.style.opacity=allMode?'0.4':'1';
+  if(monthBar)  monthBar.style.opacity=allMode?'0.4':'1';
 
   document.getElementById('ledgerRows').innerHTML=buildLedgerHTML(txs);
 
@@ -2721,11 +2887,29 @@ function updateLogoDOM(text, imgSrc){
     el.innerHTML=`<img src="${imgSrc}" class="logo-icon-img" alt="logo">`;
     el.style.background='transparent';
     if(prev){ prev.innerHTML=`<img src="${imgSrc}" style="width:100%;height:100%;object-fit:cover;">`; prev.style.background='transparent'; }
+    updateFavicon(null, imgSrc);
   } else {
     el.innerHTML=text||'₩';
     el.style.background='';
     if(prev){ prev.innerHTML=text||'₩'; prev.style.background=''; }
+    updateFavicon(text||'₩', null);
   }
+}
+
+function updateFavicon(text, imgSrc){
+  let href;
+  if(imgSrc){
+    href = imgSrc;
+  } else {
+    const t = encodeURIComponent(text||'₩');
+    const blue = getComputedStyle(document.documentElement).getPropertyValue('--blue').trim()||'#1a56db';
+    const blueEnc = encodeURIComponent(blue);
+    const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='${blue}'/><text x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-family='system-ui,sans-serif' font-size='18' font-weight='700' fill='white'>${text||'₩'}</text></svg>`;
+    href = 'data:image/svg+xml,' + svg.replace(/#/g,'%23').replace(/'/g,'%27');
+  }
+  let link = document.querySelector('link[rel="icon"]');
+  if(!link){ link=document.createElement('link'); link.rel='icon'; document.head.appendChild(link); }
+  link.href = href;
 }
 
 /* ── 배경 이미지 ── */
@@ -3293,6 +3477,52 @@ function applyDecoOnLoad() {
     stickers.forEach(s => renderStickerDOM(s));
   }
   if(typeof renderStickerThumbs === 'function') renderStickerThumbs();
+}
+
+
+function toggleHdrMenu(){
+  const dd = document.getElementById('hdrDropdown');
+  dd.classList.toggle('open');
+}
+function closeHdrMenu(){
+  document.getElementById('hdrDropdown').classList.remove('open');
+}
+function toggleExportMobile(){
+  const sub = document.getElementById('mobileExportSub');
+  if(sub) sub.style.display = sub.style.display==='none'?'flex':'none';
+}
+document.addEventListener('click', function(e){
+  const dd = document.getElementById('hdrDropdown');
+  const btn = document.getElementById('hdrMenuBtn');
+  if(dd && btn && !dd.contains(e.target) && !btn.contains(e.target)){
+    dd.classList.remove('open');
+  }
+});
+
+
+let searchAllMode = false;
+
+function toggleSearchScope(){
+  searchAllMode = !searchAllMode;
+  const btn = document.getElementById('searchScopeBtn');
+  if(btn){
+    btn.textContent = searchAllMode ? '전체' : '기간 내';
+    btn.classList.toggle('all-mode', searchAllMode);
+    btn.title = searchAllMode ? '전체 기간 검색 중 (클릭하면 기간 내 검색)' : '기간 내 검색 중 (클릭하면 전체 검색)';
+  }
+  renderLedger();
+}
+
+function clearSearch(){
+  const el=document.getElementById('fSearch');
+  if(el){ el.value=''; el.focus(); }
+  // 검색 초기화 시 전체 검색 모드도 해제
+  if(searchAllMode){
+    searchAllMode=false;
+    const btn=document.getElementById('searchScopeBtn');
+    if(btn){ btn.textContent='기간 내'; btn.classList.remove('all-mode'); }
+  }
+  renderLedger();
 }
 
 function renderAll(){updateLabels();renderSummary();renderRecentRows();renderLedger();renderFixed();renderAssets();renderBudget();renderCatSettings();renderCharts();if(statsMode==='year')renderYearStats();}

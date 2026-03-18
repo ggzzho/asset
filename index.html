@@ -104,7 +104,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-page);color:var(-
   right:12px;
   background:var(--bg-card);border:1px solid var(--border-col);
   border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.12);
-  padding:8px;min-width:200px;z-index:300;
+  padding:8px;min-width:200px;z-index:600;
   display:none;flex-direction:column;gap:2px;
   max-height:calc(100vh - 72px);overflow-y:auto;
 }
@@ -783,6 +783,7 @@ select.fselect:focus{border-color:var(--blue);}
   text-align:center;line-height:1.6;
   border-top:1px solid var(--border-col);
   margin-top:8px;
+  position:relative;z-index:20;
 }
 .app-footer-version{
   font-weight:700;color:var(--text-secondary);

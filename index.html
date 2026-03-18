@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
 <title>가계부</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2032%2032%22%3E%0A%20%20%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%231a56db%22/%3E%0A%20%20%3Ctext%20x%3D%2250%25%22%20y%3D%2254%25%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%0A%20%20%20%20font-family%3D%22system-ui%2Csans-serif%22%20font-size%3D%2218%22%20font-weight%3D%22700%22%20fill%3D%22white%22%3E%E2%82%A9%3C/text%3E%0A%3C/svg%3E">
 <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2032%2032%22%3E%0A%20%20%3Crect%20width%3D%2232%22%20height%3D%2232%22%20rx%3D%228%22%20fill%3D%22%231a56db%22/%3E%0A%20%20%3Ctext%20x%3D%2250%25%22%20y%3D%2254%25%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%0A%20%20%20%20font-family%3D%22system-ui%2Csans-serif%22%20font-size%3D%2218%22%20font-weight%3D%22700%22%20fill%3D%22white%22%3E%E2%82%A9%3C/text%3E%0A%3C/svg%3E">
@@ -12,6 +12,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
+html{overflow-x:hidden;width:100%;}
 :root{
   /* ── 테마 컬러 (JS로 동적 교체) ── */
   --blue:#1a56db;--blue-dk:#1342a8;--blue-lt:#e8f0fd;--blue-md:#bfcffa;
@@ -38,7 +39,7 @@ body.dark-mode{
   --g300:#444660;--g100:#1f2235;--g50:#0f1117;--white:#1a1d27;
   --border:#2a2d3e;--red-lt:#2d1515;--grn-lt:#0d1f14;--amber-lt:#1f1a0d;
 }
-body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-page);color:var(--text-primary);font-size:14px;line-height:1.5;transition:background .25s,color .25s;}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-page);color:var(--text-primary);font-size:14px;line-height:1.5;transition:background .25s,color .25s;overflow-x:hidden;width:100%;}
 
 /* ── HEADER ── */
 .header{
@@ -47,8 +48,13 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-page);color:var(-
   padding:0 var(--gutter);
   display:flex;align-items:center;justify-content:space-between;
   height:56px;
-  position:sticky;top:0;z-index:200;
+  position:sticky;
+  top:0;
+  z-index:200;
   transition:background .25s;
+  /* 노치/상단 안전 영역 대응 */
+  padding-top:env(safe-area-inset-top,0px);
+  height:calc(56px + env(safe-area-inset-top,0px));
 }
 .logo{display:flex;align-items:center;gap:8px;font-size:17px;font-weight:700;color:var(--blue);flex-shrink:0;white-space:nowrap;}
 .logo-icon{width:28px;height:28px;background:var(--blue);border-radius:6px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;}
@@ -2929,6 +2935,12 @@ async function syncDownload(){
       
       if (data.deco) {
         if(data.deco){ _decoCache=data.deco; await saveDecoAll(data.deco); applyDecoOnLoad(); }
+      }
+
+      // 테마 설정 복원
+      if(data.theme && Object.keys(data.theme).length > 0){
+        localStorage.setItem('theme', JSON.stringify(data.theme));
+        loadTheme();
       }
 
       save(); 

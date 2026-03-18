@@ -67,8 +67,6 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-page);color:var(-
 .yr-cat-bar{height:100%;border-radius:3px;background:var(--blue);transition:width .4s;}
 .yr-cat-amt{font-size:13px;font-weight:700;color:var(--red);text-align:right;min-width:90px;}
 
-
-/* header action buttons */
 .btn{
   padding:7px 14px;
   border-radius:6px;
@@ -101,7 +99,6 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-page);color:var(-
 }
 .export-trigger:hover{background:var(--g50);border-color:var(--g300);}
 
-/* 직각 박스 드롭다운 */
 .export-menu{
   display:none;
   position:absolute;
@@ -110,7 +107,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-page);color:var(-
   min-width:160px;
   background:#fff;
   border:1px solid var(--border);
-  border-radius:0;          /* 직각 */
+  border-radius:0;          
   box-shadow:0 4px 12px rgba(0,0,0,.10);
   z-index:500;
   overflow:hidden;
@@ -125,7 +122,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-page);color:var(-
   background:none;
   border:none;
   border-bottom:1px solid var(--border);
-  border-radius:0;          /* 직각 */
+  border-radius:0;          
   text-align:left;
   cursor:pointer;
   transition:background .12s;
@@ -135,7 +132,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-page);color:var(-
 
 /* ── NAV BAR ── */
 .nav-wrapper{
-  background:var(--bg-nav);          /* 파란 배경 */
+  background:var(--bg-nav);          
   padding:10px 20px;
   position:sticky;top:56px;z-index:190;
   display:flex;align-items:center;gap:4px;
@@ -148,16 +145,16 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg-page);color:var(-
 .nav-tab{
   padding:8px 20px;
   font-size:13px;font-weight:500;font-family:inherit;
-  color:#fff;                      /* 기본 흰 폰트 */
-  background:transparent;          /* 기본 배경 투명 */
+  color:#fff;                      
+  background:transparent;          
   border:none;
-  border-radius:20px;              /* 라운드 */
+  border-radius:20px;              
   white-space:nowrap;
   cursor:pointer;
   transition:background .18s, color .18s, font-weight .18s;
   letter-spacing:.1px;
 }
-/* 호버 & 활성 → 흰 박스 + 파란 폰트 */
+
 .nav-tab:hover,
 .nav-tab.active{
   background:#fff;
@@ -216,7 +213,6 @@ body.dark-mode .main{background:rgba(26,29,39,0.85);}
 .install-group-detail.open{display:block;}
 .install-detail-row{display:flex;justify-content:space-between;align-items:center;padding:3px 0;font-size:12px;color:var(--text-secondary);border-bottom:1px solid var(--border-col);}
 .install-detail-row:last-child{border-bottom:none;}
-/* install-toggle-btn은 row-action-btn + edit-btn 스타일 그대로 사용 — 별도 CSS 불필요 */
 
 .cpill.fixed{background:#fff3e0;color:#e65100;}
 .cpill.installment{background:#f3e8ff;color:#7c3aed;}
@@ -321,8 +317,6 @@ select.fselect:focus{border-color:var(--blue);}
 
 .mfoot{display:flex;gap:8px;justify-content:flex-end;margin-top:18px;}
 
-
-
 /* ── Google 동기화 버튼 ── */
 .btn-google{background:#fff;color:#3d3d3d;border:1px solid var(--border);display:inline-flex;align-items:center;}
 .btn-google:hover{background:var(--g50);border-color:var(--g300);}
@@ -343,7 +337,6 @@ select.fselect:focus{border-color:var(--blue);}
 .sync-btn.download:hover{background:var(--blue-lt);}
 .sync-warn{font-size:11px;color:var(--text-secondary);text-align:center;margin-top:8px;line-height:1.6;}
 
-
 /* ── 꾸미기 탭 구조 ── */
 .setting-tabs{display:flex;gap:2px;border-bottom:1px solid var(--border-col);margin-bottom:20px;}
 .setting-tab{padding:8px 14px;font-size:12px;font-weight:500;font-family:inherit;color:var(--text-secondary);background:none;border:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s;}
@@ -361,20 +354,20 @@ select.fselect:focus{border-color:var(--blue);}
   position: fixed;
   top: 0; left: 0;
   width: 100vw; height: 100vh;
-  z-index: 9000;
-  pointer-events: none; /* [핵심] 레이어 자체는 마우스 신호를 통과시킵니다. */
+  z-index: 500; 
+  pointer-events: none; 
 }
 
 .sticker-item {
   position: absolute;
-  pointer-events: auto; /* [핵심] 스티커 이미지만 마우스 신호를 받습니다. */
+  pointer-events: auto; 
   cursor: move;
 }
 .sticker-item img {
   display: block; width: 100%; height: 100%; object-fit: contain;
-  pointer-events: none; /* 이미지 드래그 방지 */
+  pointer-events: none; 
 }
-/* 스티커 삭제 버튼 */
+
 .sticker-item .sticker-del {
   position: absolute; top: -12px; right: -12px;
   width: 24px; height: 24px; border-radius: 50%;
@@ -382,7 +375,7 @@ select.fselect:focus{border-color:var(--blue);}
   font-size: 14px; cursor: pointer; display: none;
   align-items: center; justify-content: center; z-index: 11;
 }
-/* 크기 조절/회전 핸들 */
+
 .sticker-item .sticker-handle {
   position: absolute; bottom: -8px; right: -8px;
   width: 16px; height: 16px; border-radius: 50%;
@@ -495,13 +488,21 @@ select.fselect:focus{border-color:var(--blue);}
   .lhd,.lrow{grid-template-columns:58px 1fr 90px 28px;}
   .lhd>*:nth-child(3),.lrow>*:nth-child(3){display:none;}
   .stats-2col{grid-template-columns:1fr;}
-  /* asset-grid mobile: already 1fr 1fr */
+  
   .loan-info-grid{grid-template-columns:1fr 1fr;}
   .frow{grid-template-columns:1fr;}
   .nav-wrapper{padding:8px 12px;}
   .nav-tab{padding:7px 14px;font-size:12px;}
 }
+
+.upload-container { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.deco-btn { flex-grow: 1; height: 40px; border: 1px dashed #ccc; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; background: #fff; font-size: 13px; }
+.deco-info { flex-grow: 1; font-size: 13px; color: var(--blue); font-weight: bold; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mini-btn { padding: 4px 8px; font-size: 11px; border-radius: 4px; border: 1px solid #ddd; background: #f8f8f8; cursor: pointer; }
+.mini-btn.delete { color: #ff4d4d; border-color: #ffcccc; }
+
 </style>
+
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <script src="https://apis.google.com/js/api.js" async defer></script>
 </head>
@@ -525,9 +526,9 @@ select.fselect:focus{border-color:var(--blue);}
     </button>
   </div>
   <div class="hdr-r">
-    <!-- 테스트 데이터 생성 버튼 -->
+    
 <button class="btn" style="color:var(--blue);border-color:var(--blue-md);background:var(--blue-lt);" onclick="injectSample()">🧪 테스트 데이터 생성</button>
-    <!-- 내보내기 드롭다운 -->
+    
     <div class="export-wrap" id="exportWrap">
       <button class="export-trigger" onclick="toggleExport()">내보내기 ▾</button>
       <div class="export-menu" id="exportMenu">
@@ -537,15 +538,14 @@ select.fselect:focus{border-color:var(--blue);}
     </div>
     <button class="btn" onclick="document.getElementById('impFile').click()">불러오기</button>
     <button class="btn btn-reset" onclick="openResetModal()">초기화</button>
-    <input type="file" id="impFile" accept=".json" style="display:none" onchange="importData(event)">
     <div class="hdr-divider"></div>
     <button class="btn btn-google" id="googleSyncBtn" onclick="openGoogleModal()">
-      <!-- 비로그인: G 로고 + 텍스트 -->
+      
       <span id="googleBtnDefault" style="display:inline-flex;align-items:center;gap:4px;">
         <svg width="14" height="14" viewBox="0 0 24 24" style="pointer-events:none;flex-shrink:0;" fill="none"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
         <span>Google 동기화</span>
       </span>
-      <!-- 로그인 후: 아바타 + 이름 -->
+      
       <span id="googleBtnSignedIn" style="display:none;align-items:center;gap:6px;">
         <img id="googleBtnAvatar" src="" alt="" style="width:18px;height:18px;border-radius:50%;pointer-events:none;display:none;">
         <span id="googleBtnAvatarPlaceholder" style="width:18px;height:18px;border-radius:50%;background:var(--blue);color:#fff;font-size:10px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;pointer-events:none;flex-shrink:0;">G</span>
@@ -606,26 +606,26 @@ select.fselect:focus{border-color:var(--blue);}
 
   <!-- 거래내역 -->
   <div class="page" id="page-ledger">
-    <!-- 기간 단위 탭 -->
+    
     <div class="period-tab-bar">
-      <button class="period-tab active" data-period="month" onclick="setPeriod(this)">월</button>
-      <button class="period-tab" data-period="week"  onclick="setPeriod(this)">주</button>
+      <button class="period-tab active" data-period="week"  onclick="setPeriod(this)">주</button>
+      <button class="period-tab" data-period="month" onclick="setPeriod(this)">월</button>
       <button class="period-tab" data-period="year"  onclick="setPeriod(this)">연</button>
     </div>
-    <!-- 네비게이터 -->
+    
     <div class="month-bar" style="margin-bottom:14px;">
       <button class="mbtn" onclick="chPeriod(-1)">&#8249;</button>
       <span class="mlabel" id="periodLabel">-</span>
       <button class="mbtn" onclick="chPeriod(1)">&#8250;</button>
     </div>
-    <!-- 필터 -->
+    
     <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;">
       <select class="fselect" id="fType" onchange="renderLedger()" style="width:auto;font-size:12px;">
         <option value="">전체</option><option value="income">수입</option><option value="expense">지출</option>
       </select>
       <select class="fselect" id="fCat" onchange="renderLedger()" style="width:auto;font-size:12px;"></select>
     </div>
-    <!-- 기간 합계 배너 -->
+    
     <div class="ledger-summary-bar">
       <span class="ls-item inc-item">수입 <strong id="lsPeriodInc">₩0</strong></span>
       <span class="ls-sep">·</span>
@@ -633,7 +633,7 @@ select.fselect:focus{border-color:var(--blue);}
       <span class="ls-sep">·</span>
       <span class="ls-item">잔액 <strong id="lsPeriodBal">₩0</strong></span>
     </div>
-    <!-- 이번달 할부 청구 (수입/지출 바로 아래) -->
+    
     <div class="section" id="upcomingSection" style="margin-bottom:16px;display:none;">
       <div class="sec-hdr"><div class="sec-title">이번 달 카드 할부 청구</div></div>
       <div class="upcoming-list" id="upcomingList"></div>
@@ -671,12 +671,12 @@ select.fselect:focus{border-color:var(--blue);}
 
   <!-- 통계 -->
   <div class="page" id="page-stats">
-    <!-- 월/연 탭 -->
+    
     <div class="period-tab-bar">
       <button class="period-tab active" data-speriod="month" onclick="setStatsPeriod(this)">월별</button>
       <button class="period-tab" data-speriod="year" onclick="setStatsPeriod(this)">연간</button>
     </div>
-    <!-- 월별 통계 -->
+    
     <div id="statsMonthView">
       <div class="month-bar"><button class="mbtn" onclick="chM(-1)">&#8249;</button><span class="mlabel" id="ml4"></span><button class="mbtn" onclick="chM(1)">&#8250;</button></div>
       <div class="stats-2col">
@@ -694,10 +694,10 @@ select.fselect:focus{border-color:var(--blue);}
         <div class="chart-wrap"><canvas id="dailyChart"></canvas></div>
       </div>
     </div>
-    <!-- 연간 통계 -->
+    
     <div id="statsYearView" style="display:none;">
       <div class="month-bar"><button class="mbtn" onclick="chStatsYear(-1)">&#8249;</button><span class="mlabel" id="statsYearLabel">-</span><button class="mbtn" onclick="chStatsYear(1)">&#8250;</button></div>
-      <!-- 연간 요약 카드 -->
+      
       <div class="sgrid" style="margin-bottom:16px;">
         <div class="scard"><div class="slabel">연간 총 수입</div><div class="sval inc" id="yrInc">₩0</div></div>
         <div class="scard"><div class="slabel">연간 총 지출</div><div class="sval exp" id="yrExp">₩0</div></div>
@@ -722,14 +722,13 @@ select.fselect:focus{border-color:var(--blue);}
     <div class="budget-list" id="budgetList"></div>
   </div>
 
-  <!-- 카테고리 -->
+  
   <div class="page" id="page-settings">
     <div class="section"><div class="sec-hdr"><div class="sec-title">지출 카테고리</div><button class="btn btn-blue" onclick="openCatModal('expense')">+ 추가</button></div><div class="ledger" id="expCatList"></div></div>
     <div class="section"><div class="sec-hdr"><div class="sec-title">수입 카테고리</div><button class="btn btn-blue" onclick="openCatModal('income')">+ 추가</button></div><div class="ledger" id="incCatList"></div></div>
   </div>
 </div>
 
-<!-- 거래 추가 모달 -->
 <div class="overlay" id="addModal">
   <div class="modal">
     <div class="modal-title" id="addModalTitle">내역 추가</div>
@@ -763,35 +762,32 @@ select.fselect:focus{border-color:var(--blue);}
   </div>
 </div>
 
-<!-- 고정지출 모달 -->
 <div class="overlay" id="fixedModal">
   <div class="modal">
-    <div class="modal-title">고정지출 등록</div>
+    <div class="modal-title" id="fixedModalTitle">고정지출 등록</div>
     <div class="fg"><label class="flabel">이름</label><input type="text" class="finput" id="fxName" placeholder="월세, 보험료, 넷플릭스..."></div>
     <div class="fg"><label class="flabel">금액 (원)</label><input type="number" class="finput" id="fxAmt" placeholder="0"></div>
     <div class="fg"><label class="flabel">카테고리</label><select class="fselect" id="fxCat"></select></div>
     <div class="fg"><label class="flabel">매월 결제일</label><input type="number" class="finput" id="fxDay" placeholder="1~31" min="1" max="31"></div>
     <div class="fg"><label class="flabel">메모 (선택)</label><input type="text" class="finput" id="fxMemo" placeholder="메모"></div>
-    <div class="mfoot"><button class="btn" onclick="closeOverlay('fixedModal')">취소</button><button class="btn btn-blue" onclick="saveFixed()">저장</button></div>
+    <div class="mfoot"><button class="btn" onclick="closeOverlay('fixedModal')">취소</button><button class="btn btn-blue" id="fixedModalSaveBtn" onclick="saveFixed()">저장</button></div>
   </div>
 </div>
 
-<!-- 자산 모달 -->
 <div class="overlay" id="assetModal">
   <div class="modal">
-    <div class="modal-title">현금성 자산 추가</div>
+    <div class="modal-title" id="assetModalTitle">현금성 자산 추가</div>
     <div class="fg"><label class="flabel">자산 종류</label><select class="fselect" id="assetType"><option value="stock">주식</option><option value="savings">예·적금</option><option value="cash">현금</option><option value="property">부동산·전세금</option><option value="other">기타</option></select></div>
     <div class="fg"><label class="flabel">이름</label><input type="text" class="finput" id="assetName" placeholder="삼성전자, 국민은행 적금..."></div>
     <div class="fg"><label class="flabel">금액 (원)</label><input type="number" class="finput" id="assetAmt" placeholder="0"></div>
     <div class="fg"><label class="flabel">메모 (선택)</label><input type="text" class="finput" id="assetMemo" placeholder="메모"></div>
-    <div class="mfoot"><button class="btn" onclick="closeOverlay('assetModal')">취소</button><button class="btn btn-blue" onclick="saveAsset()">추가</button></div>
+    <div class="mfoot"><button class="btn" onclick="closeOverlay('assetModal')">취소</button><button class="btn btn-blue" id="assetModalSaveBtn" onclick="saveAsset()">추가</button></div>
   </div>
 </div>
 
-<!-- 대출 모달 -->
 <div class="overlay" id="loanModal">
   <div class="modal">
-    <div class="modal-title">부채·대출 등록</div>
+    <div class="modal-title" id="loanModalTitle">부채·대출 등록</div>
     <div class="fg"><label class="flabel">대출명</label><input type="text" class="finput" id="loanName" placeholder="전세자금대출, 신용대출..."></div>
     <div class="fg"><label class="flabel">원금 (원)</label><input type="number" class="finput" id="loanPrincipal" placeholder="0"></div>
     <div class="fg"><label class="flabel">잔여 원금 (원)</label><input type="number" class="finput" id="loanRemain" placeholder="원금과 같으면 동일하게"></div>
@@ -802,36 +798,34 @@ select.fselect:focus{border-color:var(--blue);}
     <div class="fg"><label class="flabel">연 금리 (%)</label><input type="number" class="finput" id="loanRate" placeholder="예: 3.5" step="0.1"></div>
     <div class="fg"><label class="flabel">금융기관</label><input type="text" class="finput" id="loanBank" placeholder="국민은행, 카카오뱅크"></div>
     <div class="fg"><label class="flabel">메모 (선택)</label><input type="text" class="finput" id="loanMemo" placeholder="메모"></div>
-    <div class="mfoot"><button class="btn" onclick="closeOverlay('loanModal')">취소</button><button class="btn btn-blue" onclick="saveLoan()">등록</button></div>
+    <div class="mfoot"><button class="btn" onclick="closeOverlay('loanModal')">취소</button><button class="btn btn-blue" id="loanModalSaveBtn" onclick="saveLoan()">등록</button></div>
   </div>
 </div>
 
-<!-- 예산 모달 -->
 <div class="overlay" id="budModal">
   <div class="modal">
-    <div class="modal-title">예산 설정</div>
+    <div class="modal-title" id="budModalTitle">예산 설정</div>
     <div class="fg"><label class="flabel">카테고리</label><select class="fselect" id="bCat"></select></div>
     <div class="fg"><label class="flabel">월 예산 (원)</label><input type="number" class="finput" id="bAmt" placeholder="0"></div>
-    <div class="mfoot"><button class="btn" onclick="closeOverlay('budModal')">취소</button><button class="btn btn-blue" onclick="saveBudget()">저장</button></div>
+    <div class="mfoot"><button class="btn" onclick="closeOverlay('budModal')">취소</button><button class="btn btn-blue" id="budModalSaveBtn" onclick="saveBudget()">저장</button></div>
   </div>
 </div>
 
-<!-- 테마 설정 모달 -->
 <div class="overlay" id="themeModal">
   <div class="modal" style="max-width:480px;">
     <div class="modal-title" style="display:flex;align-items:center;gap:8px;">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg> 설정
     </div>
 
-    <!-- 탭 -->
+    
     <div class="setting-tabs">
       <button class="setting-tab active" data-pane="pane-theme" onclick="switchSettingTab(this)">🎨 테마 컬러</button>
       <button class="setting-tab" data-pane="pane-deco" onclick="switchSettingTab(this)">✨ 꾸미기</button>
     </div>
 
-    <!-- 테마 컬러 탭 -->
+    
     <div class="setting-pane active" id="pane-theme">
-      <!-- 다크모드 -->
+      
       <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border-col);margin-bottom:18px;">
         <div>
           <div style="font-size:13px;font-weight:600;color:var(--text-primary);">다크모드</div>
@@ -842,11 +836,11 @@ select.fselect:focus{border-color:var(--blue);}
           <div class="toggle-track"></div><div class="toggle-thumb"></div>
         </label>
       </div>
-      <!-- 프리셋 -->
+      
       <div class="deco-section-title">프리셋 컬러</div>
       <div class="theme-color-grid" id="themeColorGrid"></div>
       <div style="border-top:1px solid var(--border-col);margin:18px 0;"></div>
-      <!-- 커스텀 컬러 -->
+      
       <div class="deco-section-title">커스텀 컬러</div>
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
         <input type="color" id="customColorPicker" value="#1a56db"
@@ -867,10 +861,10 @@ select.fselect:focus{border-color:var(--blue);}
       </div>
     </div>
 
-    <!-- 꾸미기 탭 -->
+    
     <div class="setting-pane" id="pane-deco">
 
-      <!-- 로고 아이콘 변경 -->
+      
       <div class="deco-section-title">로고 아이콘</div>
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
         <div id="logoPreview" style="width:40px;height:40px;background:var(--blue);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;flex-shrink:0;overflow:hidden;"></div>
@@ -886,14 +880,16 @@ select.fselect:focus{border-color:var(--blue);}
       </div>
       <div style="border-top:1px solid var(--border-col);margin:16px 0;"></div>
 
-      <!-- 배경 이미지 -->
-      <div class="deco-section-title">앱 배경 이미지</div>
-      <div class="upload-zone" onclick="document.getElementById('bgImgInput').click()">
-        <div style="font-size:24px;">🖼️</div>
-        <p>클릭해서 배경 이미지 업로드</p>
-        <p style="font-size:11px;color:var(--text-muted);">JPG, PNG, WebP 지원</p>
+      
+<div class="deco-section-title">앱 배경 이미지</div>
+      <div id="bgUploadArea" style="margin-bottom:10px;">
+        <div class="upload-zone" onclick="document.getElementById('bgImgInput').click()">
+          <div style="font-size:24px;">🖼️</div>
+          <p>클릭해서 배경 이미지 업로드</p>
+        </div>
       </div>
-      <input type="file" id="bgImgInput" accept="image/*" style="display:none" onchange="applyBgImage(event)">
+      <input type="file" id="bgImgInput" accept="image/*" style="display:none" onchange="handleFile(event, 'bgImage')">
+      
       <div id="bgImgControls" style="display:none;margin-top:10px;">
         <div style="font-size:12px;color:var(--text-secondary);margin-bottom:4px;">오버레이 색상</div>
         <div style="display:flex;gap:8px;margin-bottom:8px;">
@@ -906,17 +902,18 @@ select.fselect:focus{border-color:var(--blue);}
           <input type="range" id="bgOpacitySlider" min="0" max="90" value="50" step="5" oninput="updateBgOpacity(this.value)">
           <span class="opacity-val" id="bgOpacityVal">50%</span>
         </div>
-        <button class="btn" style="width:100%;margin-top:8px;color:var(--red);" onclick="removeBgImage()">배경 이미지 제거</button>
       </div>
       <div style="border-top:1px solid var(--border-col);margin:16px 0;"></div>
 
-      <!-- 커버 이미지 -->
       <div class="deco-section-title">커버 이미지 (헤더 위)</div>
-      <div class="upload-zone" onclick="document.getElementById('coverImgInput').click()">
-        <div style="font-size:24px;">📷</div>
-        <p>클릭해서 커버 이미지 업로드</p>
+      <div id="coverUploadArea" style="margin-bottom:10px;">
+        <div class="upload-zone" onclick="document.getElementById('coverImgInput').click()">
+          <div style="font-size:24px;">📷</div>
+          <p>클릭해서 커버 이미지 업로드</p>
+        </div>
       </div>
-      <input type="file" id="coverImgInput" accept="image/*" style="display:none" onchange="applyCoverImage(event)">
+      <input type="file" id="coverImgInput" accept="image/*" style="display:none" onchange="handleFile(event, 'headerImage')">
+      
       <div id="coverImgControls" style="display:none;margin-top:10px;">
         <div style="font-size:12px;color:var(--text-secondary);margin-bottom:4px;">오버레이 색상</div>
         <div style="display:flex;gap:8px;margin-bottom:8px;">
@@ -929,16 +926,15 @@ select.fselect:focus{border-color:var(--blue);}
           <input type="range" id="coverOpacitySlider" min="0" max="90" value="50" step="5" oninput="updateCoverOpacity(this.value)">
           <span class="opacity-val" id="coverOpacityVal">50%</span>
         </div>
-        <button class="btn" style="width:100%;margin-top:8px;color:var(--red);" onclick="removeCoverImage()">커버 이미지 제거</button>
       </div>
       <div style="border-top:1px solid var(--border-col);margin:16px 0;"></div>
 
-      <!-- 스티커 -->
+      
       <div class="deco-section-title">스티커</div>
       <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;">
         <button class="btn" style="font-size:12px;" onclick="document.getElementById('stickerInput').click()">PNG 스티커 업로드</button>
         <input type="file" id="stickerInput" accept="image/png,image/gif,image/webp" style="display:none" onchange="addSticker(event)">
-        <span style="font-size:11px;color:var(--text-muted);">드래그로 위치 이동 가능</span>
+        <span style="font-size:11px;color:var(--text-muted);">클릭해서 이동 가능</span>
       </div>
       <div class="sticker-grid" id="stickerThumbGrid"></div>
       <div id="noStickerMsg" style="font-size:12px;color:var(--text-muted);">등록된 스티커가 없어요.</div>
@@ -950,7 +946,7 @@ select.fselect:focus{border-color:var(--blue);}
   </div>
 </div>
 
-<!-- Google 동기화 모달 --><!-- Google 동기화 모달 -->
+<!-- Google 동기화 모달 -->
 <div class="overlay" id="googleModal">
   <div class="modal" style="max-width:400px;">
     <div class="modal-title" style="display:flex;align-items:center;gap:8px;">
@@ -958,7 +954,7 @@ select.fselect:focus{border-color:var(--blue);}
       Google Drive 동기화
     </div>
 
-    <!-- 로그인 전 -->
+    
     <div id="googleSignInSection">
       <p style="font-size:13px;color:var(--text-secondary);line-height:1.7;margin-bottom:16px;">
         Google 계정으로 로그인하면 가계부 데이터를<br>Google Drive에 자동 저장하고 어느 기기에서든<br>불러올 수 있어요.
@@ -969,7 +965,7 @@ select.fselect:focus{border-color:var(--blue);}
       </button>
     </div>
 
-    <!-- 로그인 후 -->
+    
     <div id="googleSignedInSection" style="display:none;">
       <div class="google-user-card">
         <img id="googleAvatar" class="google-avatar" src="" alt="" style="display:none;">
@@ -1082,7 +1078,6 @@ select.fselect:focus{border-color:var(--blue);}
   </div>
 </div>
 
-<!-- 초기화 확인 모달 -->
 <div class="overlay" id="resetModal">
   <div class="modal" style="max-width:400px;">
     <div class="modal-title" style="color:var(--red);">⚠️ 데이터 초기화</div>
@@ -1098,12 +1093,11 @@ select.fselect:focus{border-color:var(--blue);}
   </div>
 </div>
 
-<!-- 카테고리 모달 -->
 <div class="overlay" id="catModal">
   <div class="modal">
     <div class="modal-title" id="catModalTitle">카테고리 추가</div>
     <div class="fg"><label class="flabel">이름</label><input type="text" class="finput" id="catName" placeholder="새 카테고리 이름"></div>
-    <div class="mfoot"><button class="btn" onclick="closeOverlay('catModal')">취소</button><button class="btn btn-blue" onclick="addCategory()">추가</button></div>
+    <div class="mfoot"><button class="btn" onclick="closeOverlay('catModal')">취소</button><button class="btn btn-blue" id="catModalSaveBtn" onclick="addCategory()">추가</button></div>
   </div>
 </div>
 
@@ -1132,11 +1126,9 @@ function monthTxs(){return S.txs.filter(t=>t.date.startsWith(mk()));}
 function chM(d){S.month+=d;if(S.month>12){S.month=1;S.year++;}if(S.month<1){S.month=12;S.year--;}renderAll();}
 
 function showPage(el){
-  // 1. 모든 페이지와 탭의 active 클래스 제거
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
 
-  // 2. 클릭한 탭의 데이터 가져오기
   const pageId = el.dataset.page;
   const targetPage = document.getElementById('page-' + pageId);
   
@@ -1145,15 +1137,12 @@ function showPage(el){
   }
   el.classList.add('active');
 
-  // 3. [핵심] 대시보드일 때만 스티커 레이어 보이기
   const stickerLayer = document.getElementById('stickerLayer');
   if(stickerLayer) {
-    // 일구님의 대시보드 ID인 'dashboard'와 정확히 매칭시킵니다.
     if(pageId === 'dashboard') { 
       stickerLayer.style.display = 'block';
     } else {
       stickerLayer.style.display = 'none';
-      // 다른 페이지로 이동하면 마우스에 붙은 스티커를 강제로 떼어냅니다.
       if(typeof stopDrag === 'function') stopDrag(); 
     }
   }
@@ -1162,7 +1151,6 @@ function showPage(el){
   renderAll();
 }
 
-/* export dropdown */
 function toggleExport(){document.getElementById('exportMenu').classList.toggle('open');}
 document.addEventListener('click',e=>{
   const w=document.getElementById('exportWrap');
@@ -1172,10 +1160,8 @@ document.addEventListener('click',e=>{
 function updateLabels(){
   const lb=S.year+'년 '+S.month+'월';
   ['ml1','ml3','ml4','ml5'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=lb;});
-  // 거래내역 탭은 periodLabel로 관리
   P.year=S.year;P.month=S.month;
   const pl=document.getElementById('periodLabel');if(pl)pl.textContent=periodLabel();
-  // 연간 통계 레이블
   const syl=document.getElementById('statsYearLabel');if(syl)syl.textContent=statsYear+'년';
 }
 
@@ -1213,32 +1199,27 @@ function renderSummary(){
   - 각 달의 payDay 일자에 지출 트랜잭션 자동 생성
 ══════════════════════════════ */
 
-/* 월 더하기 유틸 */
 function addMonths(ym, n){
   let [y,m]=ym.split('-').map(Number);
   m+=n;while(m>12){m-=12;y++;}while(m<1){m+=12;y--;}
   return y+'-'+String(m).padStart(2,'0');
 }
 
-/* 할부 플랜에서 특정 연월의 청구금액 합계 계산 */
 function getInstallChargeForMonth(ym){
   if(!S.installPlans) return [];
   return (S.installPlans||[]).filter(p=>{
-    // 청구 발생 범위: addMonths(startYm,1) ~ addMonths(startYm, months)
     const firstBill = addMonths(p.startYm, 1);
     const lastBill  = addMonths(p.startYm, p.months);
     return ym >= firstBill && ym <= lastBill;
   }).map(p=>({...p, chargeAmt: p.monthlyAmt}));
 }
 
-/* 할부 플랜 삭제 시 연계 트랜잭션도 삭제 */
 function deleteInstallPlan(planId){
   S.installPlans = (S.installPlans||[]).filter(p=>p.id!==planId);
   S.txs = S.txs.filter(t=>t.installPlanId!==planId);
   save(); renderAll(); toast('할부가 삭제됐어요.');
 }
 
-/* 할부 배너 (이번달 카드 청구) */
 function renderInstallBanner(){
   const charges = getInstallChargeForMonth(mk());
   const b = document.getElementById('installBanner');
@@ -1250,7 +1231,6 @@ function renderInstallBanner(){
     charges.map(c=>`${c.desc} ${fmt(c.chargeAmt)}`).join(' · ');
 }
 
-/* 거래내역 탭 하단: 이번달 할부 청구 상세 */
 function renderUpcoming(){
   const charges = getInstallChargeForMonth(mk());
   const sec = document.getElementById('upcomingSection');
@@ -1281,7 +1261,6 @@ function monthsBetween(ymA, ymB){
   return (by-ay)*12+(bm-am)+1;
 }
 
-/* 월 할부금 자동계산 (모달) */
 function calcMonthlyAmt(){
   const amt = parseFloat(document.getElementById('iAmt').value)||0;
   const months = parseInt(document.getElementById('iMonths').value)||0;
@@ -1310,7 +1289,7 @@ function rowHTML(tx){
 }
 
 /* ── 할부 그룹 행 HTML (같은 날짜+카드사 묶음) ── */
-/* gid는 전역 카운터로 단순 숫자 ID 사용 → 한글/특수문자 문제 원천 차단 */
+
 let _igCounter = 0;
 
 function installGroupHTML(groupKey, items){
@@ -1319,17 +1298,22 @@ function installGroupHTML(groupKey, items){
   const date = items[0].date.slice(5);
   const plan0 = (S.installPlans||[]).find(p=>p.id===items[0].installPlanId);
   const cardName = plan0 ? (plan0.card||'카드할부') : '카드할부';
+  const firstId = items[0].id;
+
   const detailRows = items.map(t=>{
     const plan=(S.installPlans||[]).find(p=>p.id===t.installPlanId);
     const seq=t.installSeq||'?', tot=plan?plan.months:'?';
+    const canEdit = t.installSeq===1;
     return`<div class="install-detail-row">
       <span>${t.desc.replace(/ \(\d+\/\d+회\)/,'')} <span style="opacity:.6">(${seq}/${tot}회)</span></span>
-      <span style="font-weight:600;color:var(--red);">-${fmt(t.amount)}</span>
+      <span style="display:flex;align-items:center;gap:6px;">
+        <span style="font-weight:600;color:var(--red);">-${fmt(t.amount)}</span>
+        ${canEdit?`<button class="row-action-btn edit-btn" data-id="${t.id}" data-action="edit" title="할부 수정" style="font-size:11px;padding:2px 6px;">✎</button>`:''}
+      </span>
     </div>`;
   }).join('');
-  const firstId = items[0].id;
-  const magnifier = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="pointer-events:none;display:inline-block;vertical-align:middle;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>';
-  return`<div class="lrow-install-group">
+
+  return`<div class="lrow-install-group" style="cursor:pointer;" onclick="(function(e,g){if(e.target.closest('button'))return;var d=document.getElementById(g);if(d)d.classList.toggle('open');})(event,'${gid}')">
     <div class="install-group-main">
       <span class="rdate">${date}</span>
       <span>
@@ -1339,11 +1323,13 @@ function installGroupHTML(groupKey, items){
       <span><span class="cpill installment">할부</span></span>
       <span class="ramt exp">-${fmt(total)}</span>
       <span style="display:flex;gap:4px;justify-content:flex-end;align-items:center;">
-        <button class="row-action-btn edit-btn" onclick="(function(g){var e=document.getElementById(g);if(e)e.classList.toggle('open');})('${gid}')" title="상세 보기" type="button">${magnifier}</button>
         <button class="row-action-btn del-btn" data-id="${firstId}" data-action="del" title="할부 삭제">✕</button>
       </span>
     </div>
-    <div class="install-group-detail" id="${gid}">${detailRows}</div>
+    <div class="install-group-detail" id="${gid}">
+      <div style="font-size:11px;color:var(--text-muted);margin-bottom:6px;padding:0 2px;">▼ 할부 상세 내역 (✎ 버튼으로 수정 가능)</div>
+      ${detailRows}
+    </div>
   </div>`;
 }
 
@@ -1352,7 +1338,6 @@ function buildLedgerHTML(txs){
   _igCounter=0; // 렌더링마다 초기화
   if(!txs.length) return '<div class="empty">해당 기간에 거래 내역이 없습니다.</div>';
 
-  // 할부 트랜잭션을 날짜+카드사별로 그룹핑
   const installGroups={};  // key: "date_card"
   const normalTxs=[];
 
@@ -1368,23 +1353,19 @@ function buildLedgerHTML(txs){
     }
   });
 
-  // 모든 항목을 날짜 기준으로 정렬하여 합치기
   const allItems=[];
   normalTxs.forEach(t=>allItems.push({date:t.date, html:rowHTML(t)}));
   Object.entries(installGroups).forEach(([key,items])=>{
     allItems.push({date:items[0].date, html:installGroupHTML(key,items)});
   });
 
-  // 날짜 내림차순 정렬
   allItems.sort((a,b)=>b.date.localeCompare(a.date));
   return allItems.map(i=>i.html).join('');
 }
 
 function renderRecentRows(){
   _igCounter=0; // 렌더링마다 초기화
-  // 최근 거래: 할부는 그룹 표시, 일반은 개별 표시 (최대 7행)
   const allTxs=monthTxs().sort((a,b)=>b.date.localeCompare(a.date));
-  // 할부 그룹 키 수집
   const installGroups={};
   const seen=new Set();
   const rows=[];
@@ -1418,11 +1399,9 @@ function renderLedger(){
 
   document.getElementById('ledgerRows').innerHTML=buildLedgerHTML(txs);
 
-  // 카테고리 필터 업데이트
   const allCats=[...new Set(periodTxs().map(t=>t.category))],cur=document.getElementById('fCat').value;
   document.getElementById('fCat').innerHTML='<option value="">전체 카테고리</option>'+allCats.map(c=>`<option value="${c}"${c===cur?' selected':''}>${c}</option>`).join('');
 
-  // 기간 합계 배너
   const filtered=periodTxs().filter(t=>(!type||t.type===type)&&(!cat||t.category===cat));
   const pInc=filtered.filter(t=>t.type==='income').reduce((s,t)=>s+t.amount,0);
   const pExp=filtered.filter(t=>t.type==='expense').reduce((s,t)=>s+t.amount,0);
@@ -1443,15 +1422,42 @@ function renderFixed(){
     <div class="fi-icon">📌</div>
     <div class="fi-info"><div class="fi-name">${f.name}</div><div class="fi-sub">${f.category} · 매월 ${f.day}일${f.memo?' · '+f.memo:''}</div></div>
     <div class="fi-amt">${fmt(f.amount)}</div>
-    <button class="xbtn" style="margin-left:8px;width:auto" onclick="confirmDelFixed('${f.id}','${f.name}')">✕</button>
+    <button class="row-action-btn edit-btn" style="margin-left:4px;width:auto;" onclick="openEditFixed('${f.id}')" title="수정">✎</button>
+    <button class="xbtn" style="margin-left:4px;width:auto" onclick="confirmDelFixed('${f.id}','${f.name}')">✕</button>
   </div>`).join('');
 }
-function openFixedModal(){['fxName','fxAmt','fxDay','fxMemo'].forEach(id=>document.getElementById(id).value='');document.getElementById('fxCat').innerHTML=S.cats.expense.map(c=>`<option>${c}</option>`).join('');openOverlay('fixedModal');}
+function openFixedModal(){
+  editingFixedId=null;
+  document.getElementById('fixedModalTitle').textContent='고정지출 등록';
+  document.getElementById('fixedModalSaveBtn').textContent='저장';
+  ['fxName','fxAmt','fxDay','fxMemo'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('fxCat').innerHTML=S.cats.expense.map(c=>`<option>${c}</option>`).join('');
+  openOverlay('fixedModal');
+}
+function openEditFixed(id){
+  const f=S.fixedItems.find(f=>f.id===id); if(!f) return;
+  editingFixedId=id;
+  document.getElementById('fixedModalTitle').textContent='고정지출 수정';
+  document.getElementById('fixedModalSaveBtn').textContent='수정 저장';
+  document.getElementById('fxCat').innerHTML=S.cats.expense.map(c=>`<option${c===f.category?' selected':''}>${c}</option>`).join('');
+  document.getElementById('fxName').value=f.name;
+  document.getElementById('fxAmt').value=f.amount;
+  document.getElementById('fxDay').value=f.day;
+  document.getElementById('fxMemo').value=f.memo||'';
+  openOverlay('fixedModal');
+}
+let editingFixedId=null;
 function saveFixed(){
   const name=document.getElementById('fxName').value.trim(),amt=parseFloat(document.getElementById('fxAmt').value),cat=document.getElementById('fxCat').value,day=parseInt(document.getElementById('fxDay').value)||1,memo=document.getElementById('fxMemo').value.trim();
   if(!name||!amt||amt<=0){toast('이름과 금액을 입력해주세요.');return;}
-  const item={id:Date.now().toString(),name,amount:amt,category:cat,day,memo};
-  S.fixedItems.push(item);autoFixed(item);save();closeOverlay('fixedModal');renderAll();toast('고정지출이 등록됐어요.');
+  if(editingFixedId){
+    const idx=S.fixedItems.findIndex(f=>f.id===editingFixedId); if(idx<0)return;
+    S.fixedItems[idx]={...S.fixedItems[idx],name,amount:amt,category:cat,day,memo};
+    save();closeOverlay('fixedModal');renderAll();toast('고정지출이 수정됐어요.');
+  } else {
+    const item={id:Date.now().toString(),name,amount:amt,category:cat,day,memo};
+    S.fixedItems.push(item);autoFixed(item);save();closeOverlay('fixedModal');renderAll();toast('고정지출이 등록됐어요.');
+  }
 }
 function autoFixed(item){
   const d=String(Math.min(item.day,28)).padStart(2,'0');
@@ -1482,7 +1488,8 @@ function renderAssets(){
     <div class="ai-icon ${AICLS[a.type]||'ai-cash'}">${AICON[a.type]||'💼'}</div>
     <div class="asset-item-info"><div class="asset-item-name">${a.name}</div><div class="asset-item-sub">${ALBL[a.type]||'기타'}${a.memo?' · '+a.memo:''}</div></div>
     <div class="asset-item-amt">${fmt(a.amount)}</div>
-    <button class="xbtn" style="margin-left:8px;width:auto" onclick="confirmDelAsset('${a.id}')">✕</button>
+    <button class="row-action-btn edit-btn" style="margin-left:4px;width:auto;" onclick="openEditAsset('${a.id}')" title="수정">✎</button>
+    <button class="xbtn" style="margin-left:4px;width:auto" onclick="confirmDelAsset('${a.id}')">✕</button>
   </div>`).join(''):'<div class="empty" style="background:#fff;border:1px solid var(--border);border-radius:var(--rlg);">등록된 자산이 없습니다.</div>';
   const ll=document.getElementById('loanList');
   ll.innerHTML=S.loans.length?S.loans.map(l=>{
@@ -1490,7 +1497,11 @@ function renderAssets(){
     const dS=new Date(l.start),dE=new Date(l.end),tpct=Math.min(100,Math.max(0,Math.round((Date.now()-dS)/(dE-dS)*100)));
     const mi=Math.round(l.remain*(l.rate/100)/12);
     return`<div class="loan-card">
-      <div class="loan-hdr"><div><div class="loan-name">🏦 ${l.name}</div><div class="loan-sub">${l.bank||''} · 연 ${l.rate}%${l.memo?' · '+l.memo:''}</div></div><button class="xbtn" style="width:auto" onclick="confirmDelLoan('${l.id}')">✕</button></div>
+      <div class="loan-hdr"><div><div class="loan-name">🏦 ${l.name}</div><div class="loan-sub">${l.bank||''} · 연 ${l.rate}%${l.memo?' · '+l.memo:''}</div></div>
+      <div style="display:flex;gap:4px;">
+        <button class="row-action-btn edit-btn" style="width:auto;" onclick="openEditLoan('${l.id}')" title="수정">✎</button>
+        <button class="xbtn" style="width:auto" onclick="confirmDelLoan('${l.id}')">✕</button>
+      </div></div>
       <div class="loan-info-grid">
         <div class="loan-info-item"><label>원금</label><span>${fmt(l.principal)}</span></div>
         <div class="loan-info-item"><label>잔여 원금</label><span style="color:var(--red)">${fmt(l.remain)}</span></div>
@@ -1504,11 +1515,37 @@ function renderAssets(){
     </div>`;
   }).join(''):'<div class="empty" style="background:#fff;border:1px solid var(--border);border-radius:var(--rlg);">등록된 대출이 없습니다.</div>';
 }
-function openAssetModal(){['assetName','assetAmt','assetMemo'].forEach(id=>document.getElementById(id).value='');openOverlay('assetModal');}
+let editingAssetId=null;
+function openAssetModal(){
+  editingAssetId=null;
+  document.getElementById('assetModalTitle').textContent='현금성 자산 추가';
+  document.getElementById('assetModalSaveBtn').textContent='추가';
+  ['assetName','assetAmt','assetMemo'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('assetType').value='stock';
+  openOverlay('assetModal');
+}
+function openEditAsset(id){
+  const a=S.assets.find(a=>a.id===id); if(!a) return;
+  editingAssetId=id;
+  document.getElementById('assetModalTitle').textContent='자산 수정';
+  document.getElementById('assetModalSaveBtn').textContent='수정 저장';
+  document.getElementById('assetType').value=a.type||'stock';
+  document.getElementById('assetName').value=a.name;
+  document.getElementById('assetAmt').value=a.amount;
+  document.getElementById('assetMemo').value=a.memo||'';
+  openOverlay('assetModal');
+}
 function saveAsset(){
   const type=document.getElementById('assetType').value,name=document.getElementById('assetName').value.trim(),amt=parseFloat(document.getElementById('assetAmt').value),memo=document.getElementById('assetMemo').value.trim();
   if(!name||!amt||amt<=0){toast('이름과 금액을 입력해주세요.');return;}
-  S.assets.push({id:Date.now().toString(),type,name,amount:amt,memo});save();closeOverlay('assetModal');renderAssets();toast('자산이 등록됐어요.');
+  if(editingAssetId){
+    const idx=S.assets.findIndex(a=>a.id===editingAssetId); if(idx<0)return;
+    S.assets[idx]={...S.assets[idx],type,name,amount:amt,memo};
+    save();closeOverlay('assetModal');renderAssets();toast('자산이 수정됐어요.');
+  } else {
+    S.assets.push({id:Date.now().toString(),type,name,amount:amt,memo});
+    save();closeOverlay('assetModal');renderAssets();toast('자산이 등록됐어요.');
+  }
 }
 function confirmDelAsset(id){
   const a=S.assets.find(a=>a.id===id); if(!a) return;
@@ -1522,11 +1559,40 @@ function execDelAsset(){
   S._pendingAssetId=null;
   save();closeOverlay('assetDelModal');renderAssets();toast('자산이 삭제됐어요.');
 }
-function openLoanModal(){['loanName','loanPrincipal','loanRemain','loanStart','loanEnd','loanRate','loanBank','loanMemo'].forEach(id=>document.getElementById(id).value='');openOverlay('loanModal');}
+let editingLoanId=null;
+function openLoanModal(){
+  editingLoanId=null;
+  document.getElementById('loanModalTitle').textContent='부채·대출 등록';
+  document.getElementById('loanModalSaveBtn').textContent='등록';
+  ['loanName','loanPrincipal','loanRemain','loanStart','loanEnd','loanRate','loanBank','loanMemo'].forEach(id=>document.getElementById(id).value='');
+  openOverlay('loanModal');
+}
+function openEditLoan(id){
+  const l=S.loans.find(l=>l.id===id); if(!l) return;
+  editingLoanId=id;
+  document.getElementById('loanModalTitle').textContent='대출 수정';
+  document.getElementById('loanModalSaveBtn').textContent='수정 저장';
+  document.getElementById('loanName').value=l.name;
+  document.getElementById('loanPrincipal').value=l.principal;
+  document.getElementById('loanRemain').value=l.remain;
+  document.getElementById('loanStart').value=l.start;
+  document.getElementById('loanEnd').value=l.end;
+  document.getElementById('loanRate').value=l.rate;
+  document.getElementById('loanBank').value=l.bank||'';
+  document.getElementById('loanMemo').value=l.memo||'';
+  openOverlay('loanModal');
+}
 function saveLoan(){
   const name=document.getElementById('loanName').value.trim(),principal=parseFloat(document.getElementById('loanPrincipal').value),remain=parseFloat(document.getElementById('loanRemain').value)||principal,start=document.getElementById('loanStart').value,end=document.getElementById('loanEnd').value,rate=parseFloat(document.getElementById('loanRate').value)||0,bank=document.getElementById('loanBank').value.trim(),memo=document.getElementById('loanMemo').value.trim();
   if(!name||!principal||!start||!end){toast('이름, 원금, 대출일, 만기일을 입력해주세요.');return;}
-  S.loans.push({id:Date.now().toString(),name,principal,remain,start,end,rate,bank,memo});save();closeOverlay('loanModal');renderAssets();toast('대출이 등록됐어요.');
+  if(editingLoanId){
+    const idx=S.loans.findIndex(l=>l.id===editingLoanId); if(idx<0)return;
+    S.loans[idx]={...S.loans[idx],name,principal,remain,start,end,rate,bank,memo};
+    save();closeOverlay('loanModal');renderAssets();toast('대출이 수정됐어요.');
+  } else {
+    S.loans.push({id:Date.now().toString(),name,principal,remain,start,end,rate,bank,memo});
+    save();closeOverlay('loanModal');renderAssets();toast('대출이 등록됐어요.');
+  }
 }
 function confirmDelLoan(id){
   const l=S.loans.find(l=>l.id===id); if(!l) return;
@@ -1546,14 +1612,51 @@ function renderBudget(){
   const budgets=S.budgets[mk()]||{},items=Object.entries(budgets),el=document.getElementById('budgetList');
   if(!items.length){el.innerHTML='<div class="empty" style="background:#fff;border:1px solid var(--border);border-radius:var(--rlg);">예산을 설정해보세요.</div>';return;}
   el.innerHTML=items.map(([cat,budget])=>{const s=spent[cat]||0,pct=Math.min(100,Math.round(s/budget*100)),cls=pct>=100?'over':pct>=80?'warn':'ok';
-    return`<div class="bitem"><div class="bitem-hdr"><span class="bitem-name">${cat}</span><span class="bitem-amts">${fmt(s)} / ${fmt(budget)} · ${pct}%</span></div><div class="bbar"><div class="bfill ${cls}" style="width:${pct}%"></div></div></div>`;
+    return`<div class="bitem">
+      <div class="bitem-hdr">
+        <span class="bitem-name">${cat}</span>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span class="bitem-amts">${fmt(s)} / ${fmt(budget)} · ${pct}%</span>
+          <button class="row-action-btn edit-btn" style="width:auto;font-size:12px;" onclick="openEditBudget('${cat}',${budget})" title="예산 수정">✎</button>
+          <button class="xbtn" style="width:auto;" onclick="delBudget('${cat}')" title="예산 삭제">✕</button>
+        </div>
+      </div>
+      <div class="bbar"><div class="bfill ${cls}" style="width:${pct}%"></div></div>
+    </div>`;
   }).join('');
 }
-function openBudgetModal(){document.getElementById('bCat').innerHTML=S.cats.expense.map(c=>`<option>${c}</option>`).join('');document.getElementById('bAmt').value='';openOverlay('budModal');}
+let editingBudgetCat=null;
+function openBudgetModal(){
+  editingBudgetCat=null;
+  document.getElementById('budModalTitle').textContent='예산 설정';
+  document.getElementById('budModalSaveBtn').textContent='저장';
+  document.getElementById('bCat').innerHTML=S.cats.expense.map(c=>`<option>${c}</option>`).join('');
+  document.getElementById('bCat').disabled=false;
+  document.getElementById('bAmt').value='';
+  openOverlay('budModal');
+}
+function openEditBudget(cat, amount){
+  editingBudgetCat=cat;
+  document.getElementById('budModalTitle').textContent='예산 수정';
+  document.getElementById('budModalSaveBtn').textContent='수정 저장';
+  document.getElementById('bCat').innerHTML=`<option value="${cat}">${cat}</option>`;
+  document.getElementById('bCat').disabled=true;
+  document.getElementById('bAmt').value=amount;
+  openOverlay('budModal');
+}
+function delBudget(cat){
+  if(!S.budgets[mk()]) return;
+  delete S.budgets[mk()][cat];
+  save();renderBudget();toast(cat+' 예산이 삭제됐어요.');
+}
 function saveBudget(){
-  const cat=document.getElementById('bCat').value,amt=parseFloat(document.getElementById('bAmt').value);
+  const cat=editingBudgetCat||document.getElementById('bCat').value,amt=parseFloat(document.getElementById('bAmt').value);
   if(!cat||!amt||amt<=0){toast('카테고리와 금액을 입력해주세요.');return;}
-  if(!S.budgets[mk()])S.budgets[mk()]={};S.budgets[mk()][cat]=amt;save();closeOverlay('budModal');renderBudget();toast('예산이 저장됐어요.');
+  if(!S.budgets[mk()])S.budgets[mk()]={};
+  S.budgets[mk()][cat]=amt;
+  document.getElementById('bCat').disabled=false;
+  save();closeOverlay('budModal');renderBudget();
+  toast(editingBudgetCat?'예산이 수정됐어요.':'예산이 저장됐어요.');
 }
 
 function renderCatSettings(){
@@ -1561,15 +1664,44 @@ function renderCatSettings(){
     const cnt=S.txs.filter(t=>t.category===c).length;
     return`<div class="cat-row-item">
       <span class="cat-row-name">${c}</span>
-      <span style="font-size:11px;color:var(--text-muted);margin-right:8px;">${cnt>0?cnt+'건':''}</span>
+      <span style="font-size:11px;color:var(--text-muted);margin-right:12px;">${cnt>0?cnt+'건':''}</span>
+      <button class="row-action-btn edit-btn" style="width:auto;margin-right:4px;" onclick="openEditCat('${type}','${c}')" title="이름 변경">✎</button>
       <button class="xbtn" style="width:auto" onclick="confirmDelCat('${type}','${c}')">✕</button>
     </div>`;
   }).join(''):'<div class="empty">카테고리가 없습니다.</div>';
   document.getElementById('expCatList').innerHTML=mk2('expense',S.cats.expense);
   document.getElementById('incCatList').innerHTML=mk2('income',S.cats.income);
 }
-function openCatModal(type){S.catEditType=type;document.getElementById('catModalTitle').textContent=(type==='expense'?'지출':'수입')+' 카테고리 추가';document.getElementById('catName').value='';openOverlay('catModal');}
-function addCategory(){const name=document.getElementById('catName').value.trim();if(!name){toast('이름을 입력해주세요.');return;}if(S.cats[S.catEditType].includes(name)){toast('이미 존재해요.');return;}S.cats[S.catEditType].push(name);save();closeOverlay('catModal');renderCatSettings();toast('추가됐어요.');}
+function openCatModal(type){
+  S.catEditType=type; editingCatOldName=null;
+  document.getElementById('catModalTitle').textContent=(type==='expense'?'지출':'수입')+' 카테고리 추가';
+  document.getElementById('catModalSaveBtn').textContent='추가';
+  document.getElementById('catName').value='';
+  openOverlay('catModal');
+}
+let editingCatOldName=null;
+function openEditCat(type,oldName){
+  S.catEditType=type; editingCatOldName=oldName;
+  document.getElementById('catModalTitle').textContent='카테고리 이름 변경';
+  document.getElementById('catModalSaveBtn').textContent='변경';
+  document.getElementById('catName').value=oldName;
+  openOverlay('catModal');
+}
+function addCategory(){
+  const name=document.getElementById('catName').value.trim();
+  if(!name){toast('이름을 입력해주세요.');return;}
+  if(editingCatOldName){
+    if(name!==editingCatOldName && S.cats[S.catEditType].includes(name)){toast('이미 존재하는 이름이에요.');return;}
+    const idx=S.cats[S.catEditType].indexOf(editingCatOldName);
+    if(idx>-1) S.cats[S.catEditType][idx]=name;
+    S.txs.forEach(t=>{ if(t.category===editingCatOldName) t.category=name; });
+    editingCatOldName=null;
+    save();closeOverlay('catModal');renderCatSettings();renderAll();toast('카테고리 이름이 변경됐어요.');
+  } else {
+    if(S.cats[S.catEditType].includes(name)){toast('이미 존재해요.');return;}
+    S.cats[S.catEditType].push(name);save();closeOverlay('catModal');renderCatSettings();toast('추가됐어요.');
+  }
+}
 function confirmDelCat(type, name){
   S._pendingCatType = type;
   S._pendingCatName = name;
@@ -1614,11 +1746,9 @@ function openEditTx(id){
   document.getElementById('iDate').value=tx.date;
   document.getElementById('iDesc').value=tx.desc;
   document.getElementById('iAmt').value=tx.amount;
-  // 카테고리 선택
   const catSel=document.getElementById('iCat');
   Array.from(catSel.options).forEach((o,i)=>{if(o.value===tx.category)catSel.selectedIndex=i;});
   document.getElementById('iMemo').value=tx.memo||'';
-  // 할부 — 플랜 기반으로 수정
   const plan = tx.installPlanId ? (S.installPlans||[]).find(p=>p.id===tx.installPlanId) : null;
   if(plan && tx.installSeq===1){
     document.getElementById('installCheck').checked=true;
@@ -1627,7 +1757,6 @@ function openEditTx(id){
     document.getElementById('iPayDay').value=plan.payDay||'';
     document.getElementById('iCard').value=plan.card||'';
     const ma=document.getElementById('iMonthlyAmt');if(ma)ma.value=fmt(plan.monthlyAmt);
-    // 수정 대상을 plan의 원래 트랜잭션(seq=1)으로 설정
     editingTxId = plan.id+'_1';
   } else {
     document.getElementById('installCheck').checked=false;
@@ -1662,10 +1791,8 @@ function saveTx(){
   if(isI&&(!payDay||payDay<1||payDay>31)){toast('카드 결제일을 1~31 사이로 입력해주세요.');return;}
 
   if(editingTxId){
-    // 수정 모드 — 할부 플랜은 삭제 후 재생성
     const orig = S.txs.find(t=>t.id===editingTxId);
     if(orig && orig.installPlanId){
-      // 기존 플랜과 연계 트랜잭션 모두 제거
       S.installPlans=(S.installPlans||[]).filter(p=>p.id!==orig.installPlanId);
       S.txs=S.txs.filter(t=>t.installPlanId!==orig.installPlanId);
     } else {
@@ -1674,7 +1801,6 @@ function saveTx(){
   }
 
   if(isI){
-    // 할부 플랜 등록
     const planId = 'plan_'+Date.now();
     const startYm = date.slice(0,7); // "YYYY-MM"
     const monthlyAmt = Math.round(amt/months);
@@ -1682,15 +1808,12 @@ function saveTx(){
     if(!S.installPlans) S.installPlans=[];
     S.installPlans.push(plan);
 
-    // 각 청구월마다 트랜잭션 자동 생성
-    // 결제 규칙: 사용월+1 ~ 사용월+months
     for(let i=1;i<=months;i++){
       const billYm = addMonths(startYm, i);
       const [by,bm] = billYm.split('-').map(Number);
       const billDay = Math.min(payDay, new Date(by,bm,0).getDate()); // 월말 초과 방지
       const billDate = billYm+'-'+String(billDay).padStart(2,'0');
       const isLast = i===months;
-      // 마지막 회차는 나머지 금액 (반올림 차이 보정)
       const thisAmt = isLast ? amt-(monthlyAmt*(months-1)) : monthlyAmt;
       S.txs.push({
         id: planId+'_'+i,
@@ -1725,7 +1848,6 @@ function execDelTx(){
   if(!S._pendingDelId)return;
   const tx = S.txs.find(t=>t.id===S._pendingDelId);
   if(tx && tx.installPlanId){
-    // 할부: 플랜과 연계 트랜잭션 전체 삭제
     S.installPlans=(S.installPlans||[]).filter(p=>p.id!==tx.installPlanId);
     S.txs=S.txs.filter(t=>t.installPlanId!==tx.installPlanId);
     toast('할부 내역 전체가 삭제됐어요.');
@@ -1758,7 +1880,23 @@ function renderCharts(){
   renderDailyChart();
 }
 
-function exportJSON(){dl2(new Blob([JSON.stringify({txs:S.txs,budgets:S.budgets,fixedItems:S.fixedItems,assets:S.assets,loans:S.loans,cats:S.cats,installPlans:S.installPlans||[]},null,2)],{type:'application/json'}),'가계부_'+new Date().toISOString().slice(0,10)+'.json');toast('JSON 저장됐어요.');}
+function exportJSON(){
+  // 꾸미기 중 이미지(Base64)는 파일이 너무 커지므로 제외
+  const decoMeta = {};
+  for(const [k,v] of Object.entries(_decoCache)){
+    if(k==='bgImage'||k==='headerImage'||k==='stickers') continue;
+    decoMeta[k] = v;
+  }
+  const exportData = {
+    txs:S.txs, budgets:S.budgets, fixedItems:S.fixedItems,
+    assets:S.assets, loans:S.loans, cats:S.cats, installPlans:S.installPlans||[],
+    theme: JSON.parse(localStorage.getItem('theme')||'{}'),
+    deco: decoMeta
+  };
+  dl2(new Blob([JSON.stringify(exportData,null,2)],{type:'application/json'}),
+    '가계부_'+new Date().toISOString().slice(0,10)+'.json');
+  toast('JSON 저장됐어요. (이미지 제외)');
+}
 function exportCSV(){
   const hdr=['날짜','유형','내용','카테고리','금액','메모','고정지출','할부'];
   const rows=S.txs.sort((a,b)=>a.date.localeCompare(b.date)).map(t=>[t.date,t.type==='income'?'수입':'지출',t.desc,t.category,t.amount,t.memo||'',t.fixedId?'Y':'N',t.installment?t.installmentMonths+'개월':'N']);
@@ -1777,7 +1915,6 @@ function openOverlay(id){document.getElementById(id).classList.add('open');}
 function closeOverlay(id){document.getElementById(id).classList.remove('open');}
 document.querySelectorAll('.overlay').forEach(el=>el.addEventListener('click',function(e){if(e.target===this)closeOverlay(this.id);}));
 
-// 거래 행 수정/삭제/토글 버튼 — 이벤트 위임
 document.addEventListener('click', function(e){
   const btn = e.target.closest('[data-action]');
   if(!btn) return;
@@ -1807,20 +1944,51 @@ function checkResetInput(){
 }
 function executeReset(){
   localStorage.removeItem('budgetApp');
-  closeOverlay('resetModal');
   S.txs=[];S.budgets={};S.fixedItems=[];S.assets=[];S.loans=[];S.installPlans=[];
   S.cats={expense:['식비','교통','쇼핑','주거','의료','여가','교육','통신','기타'],income:['급여','부수입','투자','용돈','기타']};
   S.year=new Date().getFullYear();S.month=new Date().getMonth()+1;
+
+  localStorage.removeItem('theme');
+  applyTheme('blue', false); // 기본 블루 테마, 라이트모드
+
+  document.body.style.backgroundImage = '';
+  document.body.style.backgroundSize = '';
+  document.body.style.backgroundAttachment = '';
+  document.body.style.backgroundPosition = '';
+  const bgOverlay = document.getElementById('bodyBgOverlay');
+  if(bgOverlay) bgOverlay.style.background = 'transparent';
+
+  const coverArea = document.getElementById('coverArea');
+  if(coverArea){ coverArea.style.backgroundImage=''; coverArea.classList.remove('visible'); }
+  const coverOverlayEl = document.getElementById('coverOverlay');
+  if(coverOverlayEl) coverOverlayEl.style.background = 'transparent';
+
+  updateLogoDOM('₩', null);
+  currentLogoType='text'; currentLogoVal='₩';
+
+  stickers = [];
+  const stickerLayer = document.getElementById('stickerLayer');
+  if(stickerLayer) stickerLayer.innerHTML = '';
+
+  // 4. 꾸미기 IndexedDB 삭제
+  _decoCache = {};
+  openDecoDb().then(db=>{
+    const tx = db.transaction(DECO_STORE,'readwrite');
+    tx.objectStore(DECO_STORE).clear();
+  }).catch(()=>{});
+
+  localStorage.removeItem('lastSync');
+
+  closeOverlay('resetModal');
   renderAll();
-  toast('✅ 데이터가 초기화됐어요.');
+  toast('✅ 모든 데이터와 설정이 초기화됐어요.');
 }
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800);}
-
 
 /* ══════════════════════════════
    기간 단위 거래내역
 ══════════════════════════════ */
-let P = { mode:'month', year:new Date().getFullYear(), month:new Date().getMonth()+1, weekOffset:0 };
+let P = { mode:'week', year:new Date().getFullYear(), month:new Date().getMonth()+1, weekOffset:0 };
 
 function setPeriod(el){
   document.querySelectorAll('.period-tab-bar .period-tab').forEach(t=>t.classList.remove('active'));
@@ -1893,7 +2061,6 @@ function renderYearStats(){
   yb.textContent=(yBal<0?'-':'')+fmt(yBal);
   yb.style.color=yBal<0?'rgba(255,160,160,1)':'#fff';
 
-  // 월별 수입/지출 막대
   const mLabels=[],mIncs=[],mExps=[];
   for(let m=1;m<=12;m++){
     const k=statsYear+'-'+String(m).padStart(2,'0');
@@ -1915,7 +2082,6 @@ function renderYearStats(){
               x:{ticks:{font:{size:11}},grid:{display:false}}}}
   });
 
-  // 연간 도넛
   const mkYrDonut=(id,type,old)=>{
     const data={};yTxs.filter(t=>t.type===type).forEach(t=>{data[t.category]=(data[t.category]||0)+t.amount;});
     const labels=Object.keys(data),vals=Object.values(data);
@@ -1926,7 +2092,6 @@ function renderYearStats(){
   charts.yrExpDonut=mkYrDonut('yrExpDonut','expense',charts.yrExpDonut);
   charts.yrIncDonut=mkYrDonut('yrIncDonut','income',charts.yrIncDonut);
 
-  // 카테고리별 연간 지출 합계
   const catData={};yTxs.filter(t=>t.type==='expense').forEach(t=>{catData[t.category]=(catData[t.category]||0)+t.amount;});
   const sorted=Object.entries(catData).sort((a,b)=>b[1]-a[1]);
   const maxVal=sorted[0]?sorted[0][1]:1;
@@ -1937,7 +2102,6 @@ function renderYearStats(){
       <div class="yr-cat-amt">${fmt(amt)}</div>
     </div>`).join(''):'<div class="empty" style="background:#fff;border:1px solid var(--border);border-radius:var(--rlg);">데이터가 없습니다.</div>';
 }
-
 
 /* ══════════════════════════════
    테마 설정
@@ -1954,9 +2118,8 @@ const THEMES = [
 let currentThemeId = 'custom';
 let isDark = false;
 
-/* 16진수 → RGB */
 function hexToRgb(hex){ const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);return{r,g,b}; }
-/* 색상을 밝게/어둡게 */
+
 function shadeHex(hex, pct){
   let {r,g,b}=hexToRgb(hex);
   r=Math.min(255,Math.max(0,Math.round(r+(255-r)*(pct>0?pct:0)+r*pct*(pct<0?1:0))));
@@ -1964,12 +2127,11 @@ function shadeHex(hex, pct){
   b=Math.min(255,Math.max(0,Math.round(b+(255-b)*(pct>0?pct:0)+b*pct*(pct<0?1:0))));
   return '#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('');
 }
-/* 메인 색 → dk/lt/md 자동 파생 */
+
 function deriveTheme(main){
   return { main, dk:shadeHex(main,-0.22), lt:shadeHex(main,0.88), md:shadeHex(main,0.60) };
 }
 
-/* 핵심 적용 함수 */
 function applyColorVars(main, dk, lt, md){
   const root = document.documentElement;
   root.style.setProperty('--blue', main);
@@ -2021,7 +2183,6 @@ function refreshSwatches(activeId){
   });
 }
 
-/* 컬러 피커 ↔ 텍스트 입력 동기화 */
 function syncColorInput(hex){
   const inp = document.getElementById('customColorHex');
   if(inp) inp.value = hex;
@@ -2044,7 +2205,6 @@ function updateCustomPreview(hex){
   if(p3) p3.style.background=hex;
 }
 
-/* [수정사항] 톱니바퀴 버튼 클릭 시 테마 설정 모달창을 띄우는 통합 함수 */
 function openThemeModal(){
   const grid = document.getElementById('themeColorGrid');
   if(grid){
@@ -2068,7 +2228,6 @@ function openThemeModal(){
   if(typeof renderStickerThumbs === 'function') renderStickerThumbs();
   if(typeof updateLogoDOM === 'function') updateLogoDOM(currentLogoVal, currentLogoType==='image'?currentLogoVal:null);
 
-  // 배경 및 커버 이미지 컨트롤 UI 연동
   const d = loadDeco();
   if(d.bg){ 
     const bgCtrl = document.getElementById('bgImgControls');
@@ -2090,7 +2249,6 @@ function openThemeModal(){
   openOverlay('themeModal');
 }
 
-
 /* ══════════════════════════════
    Google Drive 동기화
 ══════════════════════════════ */
@@ -2105,7 +2263,6 @@ let gDriveFileId = null;
 let gTokenExpiry = null;      // 토큰 만료 시각 (ms)
 let gRefreshTimer = null;     // 자동 갱신 타이머
 
-/* Google API 초기화 */
 function initGoogleApi(){
   if(typeof google === 'undefined' || !google.accounts) return;
   gTokenClient = google.accounts.oauth2.initTokenClient({
@@ -2114,7 +2271,6 @@ function initGoogleApi(){
     prompt: '',               // 이미 동의한 경우 팝업 없이 조용히 갱신
     callback: onGoogleTokenReceived,
   });
-  // 저장된 세션 복원
   const saved = localStorage.getItem('gToken');
   if(saved){
     try{
@@ -2124,7 +2280,6 @@ function initGoogleApi(){
       gUserInfo = userInfo;
       gTokenExpiry = expiry || null;
       updateGoogleUI(true);
-      // 만료 임박 또는 만료됐으면 바로 조용히 갱신 시도
       if(gUserInfo) scheduleTokenRefresh();
     }catch(e){}
   }
@@ -2132,17 +2287,14 @@ function initGoogleApi(){
 
 function onGoogleTokenReceived(resp){
   if(resp.error){
-    // 조용한 갱신 실패는 무시 (사용자가 직접 로그인 안 한 경우)
     if(resp.error !== 'interaction_required' && resp.error !== 'access_denied'){
       toast('Google 로그인 실패: ' + resp.error);
     }
     return;
   }
   gAccessToken = resp.access_token;
-  // expires_in: 보통 3600초(1시간) → 만료 5분 전에 갱신하도록 설정
   const expiresIn = (resp.expires_in || 3600) * 1000;
   gTokenExpiry = Date.now() + expiresIn;
-  // 사용자 정보 (이미 있으면 재요청 불필요)
   if(gUserInfo){
     saveGoogleSession();
     scheduleTokenRefresh(expiresIn);
@@ -2159,10 +2311,8 @@ function onGoogleTokenReceived(resp){
   });
 }
 
-/* 토큰 자동 갱신 스케줄러 */
 function scheduleTokenRefresh(expiresIn){
   if(gRefreshTimer) clearTimeout(gRefreshTimer);
-  // 만료 5분 전에 갱신 (없으면 현재 만료시각 기준 계산)
   let delay;
   if(expiresIn){
     delay = Math.max(expiresIn - 5 * 60 * 1000, 10000); // 최소 10초 후
@@ -2174,21 +2324,17 @@ function scheduleTokenRefresh(expiresIn){
   gRefreshTimer = setTimeout(silentRefresh, delay);
 }
 
-/* 사용자 개입 없이 조용히 토큰 갱신 */
 function silentRefresh(){
   if(!gTokenClient || !gUserInfo) return;
-  // prompt:'' 옵션으로 팝업 없이 갱신 시도
   gTokenClient.requestAccessToken({prompt:''});
 }
 
-/* API 호출 전 토큰 유효성 확인 — 만료됐으면 갱신 후 콜백 */
 function ensureToken(callback){
   const MARGIN = 2 * 60 * 1000; // 2분 여유
   if(gAccessToken && gTokenExpiry && Date.now() < gTokenExpiry - MARGIN){
     callback(); // 유효한 토큰
     return;
   }
-  // 만료 임박 → 갱신 후 콜백
   if(!gTokenClient){ toast('Google API를 초기화 중이에요. 잠시 후 다시 시도해주세요.'); return; }
   const origCallback = gTokenClient._callback || null;
   gTokenClient.callback = (resp) => {
@@ -2215,12 +2361,10 @@ function updateGoogleUI(signedIn){
   const lbl = document.getElementById('googleBtnLabel');
   if(signedIn && gUserInfo){
     if(btn) btn.classList.add('signed-in');
-    // 버튼: 로그인 상태 표시
     const defaultSpan = document.getElementById('googleBtnDefault');
     const signedInSpan = document.getElementById('googleBtnSignedIn');
     if(defaultSpan) defaultSpan.style.display = 'none';
     if(signedInSpan) signedInSpan.style.display = 'inline-flex';
-    // 버튼 아바타
     if(gUserInfo.picture){
       const ba = document.getElementById('googleBtnAvatar');
       const bp = document.getElementById('googleBtnAvatarPlaceholder');
@@ -2230,25 +2374,20 @@ function updateGoogleUI(signedIn){
       const bp = document.getElementById('googleBtnAvatarPlaceholder');
       if(bp) bp.textContent = (gUserInfo.name||'G')[0].toUpperCase();
     }
-    // 버튼 텍스트: 이름 우선, 없으면 이메일
     if(lbl) lbl.textContent = gUserInfo.name || gUserInfo.email || 'Google 동기화';
-    // 모달 내 사용자 정보
     document.getElementById('googleUserName').textContent = gUserInfo.name || '';
     document.getElementById('googleUserEmail').textContent = gUserInfo.email || '';
-    // 모달 아바타
     if(gUserInfo.picture){
       const av = document.getElementById('googleAvatar');
       const ph = document.getElementById('googleAvatarPlaceholder');
       if(av){ av.src = gUserInfo.picture; av.style.display = 'block'; }
       if(ph) ph.style.display = 'none';
     }
-    // 마지막 동기화 시간
     const lastSync = localStorage.getItem('lastSync');
     const ss = document.getElementById('syncStatus');
     if(ss) ss.textContent = lastSync ? '마지막 동기화: ' + lastSync : '마지막 동기화: 없음';
   } else {
     if(btn) btn.classList.remove('signed-in');
-    // 버튼: 기본 상태 복원
     const defaultSpan = document.getElementById('googleBtnDefault');
     const signedInSpan = document.getElementById('googleBtnSignedIn');
     if(defaultSpan) defaultSpan.style.display = 'inline-flex';
@@ -2276,7 +2415,6 @@ function googleSignOut(){
   toast('Google 로그아웃 됐어요.');
 }
 
-/* Drive 파일 ID 검색 */
 async function findDriveFile(){
   const res = await fetch(
     `https://www.googleapis.com/drive/v3/files?q=name='${DRIVE_FILE_NAME}' and trashed=false&fields=files(id,name,modifiedTime)`,
@@ -2291,91 +2429,84 @@ async function findDriveFile(){
   return null;
 }
 
-/* Drive 업로드 - 가계부 + 꾸미기 통합 버전 */
 async function syncUpload(){
   if(!gAccessToken){ toast('먼저 Google 로그인을 해주세요.'); return; }
-  
   ensureToken(async ()=>{
-    document.getElementById('syncStatus').textContent = '업로드 중...';
+    const statusEl = document.getElementById('syncStatus');
+    statusEl.textContent = '업로드 중...';
     try{
-      // [핵심 수정] 가계부 데이터(S)와 꾸미기 데이터(deco)를 하나로 묶음
+      const decoMeta = {};
+      for(const [k,v] of Object.entries(_decoCache)){
+        // 이미지 Base64는 별도 Drive 파일로 분리 저장 → 메타만 포함
+        if(k==='bgImage'||k==='headerImage'||k==='stickers') continue;
+        decoMeta[k] = v;
+      }
       const fullData = {
-        txs: S.txs, 
-        budgets: S.budgets, 
+        txs: S.txs,
+        budgets: S.budgets,
         fixedItems: S.fixedItems,
-        assets: S.assets, 
-        loans: S.loans, 
-        cats: S.cats, 
-        installPlans: S.installPlans || [],
-        deco: JSON.parse(localStorage.getItem('budgetDeco')) || {} // 꾸미기 데이터 추가
+        assets: S.assets,
+        loans: S.loans,
+        cats: S.cats,
+        installPlans: S.installPlans||[],
+        theme: JSON.parse(localStorage.getItem('theme')||'{}'),
+        deco: decoMeta
       };
-      
       const dataStr = JSON.stringify(fullData);
-      const blob = new Blob([dataStr], {type:'application/json'});
 
-      let res;
       if(!gDriveFileId) await findDriveFile();
 
+      let res;
       if(gDriveFileId){
-        // PATCH (기존 파일 업데이트)
         res = await fetch(
           `https://www.googleapis.com/upload/drive/v3/files/${gDriveFileId}?uploadType=media`,
-          { 
-            method:'PATCH', 
-            headers:{ 
-              Authorization:'Bearer '+gAccessToken, 
-              'Content-Type':'application/json' 
-            }, 
-            body:blob 
-          }
+          { method:'PATCH', headers:{ Authorization:'Bearer '+gAccessToken, 'Content-Type':'application/json' }, body:dataStr }
         );
       } else {
-        // POST (새 파일 생성)
-        const meta = JSON.stringify({ name: DRIVE_FILE_NAME, mimeType: 'application/json' });
-        const boundary = 'boundary_kageboo_sync';
-        // multipart body 구성 시 metadata와 content(dataStr) 포함
-        const body = `--${boundary}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${meta}\r\n--${boundary}\r\nContent-Type: application/json\r\n\r\n${dataStr}\r\n--${boundary}--`;
-        
+        const meta = JSON.stringify({ name: DRIVE_FILE_NAME, mimeType:'application/json' });
+        const boundary = 'bnd_gageboo';
+        const body = `--${boundary}
+Content-Type: application/json; charset=UTF-8
+
+${meta}
+--${boundary}
+Content-Type: application/json
+
+${dataStr}
+--${boundary}--`;
         res = await fetch(
           'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id',
-          { 
-            method:'POST', 
-            headers:{ 
-              Authorization:'Bearer '+gAccessToken, 
-              'Content-Type':`multipart/related; boundary=${boundary}` 
-            }, 
-            body 
-          }
+          { method:'POST', headers:{ Authorization:'Bearer '+gAccessToken, 'Content-Type':`multipart/related; boundary=${boundary}` }, body }
         );
+        if(!res.ok){ const e=await res.json(); throw new Error(e.error?.message||res.status); }
         const created = await res.json();
         gDriveFileId = created.id;
         saveGoogleSession();
+        const now = new Date().toLocaleString('ko-KR');
+        localStorage.setItem('lastSync', now);
+        statusEl.textContent = '마지막 동기화: ' + now;
+        toast('✅ Google Drive에 저장됐어요!');
+        return;
       }
 
       if(res.ok){
         const now = new Date().toLocaleString('ko-KR');
         localStorage.setItem('lastSync', now);
-        document.getElementById('syncStatus').textContent = '마지막 동기화: ' + now;
-        toast('✅ 가계부와 꾸미기가 구글에 저장됐어요!');
+        statusEl.textContent = '마지막 동기화: ' + now;
+        toast('✅ Google Drive에 저장됐어요!');
       } else {
-        const err = await res.json();
-        if(res.status===401){ 
-          gAccessToken=null; 
-          localStorage.removeItem('gToken'); 
-          updateGoogleUI(false); 
-          toast('로그인이 만료됐어요. 다시 로그인해주세요.'); 
-          return; 
-        }
-        toast('업로드 실패: ' + (err.error?.message||res.status));
-        document.getElementById('syncStatus').textContent = '업로드 실패';
+        const errBody = await res.text();
+        if(res.status===401){ gAccessToken=null; localStorage.removeItem('gToken'); updateGoogleUI(false); toast('로그인이 만료됐어요. 다시 로그인해주세요.'); return; }
+        throw new Error(`업로드 실패 (${res.status}): ${errBody}`);
       }
     } catch(e){
-      toast('오류가 발생했어요: ' + e.message);
-      document.getElementById('syncStatus').textContent = '오류 발생';
+      console.error('syncUpload error:', e);
+      toast('업로드 오류: ' + e.message);
+      document.getElementById('syncStatus').textContent = '업로드 실패';
     }
-  }); 
+  });
 }
-/* Drive 다운로드 - 가계부 + 꾸미기 통합 버전 */
+
 async function syncDownload(){
   if(!gAccessToken){ toast('먼저 Google 로그인을 해주세요.'); return; }
   
@@ -2404,18 +2535,15 @@ async function syncDownload(){
 
       const data = await res.json();
 
-      // 1. 가계부 데이터 복구 (기존 로직)
       ['txs','budgets','fixedItems','assets','loans','cats','installPlans'].forEach(k=>{ 
         if(data[k]) S[k] = data[k]; 
       });
       if(!S.installPlans) S.installPlans = [];
       
-      // 2. [핵심 추가] 꾸미기 데이터 복구
       if (data.deco) {
-        localStorage.setItem('budgetDeco', JSON.stringify(data.deco));
+        if(data.deco){ _decoCache=data.deco; await saveDecoAll(data.deco); applyDecoOnLoad(); }
       }
 
-      // 내 컴퓨터(localStorage)에 가계부 데이터 최종 저장
       save(); 
 
       const now = new Date().toLocaleString('ko-KR');
@@ -2425,7 +2553,6 @@ async function syncDownload(){
       toast('✅ 가계부와 꾸미기 데이터를 불러왔어요!');
       closeOverlay('googleModal');
 
-      // [가장 중요] 데이터를 불러온 후 화면을 새로고침하여 꾸미기를 즉시 적용합니다.
       setTimeout(() => {
         location.reload();
       }, 1000);
@@ -2437,7 +2564,6 @@ async function syncDownload(){
   }); 
 }
 
-/* API 로드 완료 후 초기화 */
 window.addEventListener('load', ()=>{ setTimeout(initGoogleApi, 1500); });
 
 function loadTheme(){
@@ -2455,7 +2581,6 @@ function loadTheme(){
   } catch(e){}
 }
 
-
 let dailyMode = 'week'; // 'week' | 'day'
 
 function setDailyMode(el){
@@ -2472,7 +2597,6 @@ function renderDailyChart(){
   let labels=[], values=[], chartType='bar';
 
   if(dailyMode==='day'){
-    // 1일~말일 전체 표시 (거래 없는 날은 0)
     const days={};
     txs.forEach(t=>{const d=parseInt(t.date.slice(8));days[d]=(days[d]||0)+t.amount;});
     for(let d=1;d<=lastDay;d++){
@@ -2481,7 +2605,6 @@ function renderDailyChart(){
     }
     chartType='line'; // 일별은 라인 차트 (날짜 많아서 막대 불편)
   } else {
-    // 주별: 1~7 / 8~14 / 15~21 / 22~28 / 29~말일
     const weeks=[0,0,0,0,0];
     txs.forEach(t=>{
       const d=parseInt(t.date.slice(8));
@@ -2539,12 +2662,10 @@ function renderDailyChart(){
   });
 }
 
-
 /* ══════════════════════════════
    꾸미기 기능
 ══════════════════════════════ */
 
-/* 설정 탭 전환 */
 function switchSettingTab(el){
   document.querySelectorAll('.setting-tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.setting-pane').forEach(p=>p.classList.remove('active'));
@@ -2644,7 +2765,6 @@ function applyBgOverlayStyle(color, opacity){
     const rgba=color==='white'?`rgba(255,255,255,${opacity})`:`rgba(0,0,0,${opacity})`;
     document.body.style.setProperty('--bg-overlay',rgba);
   }
-  // body::before로 구현하기 어려우니 fixed pseudo div 활용
   let overlay=document.getElementById('bodyBgOverlay');
   if(!overlay){
     overlay=document.createElement('div');
@@ -2714,6 +2834,24 @@ function removeCoverImage(){
 
 /* ── 스티커 ── */
 let stickers = []; 
+
+function renderStickerThumbs(){
+  const grid = document.getElementById('stickerThumbGrid');
+  const msg  = document.getElementById('noStickerMsg');
+  if(!grid) return;
+  if(!stickers.length){
+    grid.innerHTML = '';
+    if(msg) msg.style.display = 'block';
+    return;
+  }
+  if(msg) msg.style.display = 'none';
+  grid.innerHTML = stickers.map(s=>`
+    <div class="img-thumb" title="삭제하려면 ✕ 클릭">
+      <img src="${s.src}" alt="sticker">
+      <button class="thumb-del" onclick="removeSticker('${s.id}')">✕</button>
+    </div>`).join('');
+}
+
 let currentSticker = null;
 let dragMode = null; 
 let startX, startY, startW, startH, startXpos, startYpos;
@@ -2742,10 +2880,8 @@ function addSticker(e){
   e.target.value = ""; 
 }
 
-// 1. 동작 완료 처리 함수
 const stopDrag = () => {
   if (currentSticker) {
-    // [중요] try-catch로 감싸서 저장 에러가 나도 뒷줄 코드가 실행되게 합니다.
     try {
       saveDeco({ stickers: [...stickers] });
     } catch (e) {
@@ -2753,7 +2889,6 @@ const stopDrag = () => {
     }
   }
   
-  // 에러 여부와 상관없이 무조건 상태를 초기화해서 스티커를 떼어냅니다.
   currentSticker = null;
   dragMode = null;
   
@@ -2763,7 +2898,6 @@ const stopDrag = () => {
   }
 };
 
-// 2. 스티커 생성 및 모드 분리 (위치: 클릭토글 / 크기: 드래그)
 function renderStickerDOM(s){
   const layer = document.getElementById('stickerLayer');
   if(!layer) return;
@@ -2778,19 +2912,15 @@ function renderStickerDOM(s){
     <button class="sticker-del" onclick="removeSticker('${s.id}')" style="z-index:20;">✕</button>
     <div class="sticker-handle" style="z-index:20;"></div>`;
     
-  // [A] 본체 클릭: 위치 이동 전용 (딸깍 딸깍)
   div.addEventListener('click', (e) => {
-    // 핸들이나 삭제 버튼 클릭 시에는 이동 모드 발동 금지
     if(e.target.classList.contains('sticker-del') || e.target.classList.contains('sticker-handle')) return;
     e.stopPropagation();
 
-    // 이미 이동 중이었다면? -> 놓기
     if (currentSticker && dragMode === 'move') {
       stopDrag();
       return;
     }
 
-    // 이동 시작
     currentSticker = s;
     dragMode = 'move';
     startX = e.clientX;
@@ -2801,7 +2931,6 @@ function renderStickerDOM(s){
     console.log("위치 이동 시작 (딸깍)");
   });
 
-  // [B] 핸들 드래그: 크기 조절 전용 (누르고 당기기)
   const handle = div.querySelector('.sticker-handle');
   handle.addEventListener('mousedown', (e) => {
     e.stopPropagation();
@@ -2815,7 +2944,6 @@ function renderStickerDOM(s){
     layer.style.pointerEvents = 'auto';
     console.log("크기 조절 시작 (누름)");
 
-    // 핸들에서 마우스를 떼는 순간을 감시하는 전용 이벤트
     const onceMouseUp = () => {
       stopDrag();
       window.removeEventListener('mouseup', onceMouseUp);
@@ -2826,7 +2954,6 @@ function renderStickerDOM(s){
   layer.appendChild(div);
 }
 
-// 3. 마우스 이동 처리 (통합)
 window.addEventListener('mousemove', (e) => {
   if(!currentSticker || !dragMode) return;
   const div = document.getElementById(currentSticker.id);
@@ -2849,9 +2976,7 @@ window.addEventListener('mousemove', (e) => {
   }
 });
 
-// 4. 전역 해제 장치 (이동 모드 전용)
 window.addEventListener('click', (e) => {
-  // 위치 이동 중일 때만 빈 공간 클릭 시 놓기
   if (currentSticker && dragMode === 'move') {
     if (!e.target.closest('.sticker-item') && !e.target.classList.contains('sticker-del')) {
       stopDrag();
@@ -2861,68 +2986,313 @@ window.addEventListener('click', (e) => {
 
 window.addEventListener('keydown', (e) => { if(e.key === 'Escape') stopDrag(); });
 
-
 function removeSticker(id){
-  // 1. 데이터 삭제
   stickers = stickers.filter(s => s.id !== id);
   
-  // 2. 화면에서 삭제
   const el = document.getElementById(id); 
   if(el) el.remove();
   
-  // 3. 썸네일 갱신 및 저장
   renderStickerThumbs();
   saveDeco({stickers: [...stickers]});
   
-  // 4. 혹시 드래그 중이었다면 상태 초기화
   stopDrag();
 }
 
-
 /* ── 꾸미기 저장/불러오기 ── */
-function loadDeco(){
-  try{ return JSON.parse(localStorage.getItem('budgetDeco')||'{}'); }catch(e){return {};}
-}
-function saveDeco(partial){
-  const cur=loadDeco();
-  Object.assign(cur, partial);
-  // stickers 병합 아닌 덮어쓰기
-  if(partial.stickers) cur.stickers=partial.stickers;
-  localStorage.setItem('budgetDeco', JSON.stringify(cur));
+/* ══════════════════════════════
+   꾸미기 저장/불러오기 — IndexedDB 기반
+   (이미지 Base64가 커서 localStorage 5MB 초과 → IndexedDB 사용)
+══════════════════════════════ */
+const DECO_DB_NAME = 'budgetDecoDb';
+const DECO_DB_VER  = 1;
+const DECO_STORE   = 'deco';
+let _decoDb = null;
+let _decoCache = {}; // 메모리 캐시
+
+function openDecoDb(){
+  return new Promise((resolve, reject)=>{
+    if(_decoDb){ resolve(_decoDb); return; }
+    const req = indexedDB.open(DECO_DB_NAME, DECO_DB_VER);
+    req.onupgradeneeded = e => {
+      e.target.result.createObjectStore(DECO_STORE);
+    };
+    req.onsuccess = e => { _decoDb=e.target.result; resolve(_decoDb); };
+    req.onerror   = e => reject(e);
+  });
 }
 
-function applyDecoOnLoad(){
-  const d=loadDeco();
-  // 로고
-  if(d.logo){
-    currentLogoType=d.logo.type; currentLogoVal=d.logo.val;
-    if(d.logo.type==='image') updateLogoDOM(null, d.logo.val);
-    else updateLogoDOM(d.logo.val, null);
+async function idbGet(key){
+  const db = await openDecoDb();
+  return new Promise((resolve, reject)=>{
+    const tx = db.transaction(DECO_STORE,'readonly');
+    const req = tx.objectStore(DECO_STORE).get(key);
+    req.onsuccess = e => resolve(e.target.result);
+    req.onerror   = e => reject(e);
+  });
+}
+
+async function idbSet(key, val){
+  const db = await openDecoDb();
+  return new Promise((resolve, reject)=>{
+    const tx = db.transaction(DECO_STORE,'readwrite');
+    const req = tx.objectStore(DECO_STORE).put(val, key);
+    req.onsuccess = () => resolve();
+    req.onerror   = e => reject(e);
+  });
+}
+
+async function idbDel(key){
+  const db = await openDecoDb();
+  return new Promise((resolve, reject)=>{
+    const tx = db.transaction(DECO_STORE,'readwrite');
+    tx.objectStore(DECO_STORE).delete(key);
+    tx.oncomplete = () => resolve();
+    tx.onerror    = e => reject(e);
+  });
+}
+
+function loadDeco(){
+  return _decoCache;
+}
+
+async function loadDecoAll(){
+  try{
+    const keys=['logo','bg','cover','stickers','bgOverlay','bgOpacity','coverOverlay','coverOpacity'];
+    for(const k of keys){
+      const v = await idbGet(k);
+      if(v !== undefined) _decoCache[k] = v;
+    }
+  }catch(e){ console.warn('IndexedDB loadDeco 실패, localStorage fallback:', e);
+    // fallback: 기존 localStorage 데이터 마이그레이션
+    try{
+      const old = _decoCache;
+      if(Object.keys(old).length){ _decoCache=old; await saveDecoAll(old); localStorage.removeItem('budgetDeco'); }
+    }catch(e2){}
   }
-  // 배경
-  if(d.bg){
-    document.body.style.backgroundImage=`url('${d.bg.src}')`;
-    document.body.style.backgroundSize='cover';
-    document.body.style.backgroundAttachment='fixed';
-    document.body.style.backgroundPosition='center';
-    bgOverlayColor=d.bg.overlay||'white';
-    applyBgOverlayStyle(bgOverlayColor, parseInt(d.bg.opacity||50)/100);
+}
+
+function handleFile(e, type) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const fileName = file.name;
+
+  const reader = new FileReader();
+  reader.onload = function(event) {
+    const base64 = event.target.result;
+
+    if (type === 'stickers') {
+      if(!Array.isArray(_decoCache.stickers)) _decoCache.stickers = [];
+      const id = 'stk_'+Date.now();
+      const s = {id, src:base64, x:Math.round(window.innerWidth/2-40), y:120, size:80};
+      stickers.push(s);
+      _decoCache.stickers = [...stickers];
+      saveDeco({stickers:[...stickers]});
+      renderStickerDOM(s);
+      renderStickerThumbs();
+    } else {
+      _decoCache[type] = base64;
+      _decoCache[type+'Name'] = fileName;
+      saveDeco({[type]:base64, [type+'Name']:fileName});
+      applyDecoOnLoad();
+      updateUploadUI(type);
+    }
+    if (window.toast) toast('등록 완료!');
+  };
+  reader.readAsDataURL(file);
+  e.target.value = '';
+}
+
+function updateUploadUI(type) {
+  const deco = _decoCache;
+  const isBg = (type === 'bgImage');
+  const targetType = isBg ? 'bgImage' : 'headerImage';
+  const areaId = isBg ? 'bgUploadArea' : 'coverUploadArea';
+  const inputId = isBg ? 'bgImgInput' : 'coverImgInput';
+  const container = document.getElementById(areaId);
+  if (!container) return;
+
+  if (deco[targetType]) {
+    const savedName = deco[targetType + 'Name'] || '이미지_등록됨.png';
+    container.innerHTML = `
+      <div style="display:flex; align-items:center; justify-content:space-between; background:var(--blue-lt); padding:12px; border-radius:8px; border:1px solid var(--blue); width:100%;">
+        <span style="font-size:13px; color:var(--blue); font-weight:bold; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:180px;">📄 ${savedName}</span>
+        <div style="display:flex; gap:5px; flex-shrink:0;">
+          <button class="btn" style="padding:4px 8px; font-size:11px;" onclick="document.getElementById('${inputId}').click()">교체</button>
+          <button class="btn" style="padding:4px 8px; font-size:11px; color:var(--red);" onclick="removeImageInternal('${targetType}')">삭제</button>
+        </div>
+      </div>
+    `;
+    const ctrl = document.getElementById(isBg ? 'bgImgControls' : 'coverImgControls');
+    if (ctrl) ctrl.style.display = 'block';
+  } else {
+    const icon = isBg ? '🖼️' : '📷';
+    container.innerHTML = `
+      <div class="upload-zone" onclick="document.getElementById('${inputId}').click()">
+        <div style="font-size:24px;">${icon}</div>
+        <p>클릭해서 이미지를 업로드하세요</p>
+      </div>
+    `;
+    const ctrl = document.getElementById(isBg ? 'bgImgControls' : 'coverImgControls');
+    if (ctrl) ctrl.style.display = 'none';
   }
-  // 커버
-  if(d.cover){
-    const area=document.getElementById('coverArea');
-    area.style.backgroundImage=`url('${d.cover.src}')`;
-    area.classList.add('visible');
-    coverOverlayColor=d.cover.overlay||'black';
-    const overlay=document.getElementById('coverOverlay');
-    if(overlay){ const op=parseInt(d.cover.opacity||50)/100;
-      overlay.style.background=coverOverlayColor==='none'?'transparent':coverOverlayColor==='white'?`rgba(255,255,255,${op})`:`rgba(0,0,0,${op})`; }
+}
+
+function removeImageInternal(type) {
+  let deco = {..._decoCache};
+  delete deco[type];
+  delete deco[type + 'Name'];
+  Object.assign(_decoCache, deco); saveDeco(deco);
+  
+  applyDecoOnLoad();
+  updateUploadUI(type === 'bgImage' ? 'bgImage' : 'headerImage');
+  if (window.toast) toast('삭제되었습니다.');
+}
+
+function applyDecoOnLoad() {
+  const deco = _decoCache;
+  
+  const body = document.body;
+  if (deco.bgImage) {
+    body.style.setProperty('background-image', `url(${deco.bgImage})`, 'important');
+    body.style.backgroundSize = 'cover';
+    body.style.backgroundAttachment = 'fixed';
+    body.style.backgroundPosition = 'center';
+  } else {
+    body.style.backgroundImage = 'none';
   }
-  // 스티커
-  if(d.stickers && d.stickers.length){
-    stickers=d.stickers;
-    stickers.forEach(s=>renderStickerDOM(s));
+
+  const header = document.querySelector('.header');
+  if (header) {
+    if (deco.headerImage) {
+      header.style.setProperty('background-image', `url(${deco.headerImage})`, 'important');
+      header.style.backgroundSize = 'cover';
+      header.style.backgroundPosition = 'center';
+    } else {
+      header.style.backgroundImage = 'none';
+    }
   }
+
+  updateUploadUI('bgImage');
+  updateUploadUI('headerImage');
+
+  if (window.renderStickerThumbs) renderStickerThumbs();
+}
+
+function updateUploadUI(type) {
+  const deco = _decoCache;
+  const isBg = (type === 'bgImage');
+  const areaId = isBg ? 'bgUploadArea' : 'coverUploadArea';
+  const inputId = isBg ? 'bgImgInput' : 'coverImgInput';
+  const container = document.getElementById(areaId);
+  if(!container) return;
+
+  if (deco[type]) {
+    const savedName = deco[type + 'Name'] || '이미지_등록됨.png';
+    container.innerHTML = `
+      <div style="flex:1; display:flex; align-items:center; justify-content:space-between; background:#f8f9fa; padding:12px; border-radius:8px; border:1px solid var(--blue);">
+        <span style="font-size:13px; color:var(--blue); font-weight:bold; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">📄 ${savedName}</span>
+        <div style="display:flex; gap:5px;">
+          <button class="btn" style="padding:4px 8px; font-size:11px;" onclick="document.getElementById('${inputId}').click()">교체</button>
+          <button class="btn" style="padding:4px 8px; font-size:11px; color:var(--red);" onclick="removeImageInternal('${type}')">삭제</button>
+        </div>
+      </div>
+    `;
+    const controls = document.getElementById(isBg ? 'bgImgControls' : 'coverImgControls');
+    if(controls) controls.style.display = 'block';
+  } else {
+    container.innerHTML = `
+      <div class="upload-zone" onclick="document.getElementById('${inputId}').click()" style="flex:1; margin-bottom:0;">
+        <div style="font-size:24px;">${isBg ? '🖼️' : '📷'}</div>
+        <p style="font-size:13px; margin:0;">클릭해서 ${isBg ? '배경' : '커버'} 이미지 업로드</p>
+      </div>
+    `;
+    const controls = document.getElementById(isBg ? 'bgImgControls' : 'coverImgControls');
+    if(controls) controls.style.display = 'none';
+  }
+}
+
+function removeImageInternal(type) {
+  let deco = {..._decoCache};
+  delete deco[type];
+  delete deco[type + 'Name'];
+  Object.assign(_decoCache, deco); saveDeco(deco);
+  
+  if(type === 'bgImage') {
+    document.body.style.backgroundImage = '';
+  } else {
+    const header = document.querySelector('.header');
+    if(header) header.style.backgroundImage = '';
+  }
+  
+  updateUploadUI(type);
+  if (typeof toast === 'function') toast('삭제되었습니다.');
+}
+
+async function saveDecoAll(obj){
+  for(const [k,v] of Object.entries(obj)){
+    await idbSet(k, v);
+  }
+}
+
+function saveDeco(partial){
+  Object.assign(_decoCache, partial);
+  if(partial.stickers !== undefined) _decoCache.stickers = partial.stickers;
+  // 비동기로 IndexedDB에 저장 (await 없이 fire-and-forget)
+  (async()=>{
+    try{
+      for(const [k,v] of Object.entries(partial)){
+        if(v === null || v === undefined){
+          await idbDel(k);
+        } else {
+          await idbSet(k, v);
+        }
+      }
+    }catch(e){ console.warn('IndexedDB saveDeco 오류:', e); }
+  })();
+}
+
+function applyDecoOnLoad() {
+  const deco = _decoCache; // IndexedDB에서 미리 로드된 캐시 사용
+
+  if(deco.bgImage) {
+    document.body.style.backgroundImage = `url(${deco.bgImage})`;
+    document.body.style.backgroundSize = 'cover';
+    document.body.style.backgroundAttachment = 'fixed';
+    document.body.style.backgroundPosition = 'center';
+    if(deco.bg) {
+      bgOverlayColor = deco.bg.overlay || 'white';
+      applyBgOverlayStyle(bgOverlayColor, parseInt(deco.bg.opacity||50)/100);
+    }
+  }
+
+  if(deco.headerImage) {
+    const area = document.getElementById('coverArea');
+    if(area) { area.style.backgroundImage = `url(${deco.headerImage})`; area.classList.add('visible'); }
+    if(deco.cover) {
+      coverOverlayColor = deco.cover.overlay || 'black';
+      const overlay = document.getElementById('coverOverlay');
+      if(overlay){ const op=parseInt(deco.cover.opacity||50)/100;
+        overlay.style.background = coverOverlayColor==='none'?'transparent':
+          coverOverlayColor==='white'?`rgba(255,255,255,${op})`:`rgba(0,0,0,${op})`; }
+    }
+  }
+
+  if(deco.logo) {
+    if(deco.logo.type==='image') updateLogoDOM(null, deco.logo.val);
+    else updateLogoDOM(deco.logo.val||'₩', null);
+    currentLogoType = deco.logo.type; currentLogoVal = deco.logo.val;
+  }
+
+  updateUploadUI('bgImage');
+  updateUploadUI('headerImage');
+
+  if(deco.stickers && deco.stickers.length){
+    stickers = deco.stickers;
+    const layer = document.getElementById('stickerLayer');
+    if(layer) layer.innerHTML = '';
+    stickers.forEach(s => renderStickerDOM(s));
+  }
+  if(typeof renderStickerThumbs === 'function') renderStickerThumbs();
 }
 
 function renderAll(){updateLabels();renderSummary();renderRecentRows();renderLedger();renderFixed();renderAssets();renderBudget();renderCatSettings();renderCharts();if(statsMode==='year')renderYearStats();}
@@ -2940,9 +3310,7 @@ function renderAll(){updateLabels();renderSummary();renderRecentRows();renderLed
   const pad = n => String(n).padStart(2,'0');
   const d = (yr, mo, day) => `${yr}-${pad(mo)}-${pad(day)}`;
 
-  // ── 거래내역 ──
   const txs = [
-    // 전전월
     {id:'t01',type:'income', date:d(ppy,ppm,5),  desc:'월급',           amount:3800000, category:'급여',   memo:''},
     {id:'t02',type:'income', date:d(ppy,ppm,10), desc:'프리랜서 수입',   amount:450000,  category:'부수입', memo:'디자인 외주'},
     {id:'t03',type:'expense',date:d(ppy,ppm,3),  desc:'마켓컬리',       amount:87000,   category:'식비',   memo:''},
@@ -2956,7 +3324,6 @@ function renderAll(){updateLabels();renderSummary();renderRecentRows();renderLed
     {id:'t11',type:'expense',date:d(ppy,ppm,25), desc:'인터넷 요금',    amount:27500,   category:'통신',   memo:''},
     {id:'t12',type:'expense',date:d(ppy,ppm,28), desc:'쿠팡',           amount:54000,   category:'쇼핑',   memo:'생필품'},
 
-    // 전월
     {id:'t13',type:'income', date:d(py,pm,5),  desc:'월급',             amount:3800000, category:'급여',   memo:''},
     {id:'t14',type:'income', date:d(py,pm,20), desc:'주식 배당금',      amount:120000,  category:'투자',   memo:'삼성전자'},
     {id:'t15',type:'expense',date:d(py,pm,2),  desc:'편의점',           amount:9800,    category:'식비',   memo:''},
@@ -2969,9 +3336,7 @@ function renderAll(){updateLabels();renderSummary();renderRecentRows();renderLed
     {id:'t22',type:'expense',date:d(py,pm,21), desc:'서점',             amount:43000,   category:'교육',   memo:'도서 2권'},
     {id:'t23',type:'expense',date:d(py,pm,24), desc:'친구 모임',        amount:55000,   category:'여가',   memo:'회식'},
     {id:'t24',type:'expense',date:d(py,pm,27), desc:'약국',             amount:8500,    category:'의료',   memo:''},
-    // (할부는 installPlans로 별도 관리)
 
-    // 이번 달
     {id:'t26',type:'income', date:d(y,m,5),   desc:'월급',              amount:3800000, category:'급여',   memo:''},
     {id:'t27',type:'income', date:d(y,m,15),  desc:'부업 수입',         amount:280000,  category:'부수입', memo:'블로그 수익'},
     {id:'t28',type:'expense',date:d(y,m,1),   desc:'쿠팡 로켓배송',    amount:34500,   category:'쇼핑',   memo:''},
@@ -2985,7 +3350,6 @@ function renderAll(){updateLabels();renderSummary();renderRecentRows();renderLed
     {id:'t36',type:'expense',date:d(y,m,17),  desc:'헬스장',            amount:70000,   category:'여가',   memo:'월회원권'},
   ];
 
-  // ── 고정지출 ──
   const fixedItems = [
     {id:'f01', name:'월세',          amount:700000, category:'주거',   day:1,  memo:'강남구 오피스텔'},
     {id:'f02', name:'관리비',        amount:80000,  category:'주거',   day:1,  memo:''},
@@ -2997,7 +3361,6 @@ function renderAll(){updateLabels();renderSummary();renderRecentRows();renderLed
     {id:'f08', name:'핸드폰 할부',   amount:45000,  category:'통신',   day:25, memo:'아이폰15 24개월'},
   ];
 
-  // 고정지출 → 이번달 거래내역 자동 반영
   const mk0 = `${y}-${pad(m)}`;
   fixedItems.forEach(f => {
     if(!txs.some(t=>t.fixedId===f.id && t.date.startsWith(mk0))){
@@ -3005,7 +3368,6 @@ function renderAll(){updateLabels();renderSummary();renderRecentRows();renderLed
     }
   });
 
-  // ── 자산 ──
   const assets = [
     {id:'a01', type:'savings',  name:'국민은행 적금',     amount:8000000,  memo:'월 50만 납입 중'},
     {id:'a02', type:'savings',  name:'토스뱅크 파킹통장', amount:3200000,  memo:'연 2.0%'},
@@ -3017,13 +3379,11 @@ function renderAll(){updateLabels();renderSummary();renderRecentRows();renderLed
     {id:'a08', type:'savings',  name:'청약저축',          amount:4200000,  memo:'월 10만 납입'},
   ];
 
-  // ── 대출/부채 ──
   const loans = [
     {id:'l01', name:'전세자금대출', principal:100000000, remain:100000000, start:d(y-1,4,15), end:d(y+1,4,14), rate:3.2, bank:'우리은행', memo:'만기 일시상환'},
     {id:'l02', name:'신용대출',     principal:10000000,  remain:7500000,   start:d(y-1,1,10), end:d(y+1,1,9),  rate:5.8, bank:'카카오뱅크', memo:'월 20만 상환 중'},
   ];
 
-  // ── 예산 ──
   const budgetKey = `${y}-${pad(m)}`;
   const budgets = {
     [budgetKey]: {
@@ -3038,7 +3398,6 @@ function renderAll(){updateLabels();renderSummary();renderRecentRows();renderLed
     }
   };
 
-  // ── 샘플 할부 플랜 ──
   const startYmLaptop = py+'-'+pad(pm);
   const laptopPlanId = 'plan_sample_laptop';
   const laptopTotal = 1490000;
@@ -3051,7 +3410,6 @@ function renderAll(){updateLabels();renderSummary();renderRecentRows();renderLed
     payDay:laptopPayDay, card:'신한카드', category:'쇼핑',
     startYm:startYmLaptop, memo:'삼성 갤럭시북'
   };
-  // 각 회차 트랜잭션 생성
   function addMo(ym,n){let [yy,mm]=ym.split('-').map(Number);mm+=n;while(mm>12){mm-=12;yy++;}return yy+'-'+String(mm).padStart(2,'0');}
   const laptopTxs=[];
   for(let i=1;i<=laptopMonths;i++){
@@ -3074,9 +3432,20 @@ function renderAll(){updateLabels();renderSummary();renderRecentRows();renderLed
   localStorage.setItem('budgetApp', JSON.stringify({txs:S.txs,budgets:S.budgets,fixedItems:S.fixedItems,assets:S.assets,loans:S.loans,cats:S.cats,installPlans:S.installPlans}));
 })();
 
-load();loadTheme();setType('expense');P.year=S.year;P.month=S.month;statsYear=S.year;renderAll();applyDecoOnLoad();
+  const decoData = _decoCache;
+  if(decoData.bgImage) {
+    const bgBtn = document.querySelector('button[onclick*="bgImage"]');
+    if(bgBtn) bgBtn.classList.add('uploaded');
+  }
+  if(decoData.headerImage) {
+    const headerBtn = document.querySelector('button[onclick*="headerImage"]');
+    if(headerBtn) headerBtn.classList.add('uploaded');
+  }
 
-/* [수정사항] 테스트용 더미 데이터 강제 주입 함수 */
+load();loadTheme();setType('expense');P.year=S.year;P.month=S.month;statsYear=S.year;renderAll();
+// IndexedDB 로드 후 꾸미기 적용 (비동기)
+loadDecoAll().then(()=>{ applyDecoOnLoad(); }).catch(e=>{ console.warn('Deco load error:', e); applyDecoOnLoad(); });
+
 window.injectSample = function() {
   const y = new Date().getFullYear();
   const m = String(new Date().getMonth() + 1).padStart(2,'0');

@@ -398,8 +398,9 @@ body.dark-mode .up-amt{color:#a78bfa;}
 .bfill.ok{background:var(--blue);}.bfill.warn{background:var(--amber);}.bfill.over{background:var(--red);}
 
 .chart-wrap{position:relative;width:100%;height:260px;}
-.chart-wrap.sm{height:220px;}
+.chart-wrap.sm{height:320px;}
 .stats-2col{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:22px;}
+.stats-2col > *{min-width:0;overflow:hidden;}
 
 /* ── MODAL ── */
 .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;align-items:center;justify-content:center;padding:16px;}
@@ -693,6 +694,7 @@ select.fselect:focus{border-color:var(--blue);}
 
   /* ── 통계 ── */
   .stats-2col{grid-template-columns:1fr;}
+  .chart-wrap.sm{height:340px;}
 
   /* ── 모달 ── */
   .modal{padding:18px 16px;border-radius:12px 12px 0 0;max-height:85vh;}
@@ -2696,7 +2698,7 @@ function mkDonut(id,type,old){
   const data={};monthTxs().filter(t=>t.type===type).forEach(t=>{data[t.category]=(data[t.category]||0)+t.amount;});
   const labels=Object.keys(data),vals=Object.values(data);
   if(old)old.destroy();
-  return new Chart(document.getElementById(id),{type:'doughnut',data:{labels,datasets:[{data:vals,backgroundColor:COLORS.slice(0,labels.length),borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'65%',plugins:{legend:{position:'right',labels:{boxWidth:10,font:{size:11},padding:8}},tooltip:{callbacks:{label:ctx=>ctx.label+': '+fmt(ctx.parsed)}}}}});
+  return new Chart(document.getElementById(id),{type:'doughnut',data:{labels,datasets:[{data:vals,backgroundColor:COLORS.slice(0,labels.length),borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{position:'bottom',title:{display:true,text:'',padding:{top:16}},labels:{boxWidth:12,boxHeight:12,font:{size:11},padding:10,color:document.body.classList.contains('dark-mode')?'#e8eaf0':'#444'}},tooltip:{callbacks:{label:ctx=>ctx.label+': '+fmt(ctx.parsed)}}},layout:{padding:{top:10,left:4,right:4}}}});
 }
 function renderCharts(){
   // 통계 period-tab 기본 활성화 보장
@@ -2997,7 +2999,7 @@ function renderYearStats(){
     const labels=Object.keys(data),vals=Object.values(data);
     if(old)old.destroy();
     return new Chart(document.getElementById(id),{type:'doughnut',data:{labels,datasets:[{data:vals,backgroundColor:COLORS.slice(0,labels.length),borderWidth:0}]},
-      options:{responsive:true,maintainAspectRatio:false,cutout:'65%',plugins:{legend:{position:'right',labels:{boxWidth:10,font:{size:11},padding:8}},tooltip:{callbacks:{label:ctx=>ctx.label+': '+fmt(ctx.parsed)}}}}});
+      options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{position:'bottom',title:{display:true,text:'',padding:{top:16}},labels:{boxWidth:12,boxHeight:12,font:{size:11},padding:10,color:document.body.classList.contains('dark-mode')?'#e8eaf0':'#444'}},tooltip:{callbacks:{label:ctx=>ctx.label+': '+fmt(ctx.parsed)}}},layout:{padding:{top:10,left:4,right:4}}}});
   };
   charts.yrExpDonut=mkYrDonut('yrExpDonut','expense',charts.yrExpDonut);
   charts.yrIncDonut=mkYrDonut('yrIncDonut','income',charts.yrIncDonut);
@@ -4799,7 +4801,7 @@ window.injectSample = function() {
 
 <!-- FOOTER -->
 <footer class="app-footer">
-  <span class="app-footer-version">v1.0.2</span>
+  <span class="app-footer-version">v1.0.3</span>
   <span class="app-footer-sep">·</span>
   <span class="app-footer-copy">© 2026 DOUNTOO. Made with <a href="https://claude.ai" target="_blank" rel="noopener noreferrer">Claude (AI)</a>. All rights reserved.</span>
 </footer>

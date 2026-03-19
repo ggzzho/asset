@@ -1660,9 +1660,16 @@ function renderSummary(){
   const be=document.getElementById('sBal');
   be.textContent=(bal<0?'-':'')+fmt(bal);
   be.style.color=bal<0?'rgba(255,160,160,1)':'#fff';
-  const fixAmt=S.fixedItems.reduce((s,f)=>s+f.amount,0);
+  const curYm=mk();
+  const activeFixed=S.fixedItems.filter(f=>{
+    if(!f.startYm) return true;
+    if(curYm<f.startYm) return false;
+    if(f.endYm && curYm>f.endYm) return false;
+    return true;
+  });
+  const fixAmt=activeFixed.reduce((s,f)=>s+f.amount,0);
   document.getElementById('fixBannerAmt').textContent=fmt(fixAmt);
-  document.getElementById('fixBannerCnt').textContent='총 '+S.fixedItems.length+'건';
+  document.getElementById('fixBannerCnt').textContent='총 '+activeFixed.length+'건';
   // 고정지출 → 이번달 총 지출 대비 %
   const fixPctEl=document.getElementById('fixBannerPct');
   if(fixPctEl) fixPctEl.textContent=exp>0?'총 지출의 '+Math.round(fixAmt/exp*100)+'%':'';
@@ -1987,11 +1994,23 @@ function renderLedger(){
 }
 
 function renderFixed(){
-  document.getElementById('fixPageTotal').textContent=fmt(S.fixedItems.reduce((s,f)=>s+f.amount,0));
-  document.getElementById('fixPageCnt').textContent='총 '+S.fixedItems.length+'건';
+  const curYm = mk(); // 현재 보고 있는 달 (YYYY-MM)
+  // 현재 달에 해당하는 고정지출만 표시 (startYm <= curYm <= endYm or endYm 없음)
+  const activeItems = S.fixedItems.filter(f => {
+    if(!f.startYm) return true; // startYm 없으면 항상 표시
+    if(curYm < f.startYm) return false;
+    if(f.endYm && curYm > f.endYm) return false;
+    return true;
+  });
+
+  document.getElementById('fixPageTotal').textContent=fmt(activeItems.reduce((s,f)=>s+f.amount,0));
+  document.getElementById('fixPageCnt').textContent='총 '+activeItems.length+'건';
   const el=document.getElementById('fixedList');
-  if(!S.fixedItems.length){el.innerHTML='<div class="empty" style="background:#fff;border:1px solid var(--border);border-radius:var(--rlg);">등록된 고정지출이 없습니다.</div>';return;}
-  el.innerHTML=S.fixedItems.map(f=>`<div class="fixed-item" draggable="true" data-id="${f.id}">
+  if(!activeItems.length){
+    el.innerHTML='<div class="empty" style="background:#fff;border:1px solid var(--border);border-radius:var(--rlg);">'+(S.fixedItems.length?'이 달에 해당하는 고정지출이 없습니다.':'등록된 고정지출이 없습니다.')+'</div>';
+    return;
+  }
+  el.innerHTML=activeItems.map(f=>`<div class="fixed-item" draggable="true" data-id="${f.id}">
     <span class="drag-handle" title="드래그로 순서 변경">⠿</span>
     <div class="fi-icon">📌</div>
     <div class="fi-info"><div class="fi-name">${f.name}</div><div class="fi-sub">${f.category} · 매월 ${f.day}일 · ${f.startYm||'?'}${f.endYm?' ~ '+f.endYm:'~'}${f.memo?' · '+f.memo:''}</div></div>

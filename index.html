@@ -2107,23 +2107,26 @@ function renderAssets(){
         <span>수익률 <strong style="color:${color}">${ret>=0?'+':''}${pct}%</strong></span>
       </div>`;
     }
-    // 금리 표시
-    if(a.type==='savings' && a.rate){
-      extraHTML+=`<div style="margin-top:4px;font-size:11px;color:var(--text-secondary);">연 ${a.rate}%</div>`;
-    }
+    // 금리 + 납입 진행률 + 만기 예상이자
     if(a.payment){
       const p=a.payment;
       const sDate=new Date(p.startYm+'-01'), eDate=new Date(p.endYm+'-01');
       const totalMonths=Math.round((eDate-sDate)/2592000000)+1;
       const paidMonths=Math.max(0,Math.min(totalMonths,Math.round((today-sDate)/2592000000)));
       const pct=Math.round(paidMonths/totalMonths*100);
-      // D-day 계산
       const endFull=new Date(p.endYm+'-01');
-      endFull.setMonth(endFull.getMonth()+1,0); // 만기월 말일
+      endFull.setMonth(endFull.getMonth()+1,0);
       const dday=Math.ceil((endFull-today)/86400000);
       const ddayStr=dday>0?`D-${dday}`:(dday===0?'D-Day':'만기');
       const ddayColor=dday<=30?'var(--red)':dday<=90?'var(--amber)':'var(--green)';
-      extraHTML=`
+
+      // 금리 표시만
+      let interestHTML='';
+      if(a.rate && a.rate>0){
+        interestHTML=`<div style="margin-top:6px;font-size:11px;color:var(--text-secondary);">연 ${a.rate}%</div>`;
+      }
+
+      extraHTML+=`
         <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border-col);">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;font-size:11px;">
             <span style="color:var(--text-secondary);">납입 진행률 <strong style="color:var(--blue)">${paidMonths}/${totalMonths}개월</strong></span>
@@ -2136,7 +2139,10 @@ function renderAssets(){
             <span>월 ${fmt(p.monthly)} · 매월 ${p.payDay||'-'}일</span>
             <span>만기 ${p.endYm}</span>
           </div>
+          ${interestHTML}
         </div>`;
+    } else if(a.type==='savings' && a.rate){
+      extraHTML+=`<div style="margin-top:4px;font-size:11px;color:var(--text-secondary);">연 ${a.rate}%</div>`;
     }
     return`<div class="asset-item" style="flex-direction:column;align-items:stretch;gap:0;">
       <div style="display:flex;align-items:center;gap:12px;">

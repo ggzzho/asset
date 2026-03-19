@@ -1042,7 +1042,16 @@ body.dark-mode .app-footer{
       </div>
     </div>
     <div class="section"><div class="sec-hdr"><div class="sec-title">현금성 자산</div><button class="btn btn-blue" onclick="openAssetModal()">+ 자산 추가</button></div><div class="asset-list" id="assetList"></div></div>
-    <div class="section"><div class="sec-hdr"><div class="sec-title">부채·대출</div><button class="btn btn-blue" onclick="openLoanModal()">+ 대출 추가</button></div><div id="loanList"></div></div>
+    <div class="section"><div class="sec-hdr"><div class="sec-title">부채·대출</div><button class="btn btn-blue" onclick="openLoanModal()">+ 대출 추가</button></div>
+      <div class="ledger-summary-bar" id="loanSummaryBar" style="margin-bottom:12px;display:none;">
+        <span class="ls-item">원금 합계 <strong id="loanTotalPrincipal" style="color:var(--text-primary);">₩0</strong></span>
+        <span class="ls-sep">·</span>
+        <span class="ls-item exp-item">잔여 원금 <strong id="loanTotalRemain">₩0</strong></span>
+        <span class="ls-sep">·</span>
+        <span class="ls-item" style="color:var(--amber);">월 이자(추정) <strong id="loanTotalInterest">₩0</strong></span>
+      </div>
+      <div id="loanList"></div>
+    </div>
   </div>
 
   <!-- 통계 -->
@@ -2289,7 +2298,24 @@ function renderAssets(){
   }).join(''):'<div class="empty" style="background:#fff;border:1px solid var(--border);border-radius:var(--rlg);">등록된 자산이 없습니다.</div>';
 
   const ll=document.getElementById('loanList');
-  const sortedLoans=[...S.loans].sort((a,b)=>new Date(a.end)-new Date(b.end));
+  const today2=new Date();
+  const sortedLoans=[...S.loans]
+    .filter(l=>!l.end || new Date(l.end)>=today2) // 만기일 지난 것 제외
+    .sort((a,b)=>new Date(a.end)-new Date(b.end));
+
+  // 대출 합계 요약
+  const loanSummaryBar=document.getElementById('loanSummaryBar');
+  if(sortedLoans.length){
+    const totalPrincipal=sortedLoans.reduce((s,l)=>s+l.principal,0);
+    const totalRemain=sortedLoans.reduce((s,l)=>s+l.remain,0);
+    const totalInterest=sortedLoans.reduce((s,l)=>s+Math.round(l.remain*(l.rate/100)/12),0);
+    loanSummaryBar.style.display='flex';
+    document.getElementById('loanTotalPrincipal').textContent=fmt(totalPrincipal);
+    document.getElementById('loanTotalRemain').textContent=fmt(totalRemain);
+    document.getElementById('loanTotalInterest').textContent=fmt(totalInterest);
+  } else {
+    loanSummaryBar.style.display='none';
+  }
   ll.innerHTML=sortedLoans.length?sortedLoans.map(l=>{
     const pct=Math.min(100,Math.round((1-l.remain/l.principal)*100));
     const dS=new Date(l.start),dE=new Date(l.end),tpct=Math.min(100,Math.max(0,Math.round((Date.now()-dS)/(dE-dS)*100)));

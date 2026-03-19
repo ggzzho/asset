@@ -2154,17 +2154,15 @@ function autoFixed(item){
       }
     }
   } else {
-    // 매월
-    const d=String(Math.min(item.day,28)).padStart(2,'0');
-    for(let i=0;i<=24;i++){
-      let y=new Date(startYm+'-01').getFullYear(),
-          m=new Date(startYm+'-01').getMonth()+1+i;
-      while(m>12){m-=12;y++;}
+    // 매월: 현재 달 기준 앞뒤 3개월 범위 생성 (startYm~endYm 조건 유지)
+    const now=new Date();
+    const baseY=now.getFullYear(), baseM=now.getMonth()+1;
+    for(let i=-3;i<=6;i++){
+      let y=baseY, m=baseM+i;
+      while(m>12){m-=12;y++;} while(m<1){m+=12;y--;}
       const ym=y+'-'+String(m).padStart(2,'0');
+      if(ym<startYm) continue;
       if(endYm && ym>endYm) break;
-      let lm=new Date().getMonth()+4, ly=new Date().getFullYear();
-      while(lm>12){lm-=12;ly++;}
-      if(ym>ly+'-'+String(lm).padStart(2,'0')) break;
       const dd=String(Math.min(item.day,new Date(y,m,0).getDate())).padStart(2,'0');
       if(!S.txs.some(t=>t.fixedId===item.id&&t.date.startsWith(ym))){
         S.txs.push({id:'fx_'+item.id+'_'+ym,type:'expense',

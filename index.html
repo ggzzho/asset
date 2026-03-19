@@ -2480,7 +2480,12 @@ function renderBudget(){
   const items=S.cats.expense.filter(c=>budgets[c]!==undefined).map(c=>[c,budgets[c]]);
   const el=document.getElementById('budgetList');
   if(!items.length){el.innerHTML='<div class="empty" style="background:#fff;border:1px solid var(--border);border-radius:var(--rlg);">예산을 설정해보세요.</div>';return;}
-  el.innerHTML=items.map(([cat,budget])=>{const s=spent[cat]||0,pct=Math.min(100,Math.round(s/budget*100)),cls=pct>=100?'over':pct>=80?'warn':'ok';
+  el.innerHTML=items.map(([cat,budget])=>{
+    const s=spent[cat]||0;
+    const realPct=Math.round(s/budget*100);
+    const barPct=Math.min(100,realPct);
+    const cls=realPct>=100?'over':realPct>=80?'warn':'ok';
+    const pctLabel=realPct>100?`<span style="color:var(--red);font-weight:700;">+${realPct-100}% 초과</span>`:realPct+'%';
     return`<div class="bitem" draggable="true" data-id="${cat}">
       <div class="bitem-hdr">
         <div style="display:flex;align-items:center;gap:6px;">
@@ -2488,12 +2493,12 @@ function renderBudget(){
           <span class="bitem-name">${cat}</span>
         </div>
         <div style="display:flex;align-items:center;gap:8px;">
-          <span class="bitem-amts">${fmt(s)} / ${fmt(budget)} · ${pct}%</span>
+          <span class="bitem-amts">${fmt(s)} / ${fmt(budget)} · ${pctLabel}</span>
           <button class="row-action-btn edit-btn" style="width:auto;font-size:12px;" onclick="openEditBudget('${cat}',${budget})" title="예산 수정">✎</button>
           <button class="xbtn" style="width:auto;" onclick="delBudget('${cat}')" title="예산 삭제">✕</button>
         </div>
       </div>
-      <div class="bbar"><div class="bfill ${cls}" style="width:${pct}%"></div></div>
+      <div class="bbar"><div class="bfill ${cls}" style="width:${barPct}%"></div></div>
     </div>`;
   }).join('');
   initDragSort(el, null, '.bitem', (order)=>{

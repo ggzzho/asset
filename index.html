@@ -2148,7 +2148,7 @@ function autoFixed(item){
       if(ym<startYm) continue;
       if(endYm && ym>endYm) break;
       if(!S.txs.some(t=>t.fixedId===item.id&&t.date.startsWith(ym))){
-        S.txs.push({id:Date.now().toString()+'f'+ym,type:'expense',
+        S.txs.push({id:'fx_'+item.id+'_'+ym,type:'expense',
           date:ym+'-'+dd,desc:item.name,amount:item.amount,
           category:item.category,memo:'고정지출(연간)',fixedId:item.id});
       }
@@ -2167,7 +2167,7 @@ function autoFixed(item){
       if(ym>ly+'-'+String(lm).padStart(2,'0')) break;
       const dd=String(Math.min(item.day,new Date(y,m,0).getDate())).padStart(2,'0');
       if(!S.txs.some(t=>t.fixedId===item.id&&t.date.startsWith(ym))){
-        S.txs.push({id:Date.now().toString()+'f'+ym,type:'expense',
+        S.txs.push({id:'fx_'+item.id+'_'+ym,type:'expense',
           date:ym+'-'+dd,desc:item.name,amount:item.amount,
           category:item.category,memo:'고정지출',fixedId:item.id});
       }
@@ -4731,7 +4731,14 @@ function renderAll(){updateLabels();renderSummary();renderRecentRows();renderLed
     if(headerBtn) headerBtn.classList.add('uploaded');
   }
 
-load();loadTheme();setType('expense');P.year=S.year;P.month=S.month;statsYear=S.year;renderAll();
+load();loadTheme();setType('expense');P.year=S.year;P.month=S.month;statsYear=S.year;
+// 로드 시 모든 고정지출 누락 달 보충
+if(S.fixedItems && S.fixedItems.length){
+  let filled=false;
+  S.fixedItems.forEach(f=>{ const before=S.txs.length; autoFixed(f); if(S.txs.length!==before) filled=true; });
+  if(filled) save();
+}
+renderAll();
 // IndexedDB 로드 후 꾸미기 적용 (비동기)
 loadDecoAll().then(()=>{ applyDecoOnLoad(); }).catch(e=>{ console.warn('Deco load error:', e); applyDecoOnLoad(); });
 

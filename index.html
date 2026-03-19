@@ -1122,7 +1122,7 @@ body.dark-mode .app-footer{
   <div class="modal">
     <div class="modal-title" id="addModalTitle">내역 추가</div>
     <div class="fg"><div class="type-toggle"><button class="tbtn sel-exp" id="tExp" onclick="setType('expense')">지출</button><button class="tbtn" id="tInc" onclick="setType('income')">수입</button></div></div>
-    <div class="fg"><label class="flabel">날짜</label><input type="date" class="finput" id="iDate"></div>
+    <div class="fg"><label class="flabel" id="iDateLabel">날짜</label><input type="date" class="finput" id="iDate"></div>
     <div class="fg"><label class="flabel">내용</label><input type="text" class="finput" id="iDesc" placeholder="거래 내용"></div>
     <div class="fg"><label class="flabel">금액 (원)</label><input type="number" class="finput" id="iAmt" placeholder="0" min="0" oninput="calcMonthlyAmt()"></div>
     <div class="fg"><label class="flabel">카테고리</label><select class="fselect" id="iCat"></select></div>
@@ -1813,6 +1813,9 @@ function renderUpcoming(){
       const lastBill  = addMonths(p.startYm,p.months);
       const paid = monthsBetween(firstBill, mk());
       const remain = monthsBetween(mk(), lastBill);
+      // 이 plan의 tx 아무거나 찾아서 수정 버튼 연결
+      const anyTx = S.txs.find(t=>t.installPlanId===p.id);
+      const editBtn = anyTx ? `<button class="row-action-btn edit-btn" data-id="${anyTx.id}" data-action="edit" title="할부 수정" style="margin-left:8px;">✎</button>` : '';
       return `<div class="upcoming-item">
         <div class="up-left">
           <span class="up-badge">할부</span>
@@ -1821,7 +1824,10 @@ function renderUpcoming(){
             <div class="up-sub">${p.card||''} · ${y}년 ${m}월 ${p.payDay}일 청구 · ${paid}/${p.months}회차 · ${remain}회 남음</div>
           </div>
         </div>
-        <div class="up-amt">${fmt(p.chargeAmt)}/월</div>
+        <div style="display:flex;align-items:center;gap:0;">
+          <div class="up-amt">${fmt(p.chargeAmt)}/월</div>
+          ${editBtn}
+        </div>
       </div>`;
     }).join('');
   } else {
@@ -1889,13 +1895,9 @@ function installGroupHTML(groupKey, items, readOnly=false, defaultOpen=false){
   const detailRows = items.map(t=>{
     const plan=(S.installPlans||[]).find(p=>p.id===t.installPlanId);
     const seq=t.installSeq||'?', tot=plan?plan.months:'?';
-    const canEdit = !readOnly && (t.installSeq===1 || !plan);
     return`<div class="install-detail-row">
       <span>${t.desc.replace(/ \(\d+\/\d+회\)/,'')} <span style="opacity:.6">(${seq}/${tot}회)</span></span>
-      <span style="display:flex;align-items:center;gap:6px;">
-        <span style="font-weight:600;color:var(--red);">-${fmt(t.amount)}</span>
-        ${canEdit?`<button class="row-action-btn edit-btn" data-id="${t.id}" data-action="edit" title="할부 수정">✎</button>`:''}
-      </span>
+      <span style="font-weight:600;color:var(--red);">-${fmt(t.amount)}</span>
     </div>`;
   }).join('');
 
@@ -1913,7 +1915,7 @@ function installGroupHTML(groupKey, items, readOnly=false, defaultOpen=false){
       </span>
     </div>
     <div class="install-group-detail${isOpen?' open':''}" id="${gid}">
-      <div style="font-size:11px;color:var(--text-muted);margin-bottom:6px;padding:0 2px;">▼ 할부 상세 내역${readOnly?'':' (✎ 수정 가능)'}</div>
+      <div style="font-size:11px;color:var(--text-muted);margin-bottom:6px;padding:0 2px;">▼ 할부 상세 내역</div>
       ${detailRows}
     </div>
   </div>`;
@@ -2653,6 +2655,7 @@ function openAdd(){
   document.getElementById('addModalTitle').textContent='내역 추가';
   document.getElementById('addModalSaveBtn').textContent='추가';
   document.getElementById('iDate').value=new Date().toISOString().slice(0,10);
+  const dl=document.getElementById('iDateLabel'); if(dl) dl.textContent='날짜';
   ['iDesc','iAmt','iMemo','iMonths','iPayDay','iCard','iMonthlyAmt'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
   document.getElementById('installCheck').checked=false;
   document.getElementById('installFields').className='install-fields';
@@ -2666,13 +2669,18 @@ function openEditTx(id){
   document.getElementById('addModalSaveBtn').textContent='저장';
   setType(tx.type);
   document.getElementById('iDate').value=tx.date;
-  document.getElementById('iDesc').value=tx.desc;
-  document.getElementById('iAmt').value=tx.amount;
-  const catSel=document.getElementById('iCat');
-  Array.from(catSel.options).forEach((o,i)=>{if(o.value===tx.category)catSel.selectedIndex=i;});
   document.getElementById('iMemo').value=tx.memo||'';
+  const catSel=document.getElementById('iCat');
+
   const plan = tx.installPlanId ? (S.installPlans||[]).find(p=>p.id===tx.installPlanId) : null;
-  if(plan && tx.installSeq===1){
+  const dateLabel = document.getElementById('iDateLabel');
+  if(dateLabel) dateLabel.textContent = plan ? '최초 결제일' : '날짜';
+  if(plan){
+    // 할부: plan 원본 데이터로 수정 모달 열기
+    const origDesc = plan.desc || tx.desc.replace(/ \(\d+\/\d+회\)/,'');
+    document.getElementById('iDesc').value=origDesc;
+    document.getElementById('iAmt').value=plan.totalAmt||'';
+    Array.from(catSel.options).forEach((o,i)=>{if(o.value===tx.category)catSel.selectedIndex=i;});
     document.getElementById('installCheck').checked=true;
     document.getElementById('installFields').className='install-fields show';
     document.getElementById('iMonths').value=plan.months||'';
@@ -2681,6 +2689,10 @@ function openEditTx(id){
     const ma=document.getElementById('iMonthlyAmt');if(ma)ma.value=fmt(plan.monthlyAmt);
     editingTxId = plan.id+'_1';
   } else {
+    // 일반 거래
+    document.getElementById('iDesc').value=tx.desc;
+    document.getElementById('iAmt').value=tx.amount;
+    Array.from(catSel.options).forEach((o,i)=>{if(o.value===tx.category)catSel.selectedIndex=i;});
     document.getElementById('installCheck').checked=false;
     document.getElementById('installFields').className='install-fields';
     ['iMonths','iPayDay','iCard','iMonthlyAmt'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});

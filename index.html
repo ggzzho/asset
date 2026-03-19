@@ -2729,24 +2729,29 @@ function renderCharts(){
     if(totalAmt>0){
       const fixPct=Math.round(fixedAmt/totalAmt*100);
       const varPct=100-fixPct;
-      const blue=getComputedStyle(document.documentElement).getPropertyValue('--blue').trim()||'#1a56db';
+      const cs=getComputedStyle(document.documentElement);
+      const blue=cs.getPropertyValue('--blue').trim()||'#1a56db';
+      const blueDk=cs.getPropertyValue('--blue-dk').trim()||'#1342a8';
+      const blueMd=cs.getPropertyValue('--blue-md').trim()||'#bfcffa';
+      const fixGrad=`linear-gradient(90deg,${blueDk},${blue})`;
+      const varGrad=`linear-gradient(90deg,${blue}99,${blueMd})`;
       barEl.innerHTML=`
-        <div style="margin-bottom:8px;">
-          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;">
+        <div style="margin-bottom:10px;">
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px;">
             <span>📌 고정지출 <strong>${fmt(fixedAmt)}</strong></span>
             <span style="color:var(--blue);font-weight:700;">${fixPct}%</span>
           </div>
           <div style="height:14px;background:var(--g100);border-radius:7px;overflow:hidden;">
-            <div style="height:100%;border-radius:7px;background:${blue};width:${fixPct}%;transition:width .5s;"></div>
+            <div style="height:100%;border-radius:7px;background:${fixGrad};width:${fixPct}%;transition:width .6s ease;"></div>
           </div>
         </div>
         <div>
-          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;">
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px;">
             <span>💸 변동지출 <strong>${fmt(varAmt)}</strong></span>
-            <span style="color:var(--text-secondary);font-weight:700;">${varPct}%</span>
+            <span style="color:var(--blue);font-weight:700;opacity:0.6;">${varPct}%</span>
           </div>
           <div style="height:14px;background:var(--g100);border-radius:7px;overflow:hidden;">
-            <div style="height:100%;border-radius:7px;background:var(--g300);width:${varPct}%;transition:width .5s;"></div>
+            <div style="height:100%;border-radius:7px;background:${varGrad};width:${varPct}%;transition:width .6s ease;"></div>
           </div>
         </div>
         <div style="margin-top:10px;font-size:11px;color:var(--text-muted);text-align:right;">총 지출 ${fmt(totalAmt)}</div>`;

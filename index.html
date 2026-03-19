@@ -1099,6 +1099,13 @@ body.dark-mode .app-footer{
   <div class="page" id="page-budget">
     <div class="page-title">💰 예산</div>
     <div class="month-bar"><button class="mbtn" onclick="chM(-1)">&#8249;</button><span class="mlabel" id="ml5"></span><button class="mbtn" onclick="chM(1)">&#8250;</button></div>
+    <div class="ledger-summary-bar" id="budgetSummaryBar" style="margin-bottom:14px;display:none;">
+      <span class="ls-item">예산 합계 <strong id="budgetTotalAmt" style="color:var(--blue);">₩0</strong></span>
+      <span class="ls-sep">·</span>
+      <span class="ls-item">총 지출 <strong id="budgetTotalSpent" class="exp">₩0</strong></span>
+      <span class="ls-sep">·</span>
+      <span class="ls-item">잔여 <strong id="budgetTotalRemain">₩0</strong></span>
+    </div>
     <div class="sec-hdr"><div class="sec-title">카테고리별 예산</div><button class="btn btn-blue" onclick="openBudgetModal()">+ 예산 설정</button></div>
     <div class="budget-list" id="budgetList"></div>
   </div>
@@ -2476,9 +2483,24 @@ function execDelLoan(){
 function renderBudget(){
   const spent={};monthTxs().filter(t=>t.type==='expense').forEach(t=>{spent[t.category]=(spent[t.category]||0)+t.amount;});
   const budgets=S.budgets[mk()]||{};
-  // 카테고리 순서를 S.cats.expense 기준으로 정렬
   const items=S.cats.expense.filter(c=>budgets[c]!==undefined).map(c=>[c,budgets[c]]);
   const el=document.getElementById('budgetList');
+
+  // 합계 요약 바 업데이트
+  const summaryBar=document.getElementById('budgetSummaryBar');
+  if(items.length){
+    const totalBudget=items.reduce((s,[,b])=>s+b,0);
+    const totalSpent=items.reduce((s,[c])=>s+(spent[c]||0),0);
+    const remain=totalBudget-totalSpent;
+    summaryBar.style.display='flex';
+    document.getElementById('budgetTotalAmt').textContent=fmt(totalBudget);
+    document.getElementById('budgetTotalSpent').textContent=fmt(totalSpent);
+    const remainEl=document.getElementById('budgetTotalRemain');
+    remainEl.textContent=(remain<0?'-':'')+fmt(remain);
+    remainEl.style.color=remain<0?'var(--red)':'var(--green)';
+  } else {
+    summaryBar.style.display='none';
+  }
   if(!items.length){el.innerHTML='<div class="empty" style="background:#fff;border:1px solid var(--border);border-radius:var(--rlg);">예산을 설정해보세요.</div>';return;}
   el.innerHTML=items.map(([cat,budget])=>{
     const s=spent[cat]||0;

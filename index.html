@@ -1149,7 +1149,27 @@ body.dark-mode .app-footer{
     <div class="fg"><label class="flabel">이름</label><input type="text" class="finput" id="fxName" placeholder="월세, 보험료, 넷플릭스..."></div>
     <div class="fg"><label class="flabel">금액 (원)</label><input type="number" class="finput" id="fxAmt" placeholder="0"></div>
     <div class="fg"><label class="flabel">카테고리</label><select class="fselect" id="fxCat"></select></div>
-    <div class="fg"><label class="flabel">매월 결제일</label><input type="number" class="finput" id="fxDay" placeholder="1~31" min="1" max="31"></div>
+    <div class="fg">
+      <label class="flabel">결제 주기</label>
+      <div style="display:flex;gap:8px;">
+        <button type="button" class="tbtn sel-exp" id="fxCycleMonthly" onclick="setFxCycle('monthly')" style="flex:1;">매월</button>
+        <button type="button" class="tbtn" id="fxCycleYearly" onclick="setFxCycle('yearly')" style="flex:1;">매년</button>
+      </div>
+    </div>
+    <input type="hidden" id="fxCycle" value="monthly">
+    <!-- 매월 결제일 -->
+    <div class="fg" id="fxMonthlyWrap">
+      <label class="flabel">매월 결제일</label>
+      <input type="number" class="finput" id="fxDay" placeholder="1~31" min="1" max="31">
+    </div>
+    <!-- 매년 결제월/일 -->
+    <div class="fg" id="fxYearlyWrap" style="display:none;">
+      <label class="flabel">매년 결제월/일</label>
+      <div class="frow">
+        <div><input type="number" class="finput" id="fxYearMonth" placeholder="월 (1~12)" min="1" max="12"></div>
+        <div><input type="number" class="finput" id="fxYearDay" placeholder="일 (1~31)" min="1" max="31"></div>
+      </div>
+    </div>
     <div class="frow fg">
       <div><label class="flabel">시작월 <span style="color:var(--red)">*</span></label><input type="month" class="finput" id="fxStartYm"></div>
       <div><label class="flabel">종료월 <span style="color:var(--text-muted);font-weight:400;">(없으면 비워두세요)</span></label><input type="month" class="finput" id="fxEndYm"></div>
@@ -1663,10 +1683,12 @@ function renderSummary(){
   be.textContent=(bal<0?'-':'')+fmt(bal);
   be.style.color=bal<0?'rgba(255,160,160,1)':'#fff';
   const curYm=mk();
+  const curMonth=S.month;
   const activeFixed=S.fixedItems.filter(f=>{
     if(!f.startYm) return true;
     if(curYm<f.startYm) return false;
     if(f.endYm && curYm>f.endYm) return false;
+    if(f.cycle==='yearly' && f.yearMonth && f.yearMonth!==curMonth) return false;
     return true;
   });
   const fixAmt=activeFixed.reduce((s,f)=>s+f.amount,0);
@@ -1997,11 +2019,13 @@ function renderLedger(){
 
 function renderFixed(){
   const curYm = mk(); // 현재 보고 있는 달 (YYYY-MM)
-  // 현재 달에 해당하는 고정지출만 표시 (startYm <= curYm <= endYm or endYm 없음)
+  const curMonth = S.month; // 현재 보고 있는 월 (숫자)
   const activeItems = S.fixedItems.filter(f => {
-    if(!f.startYm) return true; // startYm 없으면 항상 표시
+    if(!f.startYm) return true;
     if(curYm < f.startYm) return false;
     if(f.endYm && curYm > f.endYm) return false;
+    // 매년 결제: 해당 월(yearMonth)에만 표시
+    if(f.cycle==='yearly' && f.yearMonth && f.yearMonth !== curMonth) return false;
     return true;
   });
 
@@ -2015,22 +2039,29 @@ function renderFixed(){
   el.innerHTML=activeItems.map(f=>`<div class="fixed-item" draggable="true" data-id="${f.id}">
     <span class="drag-handle" title="드래그로 순서 변경">⠿</span>
     <div class="fi-icon">📌</div>
-    <div class="fi-info"><div class="fi-name">${f.name}</div><div class="fi-sub">${f.category} · 매월 ${f.day}일 · ${f.startYm||'?'}${f.endYm?' ~ '+f.endYm:'~'}${f.memo?' · '+f.memo:''}</div></div>
+    <div class="fi-info"><div class="fi-name">${f.name}</div><div class="fi-sub">${f.category} · ${f.cycle==='yearly'?'매년 '+f.yearMonth+'월 '+f.yearDay+'일':'매월 '+f.day+'일'} · ${f.startYm||'?'}${f.endYm?' ~ '+f.endYm:'~'}${f.memo?' · '+f.memo:''}</div></div>
     <div class="fi-amt">${fmt(f.amount)}</div>
     <button class="row-action-btn edit-btn" style="margin-left:4px;width:auto;" onclick="openEditFixed('${f.id}')" title="수정">✎</button>
     <button class="xbtn" style="margin-left:4px;width:auto" onclick="confirmDelFixed('${f.id}','${f.name}')">✕</button>
   </div>`).join('');
   initDragSort(el, 'fixedItems', '.fixed-item');
 }
+function setFxCycle(cycle){
+  document.getElementById('fxCycle').value=cycle;
+  document.getElementById('fxCycleMonthly').className='tbtn'+(cycle==='monthly'?' sel-exp':'');
+  document.getElementById('fxCycleYearly').className='tbtn'+(cycle==='yearly'?' sel-exp':'');
+  document.getElementById('fxMonthlyWrap').style.display=cycle==='monthly'?'block':'none';
+  document.getElementById('fxYearlyWrap').style.display=cycle==='yearly'?'block':'none';
+}
 function openFixedModal(){
   editingFixedId=null;
   document.getElementById('fixedModalTitle').textContent='고정지출 등록';
   document.getElementById('fixedModalSaveBtn').textContent='저장';
-  ['fxName','fxAmt','fxDay','fxMemo','fxEndYm'].forEach(id=>document.getElementById(id).value='');
-  // 시작월 기본값: 이번 달
+  ['fxName','fxAmt','fxDay','fxMemo','fxEndYm','fxYearMonth','fxYearDay'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   const now=new Date();
   document.getElementById('fxStartYm').value=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
   document.getElementById('fxCat').innerHTML=S.cats.expense.map(c=>`<option>${c}</option>`).join('');
+  setFxCycle('monthly');
   openOverlay('fixedModal');
 }
 function openEditFixed(id){
@@ -2041,10 +2072,17 @@ function openEditFixed(id){
   document.getElementById('fxCat').innerHTML=S.cats.expense.map(c=>`<option${c===f.category?' selected':''}>${c}</option>`).join('');
   document.getElementById('fxName').value=f.name;
   document.getElementById('fxAmt').value=f.amount;
-  document.getElementById('fxDay').value=f.day;
+  document.getElementById('fxDay').value=f.day||'';
   document.getElementById('fxMemo').value=f.memo||'';
   document.getElementById('fxStartYm').value=f.startYm||'';
   document.getElementById('fxEndYm').value=f.endYm||'';
+  // 주기 복원
+  const cycle=f.cycle||'monthly';
+  setFxCycle(cycle);
+  if(cycle==='yearly'){
+    document.getElementById('fxYearMonth').value=f.yearMonth||'';
+    document.getElementById('fxYearDay').value=f.yearDay||'';
+  }
   openOverlay('fixedModal');
 }
 let editingFixedId=null;
@@ -2052,15 +2090,18 @@ function saveFixed(){
   const name=document.getElementById('fxName').value.trim(),
         amt=parseFloat(document.getElementById('fxAmt').value),
         cat=document.getElementById('fxCat').value,
-        day=parseInt(document.getElementById('fxDay').value)||1,
         memo=document.getElementById('fxMemo').value.trim(),
         startYm=document.getElementById('fxStartYm').value,
         endYm=document.getElementById('fxEndYm').value||null;
+  const cycle=document.getElementById('fxCycle').value||'monthly';
+  const day=cycle==='monthly'?(parseInt(document.getElementById('fxDay').value)||1):1;
+  const yearMonth=cycle==='yearly'?(parseInt(document.getElementById('fxYearMonth').value)||1):null;
+  const yearDay=cycle==='yearly'?(parseInt(document.getElementById('fxYearDay').value)||1):null;
   if(!name||!amt||amt<=0){toast('이름과 금액을 입력해주세요.');return;}
   if(!startYm){toast('시작월을 입력해주세요.');return;}
   if(editingFixedId){
     const idx=S.fixedItems.findIndex(f=>f.id===editingFixedId); if(idx<0)return;
-    S.fixedItems[idx]={...S.fixedItems[idx],name,amount:amt,category:cat,day,memo,startYm,endYm};
+    S.fixedItems[idx]={...S.fixedItems[idx],name,amount:amt,category:cat,day,memo,startYm,endYm,cycle,yearMonth,yearDay};
     // 기존 거래내역 동기화 (기간 밖 삭제, 기간 내 업데이트)
     S.txs=S.txs.filter(t=>{
       if(t.fixedId!==editingFixedId) return true;
@@ -2078,36 +2119,52 @@ function saveFixed(){
     autoFixed(S.fixedItems[idx]);
     save();closeOverlay('fixedModal');renderAll();toast('고정지출이 수정됐어요.');
   } else {
-    const item={id:Date.now().toString(),name,amount:amt,category:cat,day,memo,startYm,endYm};
+    const item={id:Date.now().toString(),name,amount:amt,category:cat,day,memo,startYm,endYm,cycle,yearMonth,yearDay};
     S.fixedItems.push(item);autoFixed(item);save();closeOverlay('fixedModal');renderAll();toast('고정지출이 등록됐어요.');
   }
 }
 function autoFixed(item){
-  const d=String(Math.min(item.day,28)).padStart(2,'0');
   const startYm=item.startYm;
   const endYm=item.endYm||null;
+  const cycle=item.cycle||'monthly';
   if(!startYm) return;
 
-  // 시작월 기준 과거 0개월 ~ 미래 24개월 범위 생성 (종료월 있으면 그 달까지만)
-  const now=new Date();
-  const months=[];
-  for(let i=0;i<=24;i++){
-    let y=new Date(startYm+'-01').getFullYear(),
-        m=new Date(startYm+'-01').getMonth()+1+i;
-    while(m>12){m-=12;y++;}
-    const ym=y+'-'+String(m).padStart(2,'0');
-    if(endYm && ym>endYm) break;
-    months.push(ym);
-  }
-  months.forEach(ym=>{
-    if(!S.txs.some(t=>t.fixedId===item.id&&t.date.startsWith(ym))){
-      S.txs.push({
-        id:Date.now().toString()+'f'+ym,type:'expense',
-        date:ym+'-'+d,desc:item.name,amount:item.amount,
-        category:item.category,memo:'고정지출',fixedId:item.id
-      });
+  if(cycle==='yearly'){
+    // 매년: yearMonth/yearDay 기준으로 해당 연도에만 생성
+    const mm=String(item.yearMonth||1).padStart(2,'0');
+    const dd=String(Math.min(item.yearDay||1,28)).padStart(2,'0');
+    const startYear=parseInt(startYm.slice(0,4));
+    const endYear=endYm?parseInt(endYm.slice(0,4)):startYear+10;
+    for(let y=startYear;y<=endYear;y++){
+      const ym=y+'-'+mm;
+      if(ym<startYm) continue;
+      if(endYm && ym>endYm) break;
+      if(!S.txs.some(t=>t.fixedId===item.id&&t.date.startsWith(ym))){
+        S.txs.push({id:Date.now().toString()+'f'+ym,type:'expense',
+          date:ym+'-'+dd,desc:item.name,amount:item.amount,
+          category:item.category,memo:'고정지출(연간)',fixedId:item.id});
+      }
     }
-  });
+  } else {
+    // 매월
+    const d=String(Math.min(item.day,28)).padStart(2,'0');
+    for(let i=0;i<=24;i++){
+      let y=new Date(startYm+'-01').getFullYear(),
+          m=new Date(startYm+'-01').getMonth()+1+i;
+      while(m>12){m-=12;y++;}
+      const ym=y+'-'+String(m).padStart(2,'0');
+      if(endYm && ym>endYm) break;
+      let lm=new Date().getMonth()+4, ly=new Date().getFullYear();
+      while(lm>12){lm-=12;ly++;}
+      if(ym>ly+'-'+String(lm).padStart(2,'0')) break;
+      const dd=String(Math.min(item.day,new Date(y,m,0).getDate())).padStart(2,'0');
+      if(!S.txs.some(t=>t.fixedId===item.id&&t.date.startsWith(ym))){
+        S.txs.push({id:Date.now().toString()+'f'+ym,type:'expense',
+          date:ym+'-'+dd,desc:item.name,amount:item.amount,
+          category:item.category,memo:'고정지출',fixedId:item.id});
+      }
+    }
+  }
 }
 function confirmDelFixed(id, name){
   S._pendingFixedId = id;

@@ -1148,6 +1148,10 @@ body.dark-mode .app-footer{
     <div class="fg"><label class="flabel">금액 (원)</label><input type="number" class="finput" id="fxAmt" placeholder="0"></div>
     <div class="fg"><label class="flabel">카테고리</label><select class="fselect" id="fxCat"></select></div>
     <div class="fg"><label class="flabel">매월 결제일</label><input type="number" class="finput" id="fxDay" placeholder="1~31" min="1" max="31"></div>
+    <div class="frow fg">
+      <div><label class="flabel">시작월 <span style="color:var(--red)">*</span></label><input type="month" class="finput" id="fxStartYm"></div>
+      <div><label class="flabel">종료월 <span style="color:var(--text-muted);font-weight:400;">(없으면 비워두세요)</span></label><input type="month" class="finput" id="fxEndYm"></div>
+    </div>
     <div class="fg"><label class="flabel">메모 (선택)</label><input type="text" class="finput" id="fxMemo" placeholder="메모"></div>
     <div class="mfoot"><button class="btn" onclick="closeOverlay('fixedModal')">취소</button><button class="btn btn-blue" id="fixedModalSaveBtn" onclick="saveFixed()">저장</button></div>
   </div>
@@ -1552,6 +1556,13 @@ function load(){
         }
       });
       if(changed) save();
+      // 마이그레이션: startYm 없는 고정지출에 이번달 기본값 설정
+      const curYm=new Date().getFullYear()+'-'+String(new Date().getMonth()+1).padStart(2,'0');
+      let fixChanged=false;
+      S.fixedItems.forEach(f=>{
+        if(!f.startYm){ f.startYm=curYm; fixChanged=true; }
+      });
+      if(fixChanged) save();
     }
   }catch(e){}
 }
@@ -1983,7 +1994,7 @@ function renderFixed(){
   el.innerHTML=S.fixedItems.map(f=>`<div class="fixed-item" draggable="true" data-id="${f.id}">
     <span class="drag-handle" title="드래그로 순서 변경">⠿</span>
     <div class="fi-icon">📌</div>
-    <div class="fi-info"><div class="fi-name">${f.name}</div><div class="fi-sub">${f.category} · 매월 ${f.day}일${f.memo?' · '+f.memo:''}</div></div>
+    <div class="fi-info"><div class="fi-name">${f.name}</div><div class="fi-sub">${f.category} · 매월 ${f.day}일 · ${f.startYm||'?'}${f.endYm?' ~ '+f.endYm:'~'}${f.memo?' · '+f.memo:''}</div></div>
     <div class="fi-amt">${fmt(f.amount)}</div>
     <button class="row-action-btn edit-btn" style="margin-left:4px;width:auto;" onclick="openEditFixed('${f.id}')" title="수정">✎</button>
     <button class="xbtn" style="margin-left:4px;width:auto" onclick="confirmDelFixed('${f.id}','${f.name}')">✕</button>
@@ -1994,7 +2005,10 @@ function openFixedModal(){
   editingFixedId=null;
   document.getElementById('fixedModalTitle').textContent='고정지출 등록';
   document.getElementById('fixedModalSaveBtn').textContent='저장';
-  ['fxName','fxAmt','fxDay','fxMemo'].forEach(id=>document.getElementById(id).value='');
+  ['fxName','fxAmt','fxDay','fxMemo','fxEndYm'].forEach(id=>document.getElementById(id).value='');
+  // 시작월 기본값: 이번 달
+  const now=new Date();
+  document.getElementById('fxStartYm').value=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
   document.getElementById('fxCat').innerHTML=S.cats.expense.map(c=>`<option>${c}</option>`).join('');
   openOverlay('fixedModal');
 }
@@ -2008,46 +2022,69 @@ function openEditFixed(id){
   document.getElementById('fxAmt').value=f.amount;
   document.getElementById('fxDay').value=f.day;
   document.getElementById('fxMemo').value=f.memo||'';
+  document.getElementById('fxStartYm').value=f.startYm||'';
+  document.getElementById('fxEndYm').value=f.endYm||'';
   openOverlay('fixedModal');
 }
 let editingFixedId=null;
 function saveFixed(){
-  const name=document.getElementById('fxName').value.trim(),amt=parseFloat(document.getElementById('fxAmt').value),cat=document.getElementById('fxCat').value,day=parseInt(document.getElementById('fxDay').value)||1,memo=document.getElementById('fxMemo').value.trim();
+  const name=document.getElementById('fxName').value.trim(),
+        amt=parseFloat(document.getElementById('fxAmt').value),
+        cat=document.getElementById('fxCat').value,
+        day=parseInt(document.getElementById('fxDay').value)||1,
+        memo=document.getElementById('fxMemo').value.trim(),
+        startYm=document.getElementById('fxStartYm').value,
+        endYm=document.getElementById('fxEndYm').value||null;
   if(!name||!amt||amt<=0){toast('이름과 금액을 입력해주세요.');return;}
+  if(!startYm){toast('시작월을 입력해주세요.');return;}
   if(editingFixedId){
     const idx=S.fixedItems.findIndex(f=>f.id===editingFixedId); if(idx<0)return;
-    S.fixedItems[idx]={...S.fixedItems[idx],name,amount:amt,category:cat,day,memo};
-    // 기존 거래내역도 업데이트 (날짜·금액·카테고리 동기화)
+    S.fixedItems[idx]={...S.fixedItems[idx],name,amount:amt,category:cat,day,memo,startYm,endYm};
+    // 기존 거래내역 동기화 (기간 밖 삭제, 기간 내 업데이트)
+    S.txs=S.txs.filter(t=>{
+      if(t.fixedId!==editingFixedId) return true;
+      const ym=t.date.slice(0,7);
+      return ym>=startYm && (!endYm||ym<=endYm);
+    });
     S.txs.forEach(t=>{
       if(t.fixedId===editingFixedId){
         const ym=t.date.slice(0,7);
         const dd=String(Math.min(day,new Date(parseInt(ym.slice(0,4)),parseInt(ym.slice(5,7)),0).getDate())).padStart(2,'0');
-        t.date=ym+'-'+dd;
-        t.desc=name; t.amount=amt; t.category=cat; t.memo=memo||'고정지출';
+        t.date=ym+'-'+dd; t.desc=name; t.amount=amt; t.category=cat; t.memo=memo||'고정지출';
       }
     });
+    // 기간 내 누락 달 보충
+    autoFixed(S.fixedItems[idx]);
     save();closeOverlay('fixedModal');renderAll();toast('고정지출이 수정됐어요.');
   } else {
-    const item={id:Date.now().toString(),name,amount:amt,category:cat,day,memo};
+    const item={id:Date.now().toString(),name,amount:amt,category:cat,day,memo,startYm,endYm};
     S.fixedItems.push(item);autoFixed(item);save();closeOverlay('fixedModal');renderAll();toast('고정지출이 등록됐어요.');
   }
 }
 function autoFixed(item){
-  // 고정지출: 현재 데이터에 있는 모든 연월에 대해 누락된 달 생성
-  // 최소 등록월(당월 포함) 기준으로 6개월 전후까지 생성
   const d=String(Math.min(item.day,28)).padStart(2,'0');
+  const startYm=item.startYm;
+  const endYm=item.endYm||null;
+  if(!startYm) return;
+
+  // 시작월 기준 과거 0개월 ~ 미래 24개월 범위 생성 (종료월 있으면 그 달까지만)
   const now=new Date();
   const months=[];
-  for(let i=-3;i<=12;i++){
-    let y=now.getFullYear(), m=now.getMonth()+1+i;
-    while(m>12){m-=12;y++;} while(m<1){m+=12;y--;}
-    months.push(y+'-'+String(m).padStart(2,'0'));
+  for(let i=0;i<=24;i++){
+    let y=new Date(startYm+'-01').getFullYear(),
+        m=new Date(startYm+'-01').getMonth()+1+i;
+    while(m>12){m-=12;y++;}
+    const ym=y+'-'+String(m).padStart(2,'0');
+    if(endYm && ym>endYm) break;
+    months.push(ym);
   }
   months.forEach(ym=>{
     if(!S.txs.some(t=>t.fixedId===item.id&&t.date.startsWith(ym))){
-      S.txs.push({id:Date.now().toString()+'f'+ym,type:'expense',
+      S.txs.push({
+        id:Date.now().toString()+'f'+ym,type:'expense',
         date:ym+'-'+d,desc:item.name,amount:item.amount,
-        category:item.category,memo:'고정지출',fixedId:item.id});
+        category:item.category,memo:'고정지출',fixedId:item.id
+      });
     }
   });
 }
@@ -4475,20 +4512,35 @@ function renderAll(){updateLabels();renderSummary();renderRecentRows();renderLed
   ];
 
   const fixedItems = [
-    {id:'f01', name:'월세',          amount:700000, category:'주거',   day:1,  memo:'강남구 오피스텔'},
-    {id:'f02', name:'관리비',        amount:80000,  category:'주거',   day:1,  memo:''},
-    {id:'f03', name:'실손보험',      amount:54000,  category:'의료',   day:5,  memo:'KB손해보험'},
-    {id:'f04', name:'종신보험',      amount:120000, category:'의료',   day:5,  memo:'삼성생명'},
-    {id:'f05', name:'넷플릭스',      amount:17000,  category:'여가',   day:10, memo:'스탠다드'},
-    {id:'f06', name:'유튜브 프리미엄',amount:14900, category:'여가',   day:10, memo:''},
-    {id:'f07', name:'스포티파이',    amount:10900,  category:'여가',   day:15, memo:''},
-    {id:'f08', name:'핸드폰 할부',   amount:45000,  category:'통신',   day:25, memo:'아이폰15 24개월'},
+    {id:'f01', name:'월세',          amount:700000, category:'주거',   day:1,  memo:'강남구 오피스텔', startYm:`${y-1}-01`},
+    {id:'f02', name:'관리비',        amount:80000,  category:'주거',   day:1,  memo:'',               startYm:`${y-1}-01`},
+    {id:'f03', name:'실손보험',      amount:54000,  category:'의료',   day:5,  memo:'KB손해보험',      startYm:`${y-1}-01`},
+    {id:'f04', name:'종신보험',      amount:120000, category:'의료',   day:5,  memo:'삼성생명',        startYm:`${y-1}-01`},
+    {id:'f05', name:'넷플릭스',      amount:17000,  category:'여가',   day:10, memo:'스탠다드',        startYm:`${y-1}-06`},
+    {id:'f06', name:'유튜브 프리미엄',amount:14900, category:'여가',   day:10, memo:'',               startYm:`${y-1}-06`},
+    {id:'f07', name:'스포티파이',    amount:10900,  category:'여가',   day:15, memo:'',               startYm:`${y}-01`},
+    {id:'f08', name:'핸드폰 할부',   amount:45000,  category:'통신',   day:25, memo:'아이폰15 24개월', startYm:`${y-1}-03`, endYm:`${y+1}-02`},
   ];
 
-  const mk0 = `${y}-${pad(m)}`;
+  // 고정지출 거래내역 자동 생성 (startYm ~ 현재+3개월)
   fixedItems.forEach(f => {
-    if(!txs.some(t=>t.fixedId===f.id && t.date.startsWith(mk0))){
-      txs.push({id:'fx_'+f.id, type:'expense', date:d(y,m,Math.min(f.day,28)), desc:f.name, amount:f.amount, category:f.category, memo:'고정지출', fixedId:f.id});
+    const startYm = f.startYm || `${y}-${pad(m)}`;
+    const endYm = f.endYm || null;
+    const sDate = new Date(startYm+'-01');
+    for(let i=0; i<=24; i++){
+      let fy=sDate.getFullYear(), fm=sDate.getMonth()+1+i;
+      while(fm>12){fm-=12;fy++;}
+      const ym=fy+'-'+pad(fm);
+      if(endYm && ym>endYm) break;
+      // 현재+3개월까지만
+      const limitY=y, limitM=m+3;
+      const limitYm=limitY+'-'+pad(limitM>12?limitM-12:limitM);
+      if(ym>limitYm+(limitM>12?String(limitY+1):String(limitY))) break;
+      const dd=String(Math.min(f.day,new Date(fy,fm,0).getDate())).padStart(2,'0');
+      if(!txs.some(t=>t.fixedId===f.id&&t.date.startsWith(ym))){
+        txs.push({id:'fx_'+f.id+'_'+ym, type:'expense', date:ym+'-'+dd,
+          desc:f.name, amount:f.amount, category:f.category, memo:'고정지출', fixedId:f.id});
+      }
     }
   });
 
@@ -4629,22 +4681,31 @@ window.injectSample = function() {
 
   /* ── 고정지출 ── */
   S.fixedItems = [
-    {id:'f01', name:'월세',            amount:700000, category:'주거',   day:1,  memo:'강남구 오피스텔'},
-    {id:'f02', name:'관리비',          amount:80000,  category:'주거',   day:1,  memo:''},
-    {id:'f03', name:'실손보험',        amount:54000,  category:'의료',   day:5,  memo:'KB손해보험'},
-    {id:'f04', name:'종신보험',        amount:120000, category:'의료',   day:5,  memo:'삼성생명'},
-    {id:'f05', name:'넷플릭스',        amount:17000,  category:'여가',   day:10, memo:'스탠다드'},
-    {id:'f06', name:'유튜브 프리미엄', amount:14900,  category:'여가',   day:10, memo:''},
-    {id:'f07', name:'스포티파이',      amount:10900,  category:'여가',   day:15, memo:''},
-    {id:'f08', name:'핸드폰 할부',     amount:45000,  category:'통신',   day:25, memo:'아이폰15 24개월'},
+    {id:'f01', name:'월세',            amount:700000, category:'주거',   day:1,  memo:'강남구 오피스텔', startYm:`${cy-1}-01`},
+    {id:'f02', name:'관리비',          amount:80000,  category:'주거',   day:1,  memo:'',               startYm:`${cy-1}-01`},
+    {id:'f03', name:'실손보험',        amount:54000,  category:'의료',   day:5,  memo:'KB손해보험',      startYm:`${cy-1}-01`},
+    {id:'f04', name:'종신보험',        amount:120000, category:'의료',   day:5,  memo:'삼성생명',        startYm:`${cy-1}-01`},
+    {id:'f05', name:'넷플릭스',        amount:17000,  category:'여가',   day:10, memo:'스탠다드',        startYm:`${cy-1}-06`},
+    {id:'f06', name:'유튜브 프리미엄', amount:14900,  category:'여가',   day:10, memo:'',               startYm:`${cy-1}-06`},
+    {id:'f07', name:'스포티파이',      amount:10900,  category:'여가',   day:15, memo:'',               startYm:`${cy}-01`},
+    {id:'f08', name:'핸드폰 할부',     amount:45000,  category:'통신',   day:25, memo:'아이폰15 24개월', startYm:`${cy-1}-03`, endYm:`${cy+1}-02`},
   ];
 
-  /* ── 이번달 고정지출 자동 추가 ── */
-  const mk0 = `${cy}-${pad(cm)}`;
+  /* ── 고정지출 거래내역 자동 생성 (startYm ~ 현재+3개월) ── */
   S.fixedItems.forEach(f => {
-    if(!S.txs.some(t=>t.fixedId===f.id && t.date.startsWith(mk0))){
-      S.txs.push({id:'fx_'+f.id, type:'expense', date:d(cy,cm,Math.min(f.day,28)),
-        desc:f.name, amount:f.amount, category:f.category, memo:'고정지출', fixedId:f.id});
+    const sDate = new Date(f.startYm+'-01');
+    for(let i=0; i<=24; i++){
+      let fy=sDate.getFullYear(), fm=sDate.getMonth()+1+i;
+      while(fm>12){fm-=12;fy++;}
+      const ym=fy+'-'+pad(fm);
+      if(f.endYm && ym>f.endYm) break;
+      let lm=cm+3, ly=cy; while(lm>12){lm-=12;ly++;} 
+      if(ym>ly+'-'+pad(lm)) break;
+      const dd=String(Math.min(f.day,new Date(fy,fm,0).getDate())).padStart(2,'0');
+      if(!S.txs.some(t=>t.fixedId===f.id&&t.date.startsWith(ym))){
+        S.txs.push({id:'fx_'+f.id+'_'+ym, type:'expense', date:ym+'-'+dd,
+          desc:f.name, amount:f.amount, category:f.category, memo:'고정지출', fixedId:f.id});
+      }
     }
   });
 

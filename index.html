@@ -1604,7 +1604,16 @@ function todayStr(){const n=new Date();return n.getFullYear()+'-'+String(n.getMo
 // 할부 미래 회차 제외: 오늘 이후 날짜의 installPlanId 트랜잭션은 집계/표시 안 함
 function isVisibleTx(t){ return !t.installPlanId || t.date <= todayStr(); }
 function monthTxs(){return S.txs.filter(t=>t.date.startsWith(mk()) && isVisibleTx(t));}
-function chM(d){S.month+=d;if(S.month>12){S.month=1;S.year++;}if(S.month<1){S.month=12;S.year--;}renderAll();}
+function chM(d){
+  S.month+=d;
+  if(S.month>12){S.month=1;S.year++;}
+  if(S.month<1){S.month=12;S.year--;}
+  // 이동한 달 기준으로 고정지출 누락 보충
+  let filled=false;
+  S.fixedItems.forEach(f=>{const before=S.txs.length;autoFixed(f);if(S.txs.length!==before)filled=true;});
+  if(filled) save();
+  renderAll();
+}
 
 function showPage(el){
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));

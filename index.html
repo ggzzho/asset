@@ -689,10 +689,10 @@ select.fselect:focus{border-color:var(--blue);}
   .ledger{overflow:hidden;}
 
   /* ── 대시보드 최근거래 모바일 ── */
-  .dashboard-lhd{grid-template-columns:58px minmax(0,1fr) 80px;}
-  #recentRows .lrow{grid-template-columns:58px minmax(0,1fr) 80px !important;}
+  .dashboard-lhd{grid-template-columns:44px 1fr 80px;}
+  #recentRows .lrow{grid-template-columns:44px 1fr 80px;}
   #recentRows .lrow .cat-col{display:none;}
-  #recentRows .install-group-main{grid-template-columns:58px minmax(0,1fr) 80px !important;}
+  #recentRows .install-group-main{grid-template-columns:44px 1fr 80px;}
   #recentRows .install-group-main .cat-col{display:none;}
 
   /* ── 자산·부채 ── */
@@ -1986,7 +1986,10 @@ function buildLedgerHTML(txs){
 
 function renderRecentRows(){
   _igCounter=0; // 렌더링마다 초기화
-  const allTxs=monthTxs().sort((a,b)=>b.date.localeCompare(a.date));
+  const today=todayStr();
+  const allTxs=monthTxs()
+    .filter(t=>t.date<=today)  // 오늘 이후 미래 항목 숨김
+    .sort((a,b)=>b.date.localeCompare(a.date)||Number(b.id)-Number(a.id));
   const installGroups={};
   const seen=new Set();
   const rows=[];
@@ -2005,7 +2008,7 @@ function renderRecentRows(){
   Object.entries(installGroups).forEach(([key,items])=>{
     rows.push({date:items[0].date, html:installGroupHTML(key,items,true)});
   });
-  rows.sort((a,b)=>b.date.localeCompare(a.date));
+  rows.sort((a,b)=>b.date.localeCompare(a.date)||Number(b.id)-Number(a.id));
   const el=document.getElementById('recentRows');
   if(el) el.innerHTML=rows.length?rows.slice(0,12).map(r=>r.html).join(''):'<div class="empty">이번 달 거래 내역이 없습니다.</div>';
 }
@@ -2033,8 +2036,8 @@ function renderLedger(){
   );
 
   // 정렬
-  if(sortVal==='date_desc') txs.sort((a,b)=>b.date.localeCompare(a.date));
-  else if(sortVal==='date_asc')  txs.sort((a,b)=>a.date.localeCompare(b.date));
+  if(sortVal==='date_desc') txs.sort((a,b)=>b.date.localeCompare(a.date)||Number(b.id)-Number(a.id));
+  else if(sortVal==='date_asc')  txs.sort((a,b)=>a.date.localeCompare(b.date)||Number(b.id)-Number(a.id));
   else if(sortVal==='amt_desc')  txs.sort((a,b)=>b.amount-a.amount);
   else if(sortVal==='amt_asc')   txs.sort((a,b)=>a.amount-b.amount);
 

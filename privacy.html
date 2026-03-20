@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>개인정보처리방침 — 도토리 가계부</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Noto Sans KR',sans-serif;background:#f8f8f8;color:#1a1a1a;font-size:15px;line-height:1.8;}
+.wrap{max-width:760px;margin:0 auto;padding:48px 24px 80px;}
+.header{display:flex;align-items:center;gap:12px;margin-bottom:40px;padding-bottom:20px;border-bottom:2px solid #1a56db;}
+.logo-icon{width:36px;height:36px;background:#1a56db;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;font-weight:700;flex-shrink:0;}
+.logo-text{font-size:18px;font-weight:700;color:#1a56db;}
+h1{font-size:26px;font-weight:700;margin-bottom:8px;color:#0d0d0d;}
+.subtitle{font-size:13px;color:#6b6b6b;margin-bottom:36px;}
+h2{font-size:17px;font-weight:700;margin:36px 0 12px;color:#1a56db;padding-left:10px;border-left:3px solid #1a56db;}
+p{margin-bottom:12px;color:#3d3d3d;}
+ul{margin:8px 0 12px 20px;color:#3d3d3d;}
+ul li{margin-bottom:6px;}
+.highlight-box{background:#e8f0fd;border:1px solid #bfcffa;border-radius:8px;padding:16px 20px;margin:16px 0;font-size:14px;color:#1342a8;}
+.highlight-box strong{display:block;margin-bottom:4px;}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14px;}
+th{background:#1a56db;color:#fff;padding:10px 14px;text-align:left;font-weight:600;}
+td{padding:10px 14px;border-bottom:1px solid #e2e2e2;color:#3d3d3d;}
+tr:last-child td{border-bottom:none;}
+tr:nth-child(even) td{background:#f0f5ff;}
+.footer{margin-top:48px;padding-top:20px;border-top:1px solid #e2e2e2;font-size:12px;color:#b0b0b0;text-align:center;}
+.back-btn{display:inline-flex;align-items:center;gap:6px;margin-bottom:24px;font-size:13px;color:#1a56db;text-decoration:none;border:1px solid #bfcffa;background:#e8f0fd;padding:7px 14px;border-radius:6px;transition:all .15s;}
+.back-btn:hover{background:#1a56db;color:#fff;border-color:#1a56db;}
+@media(max-width:600px){.wrap{padding:28px 16px 60px;}.header{margin-bottom:24px;}h1{font-size:20px;}h2{font-size:15px;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="header">
+    <div class="logo-icon">₩</div>
+    <span class="logo-text">도토리 가계부 (DOUNTOO)</span>
+  </div>
+
+  <a href="index.html" class="back-btn">← 앱으로 돌아가기</a>
+
+  <h1>개인정보처리방침</h1>
+  <p class="subtitle">시행일: 2026년 3월 20일 &nbsp;|&nbsp; 최종 수정일: 2026년 3월 20일</p>
+
+  <div class="highlight-box">
+    <strong>📌 핵심 요약</strong>
+    도토리 가계부는 귀하의 금융 데이터를 외부 서버에 저장하지 않습니다. 모든 데이터는 귀하의 기기(브라우저 로컬 스토리지)에만 저장됩니다. Google 동기화 기능을 사용하는 경우에는 귀하의 Google Drive에 저장됩니다.
+  </div>
+
+  <h2>1. 개인정보 처리자 정보</h2>
+  <p>본 서비스는 개인이 운영하는 비영리 웹 애플리케이션입니다. 별도의 사업자 등록이 없으며 서버를 운영하지 않습니다.</p>
+  <ul>
+    <li>서비스명: 도토리 가계부 (DOUNTOO)</li>
+    <li>서비스 주소: https://ggzzho.github.io/asset/</li>
+    <li>운영 환경: GitHub Pages (정적 호스팅)</li>
+  </ul>
+
+  <h2>2. 수집하는 개인정보 항목</h2>
+
+  <p><strong>가. 서비스 이용 시 기기에 저장되는 정보 (서버 미전송)</strong></p>
+  <table>
+    <tr><th>항목</th><th>저장 위치</th><th>용도</th></tr>
+    <tr><td>거래내역 (날짜, 금액, 내용, 카테고리)</td><td>브라우저 로컬 스토리지</td><td>가계부 기능 제공</td></tr>
+    <tr><td>고정지출 설정</td><td>브라우저 로컬 스토리지</td><td>자동 반복 지출 관리</td></tr>
+    <tr><td>자산·부채 정보</td><td>브라우저 로컬 스토리지</td><td>자산 현황 파악</td></tr>
+    <tr><td>예산 설정</td><td>브라우저 로컬 스토리지</td><td>예산 관리 기능 제공</td></tr>
+    <tr><td>앱 설정 (테마, 카테고리 등)</td><td>브라우저 로컬 스토리지</td><td>사용자 환경 유지</td></tr>
+    <tr><td>배경·꾸미기 이미지</td><td>브라우저 IndexedDB</td><td>개인화 기능 제공</td></tr>
+  </table>
+
+  <p><strong>나. Google 동기화 사용 시 수집되는 정보 (선택적)</strong></p>
+  <table>
+    <tr><th>항목</th><th>수집 출처</th><th>용도</th></tr>
+    <tr><td>Google 계정 이름, 이메일, 프로필 사진</td><td>Google OAuth 2.0</td><td>로그인 상태 표시</td></tr>
+    <tr><td>가계부 데이터 (JSON)</td><td>앱 내 데이터</td><td>Google Drive 백업·복원</td></tr>
+  </table>
+
+  <div class="highlight-box">
+    Google 동기화는 사용자가 직접 활성화해야 하며, 데이터는 귀하의 Google Drive 내 앱 전용 폴더에만 저장됩니다. 운영자는 귀하의 Google Drive 데이터에 접근하지 않습니다.
+  </div>
+
+  <h2>3. 개인정보 수집 및 이용 목적</h2>
+  <ul>
+    <li>가계부 서비스 기능 제공 (거래 기록, 통계, 예산 관리)</li>
+    <li>사용자 설정 유지 (테마, 카테고리, 레이아웃)</li>
+    <li>Google 동기화 선택 시: 기기 간 데이터 동기화</li>
+  </ul>
+
+  <h2>4. 개인정보 보유 및 이용 기간</h2>
+  <p>모든 데이터는 귀하의 기기에 저장되며 운영자는 보유하지 않습니다.</p>
+  <ul>
+    <li><strong>로컬 데이터:</strong> 브라우저 데이터를 삭제하거나 앱 내 "초기화" 버튼을 누르면 즉시 삭제됩니다.</li>
+    <li><strong>Google Drive 데이터:</strong> 귀하의 Google Drive에서 직접 삭제하거나 앱에서 연동 해제 시 삭제됩니다.</li>
+    <li><strong>Google 세션 정보:</strong> 브라우저 종료 또는 로그아웃 시 삭제됩니다.</li>
+  </ul>
+
+  <h2>5. 개인정보의 제3자 제공</h2>
+  <p>도토리 가계부는 수집한 개인정보를 제3자에게 제공하지 않습니다. 단, 아래의 경우는 예외입니다.</p>
+  <ul>
+    <li>귀하가 Google 동기화를 선택한 경우, Google LLC의 서비스를 이용하게 됩니다. Google의 개인정보처리방침은 <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">policies.google.com/privacy</a>에서 확인할 수 있습니다.</li>
+  </ul>
+
+  <h2>6. 이용자의 권리</h2>
+  <p>귀하는 언제든지 다음 권리를 행사할 수 있습니다.</p>
+  <ul>
+    <li><strong>데이터 삭제:</strong> 앱 우측 상단 메뉴 → "초기화"로 모든 로컬 데이터를 즉시 삭제할 수 있습니다.</li>
+    <li><strong>데이터 내보내기:</strong> 앱 내 "내보내기" 기능으로 본인의 데이터를 JSON 또는 CSV 형식으로 다운로드할 수 있습니다.</li>
+    <li><strong>Google 연동 해제:</strong> Google 계정 설정에서 도토리 가계부의 앱 접근 권한을 언제든 취소할 수 있습니다.</li>
+  </ul>
+
+  <h2>7. 쿠키 및 추적</h2>
+  <p>도토리 가계부는 쿠키를 사용하지 않으며, 사용자 행동을 추적하는 분석 도구(Google Analytics 등)를 탑재하지 않습니다. 광고도 표시하지 않습니다.</p>
+
+  <h2>8. 보안</h2>
+  <p>서비스는 HTTPS를 통해 제공되며, 모든 데이터는 귀하의 기기에서만 처리됩니다. 운영자는 귀하의 금융 데이터에 접근할 수 없습니다. 단, 기기 보안은 귀하가 직접 관리하셔야 합니다.</p>
+
+  <h2>9. 미성년자 보호</h2>
+  <p>본 서비스는 만 14세 미만 아동을 대상으로 하지 않습니다. 만 14세 미만의 경우 보호자의 동의 하에 사용하시기 바랍니다.</p>
+
+  <h2>10. 개인정보처리방침 변경</h2>
+  <p>본 방침이 변경되는 경우, 앱 내 공지 또는 GitHub 저장소를 통해 안내합니다. 변경 후에도 서비스를 계속 이용하시면 변경된 방침에 동의한 것으로 간주합니다.</p>
+
+  <h2>11. 문의</h2>
+  <p>개인정보 처리에 관한 문의는 GitHub Issues를 통해 연락 주시기 바랍니다.</p>
+  <ul>
+    <li>GitHub: <a href="https://github.com/ggzzho/asset" target="_blank" rel="noopener">github.com/ggzzho/asset</a></li>
+  </ul>
+
+  <div class="footer">
+    © 2026 DOUNTOO (도토리 가계부). 본 방침은 2026년 3월 20일부터 시행됩니다.
+  </div>
+</div>
+</body>
+</html>

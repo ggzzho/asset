@@ -9,6 +9,9 @@
 <meta name="theme-color" content="#1a56db">
 <meta name="apple-mobile-web-app-title" content="도토리 가계부">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="description" content="심플하고 스마트한 개인 가계부 앱. 거래내역, 고정지출, 자산·부채, 예산을 한 번에 관리하세요.">
+<link rel="manifest" href="manifest.json">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -307,7 +310,7 @@ body.dark-mode .amber-b .bsub{color:#a89060;}
 .lrow{display:grid;grid-template-columns:72px 1fr 100px 110px 64px;padding:11px 16px;border-bottom:1px solid var(--border);align-items:center;transition:background .1s;min-width:0;}
 .lrow:last-child{border-bottom:none;}
 .lrow:hover{background:var(--bg-row-hover);}
-.rdate{font-size:12px;color:var(--g500);}
+.rdate{font-size:12px;color:var(--g500);white-space:nowrap;}
 .rdesc{font-size:13px;font-weight:500;word-break:break-word;overflow-wrap:break-word;}
 .rmemo{font-size:11px;color:var(--g300);word-break:break-word;overflow-wrap:break-word;}
 .cpill{font-size:11px;padding:2px 8px;border-radius:20px;background:var(--blue-lt);color:var(--blue);font-weight:500;display:inline-block;}
@@ -598,6 +601,15 @@ select.fselect:focus{border-color:var(--blue);}
 .cat-row-item:last-child{border-bottom:none;}
 .cat-row-name{flex:1;font-size:13px;font-weight:500;}
 
+/* ── 업데이트 알림 배너 ── */
+.update-banner{position:fixed;bottom:0;left:0;right:0;background:var(--blue);color:#fff;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;z-index:9000;box-shadow:0 -4px 20px rgba(0,0,0,.2);transform:translateY(100%);transition:transform .3s;flex-wrap:wrap;}
+.update-banner.show{transform:translateY(0);}
+.update-banner-msg{font-size:13px;font-weight:500;}
+.update-banner-actions{display:flex;gap:8px;flex-shrink:0;}
+.update-banner-actions button{padding:6px 14px;border-radius:6px;border:none;font-size:12px;font-weight:600;cursor:pointer;transition:opacity .15s;}
+.update-banner-reload{background:#fff;color:var(--blue);}
+.update-banner-dismiss{background:rgba(255,255,255,.2);color:#fff;}
+.update-banner-reload:hover,.update-banner-dismiss:hover{opacity:.85;}
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(12px);background:var(--g900);color:#fff;padding:10px 22px;border-radius:24px;font-size:13px;font-weight:500;z-index:9999;opacity:0;transition:all .28s;pointer-events:none;white-space:nowrap;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
@@ -651,8 +663,8 @@ select.fselect:focus{border-color:var(--blue);}
   .lhd,.lrow{padding:9px 10px;}
   .lrow-install-group{padding:9px 10px;}
   .lhd{grid-template-columns:44px 1fr 80px 52px;}
-  .lrow{grid-template-columns:44px minmax(0,1fr) 72px 52px;}
-  .lhd{grid-template-columns:44px minmax(0,1fr) 72px 52px;}
+  .lrow{grid-template-columns:58px minmax(0,1fr) 72px 52px;}
+  .lhd{grid-template-columns:58px minmax(0,1fr) 72px 52px;}
   .install-group-main{grid-template-columns:44px 1fr 80px 52px;}
   .lhd .cat-col,.lrow .cat-col,.install-group-main .cat-col{display:none;}
   .ramt{font-size:12px;white-space:nowrap;text-align:right;}
@@ -840,7 +852,7 @@ body.dark-mode .app-footer{
     <input type="file" id="impFile" accept=".json" style="display:none" onchange="importData(event)">
     <!-- 데스크탑 버튼 그룹 -->
     <div class="hdr-actions">
-      <button class="btn" style="color:var(--blue);border-color:var(--blue-md);background:var(--blue-lt);" onclick="injectSample()">🧪 테스트</button>
+      <button class="btn" style="color:var(--blue);border-color:var(--blue-md);background:var(--blue-lt);display:none;" onclick="injectSample()">🧪 테스트</button>
       <div class="export-wrap" id="exportWrap">
         <button class="export-trigger" onclick="toggleExport()">내보내기 ▾</button>
         <div class="export-menu" id="exportMenu">
@@ -891,9 +903,9 @@ body.dark-mode .app-footer{
           </span>
         </span>
       </button>
-      <button class="btn" style="width:100%;justify-content:flex-start;" onclick="injectSample();closeHdrMenu()">🧪 테스트 데이터</button>
-      <button class="btn" style="width:100%;justify-content:flex-start;" onclick="exportJSON();closeHdrMenu()">JSON 내보내기</button>
-      <button class="btn" style="width:100%;justify-content:flex-start;" onclick="exportCSV();closeHdrMenu()">CSV 내보내기</button>
+      <button class="btn" style="width:100%;justify-content:flex-start;display:none;" onclick="injectSample();closeHdrMenu()">🧪 테스트 데이터</button>
+      <button class="btn" style="width:100%;justify-content:flex-start;" onclick="exportJSON();closeHdrMenu()">📤 JSON 내보내기</button>
+      <button class="btn" style="width:100%;justify-content:flex-start;" onclick="exportCSV();closeHdrMenu()">📤 CSV 내보내기</button>
       <button class="btn" style="width:100%;justify-content:flex-start;" onclick="document.getElementById('impFile').click();closeHdrMenu()">불러오기</button>
       <button class="btn btn-reset" style="width:100%;justify-content:flex-start;" onclick="openResetModal();closeHdrMenu()">초기화</button>
     </div>
@@ -1607,6 +1619,11 @@ function load(){
 }
 function save(){localStorage.setItem('budgetApp',JSON.stringify({txs:S.txs,budgets:S.budgets,fixedItems:S.fixedItems,assets:S.assets,loans:S.loans,cats:S.cats,installPlans:S.installPlans||[]}));}
 function fmt(n){return'₩'+Math.abs(Math.round(n)).toLocaleString('ko-KR');}
+function fmtDate(dateStr){
+  const d=new Date(dateStr+'T00:00:00');
+  const days=['일','월','화','수','목','금','토'];
+  return dateStr.slice(5)+'('+days[d.getDay()]+')';
+}
 function mk(){return S.year+'-'+String(S.month).padStart(2,'0');}
 // 오늘 날짜 문자열 "YYYY-MM-DD"
 function todayStr(){const n=new Date();return n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0')+'-'+String(n.getDate()).padStart(2,'0');}
@@ -1875,7 +1892,7 @@ function rowHTML(tx, readOnly=false){
   const isF=S.fixedItems.some(f=>f.id===tx.fixedId);
   const pc=isF?'fixed':'';
   return`<div class="lrow">
-    <span class="rdate">${tx.date.slice(5)}</span>
+    <span class="rdate">${fmtDate(tx.date)}</span>
     <span style="min-width:0;overflow:hidden;"><div class="rdesc">${tx.desc}</div>${tx.memo?'<div class="rmemo">'+tx.memo+'</div>':''}</span>
     <span class="cat-col"><span class="cpill ${pc}">${tx.category}</span></span>
     <span class="ramt ${tx.type==='income'?'inc':'exp'}">${tx.type==='income'?'+':'-'}${fmt(tx.amount)}</span>
@@ -1895,7 +1912,7 @@ function installGroupHTML(groupKey, items, readOnly=false, defaultOpen=false){
   const prefix = readOnly ? 'dash_ig' : 'ledg_ig';
   const gid = prefix + (++_igCounter);
   const total = items.reduce((s,t)=>s+t.amount,0);
-  const date = items[0].date.slice(5);
+  const date = fmtDate(items[0].date);
   const plan0 = (S.installPlans||[]).find(p=>p.id===items[0].installPlanId);
   const cardName = plan0 ? (plan0.card||'카드할부') : '카드할부';
   const firstId = items[0].id;
@@ -4951,8 +4968,54 @@ window.injectSample = function() {
 <footer class="app-footer">
   <span class="app-footer-version">v1.0.3</span>
   <span class="app-footer-sep">·</span>
-  <span class="app-footer-copy">© 2026 DOUNTOO. Made with <a href="https://claude.ai" target="_blank" rel="noopener noreferrer">Claude (AI)</a>. All rights reserved.</span>
+  <span class="app-footer-copy">© 2026 DOUNTOO. Made with <a href="https://claude.ai" target="_blank" rel="noopener noreferrer">Claude (AI)</a>.</span>
+  <span class="app-footer-sep">·</span>
+  <a href="privacy.html" target="_blank" rel="noopener noreferrer" class="app-footer-copy">개인정보처리방침</a>
 </footer>
+
+<!-- 업데이트 알림 배너 -->
+<div class="update-banner" id="updateBanner">
+  <span class="update-banner-msg">🎉 새 버전이 있습니다! 새로고침하면 최신 기능을 사용할 수 있어요.</span>
+  <div class="update-banner-actions">
+    <button class="update-banner-reload" onclick="location.reload()">새로고침</button>
+    <button class="update-banner-dismiss" onclick="document.getElementById('updateBanner').classList.remove('show')">나중에</button>
+  </div>
+</div>
+
+<!-- Service Worker 등록 -->
+<script>
+if('serviceWorker' in navigator){
+  // GitHub Pages 환경에서만 SW 등록 (로컬/미리보기 환경 제외)
+  const isProduction = location.hostname !== 'localhost' &&
+                       !location.hostname.includes('127.0.0.1') &&
+                       !location.hostname.includes('claudeusercontent.com') &&
+                       !location.hostname.includes('claude.ai');
+  if(isProduction){
+    window.addEventListener('load', ()=>{
+      navigator.serviceWorker.register('./sw.js')
+        .then(reg=>{
+          reg.addEventListener('updatefound', ()=>{
+            const newWorker=reg.installing;
+            newWorker.addEventListener('statechange', ()=>{
+              if(newWorker.state==='installed' && navigator.serviceWorker.controller){
+                document.getElementById('updateBanner').classList.add('show');
+              }
+            });
+          });
+          if(reg.waiting && navigator.serviceWorker.controller){
+            document.getElementById('updateBanner').classList.add('show');
+          }
+        })
+        .catch(err=>console.warn('[SW] 등록 실패:', err));
+      navigator.serviceWorker.addEventListener('message', e=>{
+        if(e.data && e.data.type==='SW_UPDATED'){
+          document.getElementById('updateBanner').classList.add('show');
+        }
+      });
+    });
+  }
+}
+</script>
 
 </body>
 </html>

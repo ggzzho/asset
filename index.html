@@ -1028,13 +1028,27 @@ body.dark-mode .app-footer{
   <div class="page" id="page-fixed">
     <div class="page-title">📌 고정지출</div>
     <div class="month-bar"><button class="mbtn" onclick="chM(-1)">&#8249;</button><span class="mlabel" id="ml3"></span><button class="mbtn" onclick="chM(1)">&#8250;</button></div>
-    <div class="banner blue-b" style="margin-bottom:18px;">
+    <div class="sec-hdr"><div class="sec-title">등록된 고정지출</div><button class="btn btn-blue" onclick="openFixedModal()">+ 고정지출 추가</button></div>
+    <div class="banner blue-b" style="margin-bottom:14px;margin-top:10px;">
       <div class="banner-left"><div class="bicon blue">📌</div><div><div class="btitle">고정지출 합계</div><div class="bval" id="fixPageTotal">₩0</div></div></div>
       <div class="bsub" id="fixPageCnt"></div>
     </div>
-    <div class="sec-hdr"><div class="sec-title">등록된 고정지출</div><button class="btn btn-blue" onclick="openFixedModal()">+ 고정지출 추가</button></div>
     <div class="fixed-list" id="fixedList"></div>
     <div class="sec-hdr" style="margin-top:24px;"><div class="sec-title">💳 카드 할부 관리</div></div>
+    <div id="installSummaryCards" style="display:none;margin:10px 0 14px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div class="acard" style="border-left:3px solid #7c3aed;">
+          <div class="acard-label">이번달 할부 청구</div>
+          <div class="acard-val" id="fixInstallMonthAmt" style="font-size:18px;color:#7c3aed;">₩0</div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:4px;" id="fixInstallMonthCnt"></div>
+        </div>
+        <div class="acard" style="border-left:3px solid var(--blue);">
+          <div class="acard-label">카드 총 결제금액</div>
+          <div class="acard-val" id="fixInstallTotalAmt" style="font-size:18px;color:var(--blue);">₩0</div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:4px;" id="fixInstallTotalCnt"></div>
+        </div>
+      </div>
+    </div>
     <div id="installPlanList"></div>
   </div>
 
@@ -1836,9 +1850,28 @@ function deleteInstallPlan(planId){
 function renderInstallPlans(){
   const el = document.getElementById('installPlanList'); if(!el) return;
   const plans = S.installPlans||[];
+  const summaryEl = document.getElementById('installSummaryCards');
+
   if(!plans.length){
     el.innerHTML='<div class="empty" style="background:var(--bg-card);border:1px solid var(--border-col);border-radius:var(--rlg);">등록된 카드 할부가 없습니다.</div>';
+    if(summaryEl) summaryEl.style.display='none';
     return;
+  }
+
+  // 요약 카드 계산
+  const charges = getInstallChargeForMonth(mk());
+  const monthTotal = charges.length
+    ? charges.reduce((s,c)=>s+c.chargeAmt,0)
+    : monthTxs().filter(t=>t.installPlanId).reduce((s,t)=>s+t.amount,0);
+  const monthCnt = charges.length || monthTxs().filter(t=>t.installPlanId).length;
+  const grandTotal = plans.reduce((s,p)=>s+p.totalAmt,0);
+
+  if(summaryEl){
+    summaryEl.style.display='';
+    document.getElementById('fixInstallMonthAmt').textContent=fmt(monthTotal);
+    document.getElementById('fixInstallMonthCnt').textContent=monthCnt+'건 청구';
+    document.getElementById('fixInstallTotalAmt').textContent=fmt(grandTotal);
+    document.getElementById('fixInstallTotalCnt').textContent='총 '+plans.length+'건 진행 중';
   }
   const today = todayStr();
   el.innerHTML = plans.map(p=>{

@@ -331,6 +331,14 @@ body.dark-mode .amber-b .bsub{color:#a89060;}
 .ramt{font-size:13px;font-weight:700;text-align:right;}
 .ramt.inc{color:var(--green);}.ramt.exp{color:var(--red);}
 .xbtn{background:none;border:none;cursor:pointer;color:var(--g300);font-size:12px;text-align:right;padding:0;width:100%;}
+/* ── 할부 플랜 관리 아이템 ── */
+.install-plan-item{background:var(--bg-card);border:1px solid var(--border-col);border-radius:var(--r);padding:12px 14px;display:flex;align-items:center;gap:12px;margin-bottom:8px;}
+.install-plan-item:last-child{margin-bottom:0;}
+.install-plan-progress{margin-top:5px;display:flex;align-items:center;gap:8px;}
+.install-plan-bar{flex:1;height:4px;background:var(--border-col);border-radius:2px;overflow:hidden;}
+.install-plan-fill{height:100%;background:#7c3aed;border-radius:2px;transition:width .3s;}
+.install-plan-cnt{font-size:11px;color:var(--text-muted);white-space:nowrap;}
+body.dark-mode .install-plan-item{background:var(--bg-card);border-color:var(--border-col);}
 /* ── 거래 행 수정/삭제 버튼 ── */
 .row-action-btn{background:none;border:1px solid var(--border);border-radius:5px;cursor:pointer;font-size:12px;padding:3px 7px;transition:all .15s;line-height:1;}
 .edit-btn{color:var(--blue);}
@@ -1026,6 +1034,8 @@ body.dark-mode .app-footer{
     </div>
     <div class="sec-hdr"><div class="sec-title">등록된 고정지출</div><button class="btn btn-blue" onclick="openFixedModal()">+ 고정지출 추가</button></div>
     <div class="fixed-list" id="fixedList"></div>
+    <div class="sec-hdr" style="margin-top:24px;"><div class="sec-title">💳 카드 할부 관리</div></div>
+    <div id="installPlanList"></div>
   </div>
 
   <!-- 자산·부채 -->
@@ -1805,6 +1815,49 @@ function deleteInstallPlan(planId){
   save(); renderAll(); toast('할부가 삭제됐어요.');
 }
 
+function renderInstallPlans(){
+  const el = document.getElementById('installPlanList'); if(!el) return;
+  const plans = S.installPlans||[];
+  if(!plans.length){
+    el.innerHTML='<div class="empty" style="background:var(--bg-card);border:1px solid var(--border-col);border-radius:var(--rlg);">등록된 카드 할부가 없습니다.</div>';
+    return;
+  }
+  const today = todayStr();
+  el.innerHTML = plans.map(p=>{
+    const paid = S.txs.filter(t=>t.installPlanId===p.id && t.date<=today).length;
+    const remaining = p.months - paid;
+    const pct = Math.round(paid/p.months*100);
+    const firstBill = addMonths(p.startYm,1);
+    const lastBill  = addMonths(p.startYm,p.months);
+    return `<div class="install-plan-item">
+      <div class="fi-icon" style="background:#f3e8ff;font-size:16px;">💳</div>
+      <div class="fi-info">
+        <div class="fi-name">${p.desc}</div>
+        <div class="fi-sub">${p.card||'카드할부'} · 매월 ${p.payDay}일 · ${p.months}개월 · ${firstBill} ~ ${lastBill}</div>
+        <div class="install-plan-progress">
+          <div class="install-plan-bar"><div class="install-plan-fill" style="width:${pct}%"></div></div>
+          <span class="install-plan-cnt">${paid}/${p.months}회 · 잔여 ${fmt(remaining*p.monthlyAmt)}</span>
+        </div>
+      </div>
+      <div class="fi-amt" style="color:#7c3aed;">${fmt(p.totalAmt)}</div>
+      <button class="row-action-btn edit-btn" style="margin-left:4px;width:auto;" onclick="openEditInstallPlan('${p.id}')" title="할부 수정">✎</button>
+      <button class="xbtn" style="margin-left:4px;width:auto;" onclick="confirmDelInstallPlan('${p.id}','${p.desc.replace(/'/g,"\\'")}')">✕</button>
+    </div>`;
+  }).join('');
+}
+
+function openEditInstallPlan(planId){
+  const tx = S.txs.find(t=>t.installPlanId===planId);
+  if(tx) openEditTx(tx.id);
+}
+
+function confirmDelInstallPlan(planId, desc){
+  S._pendingDelId = null;
+  S._pendingDelInstallId = planId;
+  document.getElementById('delConfirmDesc').textContent = '"'+desc+'" 할부 전체';
+  openOverlay('delConfirmModal');
+}
+
 function renderInstallBanner(){
   const b = document.getElementById('installBanner');
   // installPlans 기반 청구 확인
@@ -2090,6 +2143,7 @@ function renderFixed(){
   const el=document.getElementById('fixedList');
   if(!sortedItems.length){
     el.innerHTML='<div class="empty" style="background:#fff;border:1px solid var(--border);border-radius:var(--rlg);">'+(S.fixedItems.length?'이 달에 해당하는 고정지출이 없습니다.':'등록된 고정지출이 없습니다.')+'</div>';
+    renderInstallPlans();
     return;
   }
   el.innerHTML=sortedItems.map(f=>`<div class="fixed-item" data-id="${f.id}">
@@ -2100,6 +2154,7 @@ function renderFixed(){
     <button class="xbtn" style="margin-left:4px;width:auto" onclick="confirmDelFixed('${f.id}','${f.name}')">✕</button>
   </div>`).join('');
   // 드래그앤드롭 제거 (결제일 자동 정렬로 대체)
+  renderInstallPlans();
 }
 function setFxCycle(cycle){
   document.getElementById('fxCycle').value=cycle;
@@ -2832,6 +2887,12 @@ function confirmDelTx(id){
   openOverlay('delConfirmModal');
 }
 function execDelTx(){
+  if(S._pendingDelInstallId){
+    deleteInstallPlan(S._pendingDelInstallId);
+    S._pendingDelInstallId=null;
+    closeOverlay('delConfirmModal');
+    return;
+  }
   if(!S._pendingDelId)return;
   const tx = S.txs.find(t=>t.id===S._pendingDelId);
   if(tx && tx.installPlanId){

@@ -1187,9 +1187,27 @@ body.dark-mode .app-footer{
   <div class="modal">
     <div class="modal-title" id="fixedModalTitle">고정지출 등록</div>
     <div class="fg"><label class="flabel">이름</label><input type="text" class="finput" id="fxName" placeholder="월세, 보험료, 넷플릭스..."></div>
-    <div class="fg"><label class="flabel">금액 (원)</label><input type="number" class="finput" id="fxAmt" placeholder="0"></div>
+    <div class="fg"><label class="flabel">금액 (원)</label><input type="number" class="finput" id="fxAmt" placeholder="0" oninput="calcFxMonthlyAmt()"></div>
     <div class="fg"><label class="flabel">카테고리</label><select class="fselect" id="fxCat"></select></div>
+    <!-- 카드 할부 토글 -->
     <div class="fg">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <label class="toggle-sw"><input type="checkbox" id="fxInstallCheck" onchange="toggleFxInstall()"><div class="toggle-track"></div><div class="toggle-thumb"></div></label>
+        <span style="font-size:13px;color:var(--text-primary);">카드 할부</span>
+      </div>
+      <div class="install-fields" id="fxInstallFields">
+        <div class="frow" style="margin-top:10px;">
+          <div><label class="flabel">할부 개월 수</label><input type="number" class="finput" id="fxiMonths" placeholder="예: 10" min="2" max="60" oninput="calcFxMonthlyAmt()"></div>
+          <div><label class="flabel">카드 결제일 (일)</label><input type="number" class="finput" id="fxiPayDay" placeholder="예: 14" min="1" max="31" oninput="calcFxMonthlyAmt()"></div>
+        </div>
+        <div class="frow" style="margin-top:8px;">
+          <div><label class="flabel">카드사 (선택)</label><input type="text" class="finput" id="fxiCard" placeholder="예: 신한카드"></div>
+          <div><label class="flabel">월 할부금 (자동계산)</label><input type="text" class="finput" id="fxiMonthlyAmt" placeholder="자동입력" readonly style="background:var(--bg-row-hover);color:var(--blue);font-weight:600;"></div>
+        </div>
+      </div>
+    </div>
+    <!-- 결제 주기 (할부 OFF 시만 표시) -->
+    <div class="fg" id="fxCycleGroup">
       <label class="flabel">결제 주기</label>
       <div style="display:flex;gap:8px;">
         <button type="button" class="tbtn sel-exp" id="fxCycleMonthly" onclick="setFxCycle('monthly')" style="flex:1;">매월</button>
@@ -1211,8 +1229,8 @@ body.dark-mode .app-footer{
       </div>
     </div>
     <div class="frow fg">
-      <div><label class="flabel">시작월 <span style="color:var(--red)">*</span></label><input type="month" class="finput" id="fxStartYm"></div>
-      <div><label class="flabel">종료월 <span style="color:var(--text-muted);font-weight:400;">(없으면 비워두세요)</span></label><input type="month" class="finput" id="fxEndYm"></div>
+      <div><label class="flabel" id="fxStartYmLabel">시작월 <span style="color:var(--red)">*</span></label><input type="month" class="finput" id="fxStartYm"></div>
+      <div id="fxEndYmWrap"><label class="flabel">종료월 <span style="color:var(--text-muted);font-weight:400;">(없으면 비워두세요)</span></label><input type="month" class="finput" id="fxEndYm"></div>
     </div>
     <div class="fg"><label class="flabel">메모 (선택)</label><input type="text" class="finput" id="fxMemo" placeholder="메모"></div>
     <div class="mfoot"><button class="btn" onclick="closeOverlay('fixedModal')">취소</button><button class="btn btn-blue" id="fixedModalSaveBtn" onclick="saveFixed()">저장</button></div>
@@ -2163,6 +2181,31 @@ function setFxCycle(cycle){
   document.getElementById('fxMonthlyWrap').style.display=cycle==='monthly'?'block':'none';
   document.getElementById('fxYearlyWrap').style.display=cycle==='yearly'?'block':'none';
 }
+function toggleFxInstall(){
+  const on=document.getElementById('fxInstallCheck').checked;
+  document.getElementById('fxInstallFields').className='install-fields'+(on?' show':'');
+  document.getElementById('fxCycleGroup').style.display=on?'none':'';
+  document.getElementById('fxMonthlyWrap').style.display=on?'none':'';
+  document.getElementById('fxYearlyWrap').style.display='none';
+  document.getElementById('fxEndYmWrap').style.display=on?'none':'';
+  document.getElementById('fxStartYmLabel').innerHTML=on
+    ?'결제 시작월 <span style="color:var(--red)">*</span>'
+    :'시작월 <span style="color:var(--red)">*</span>';
+}
+function calcFxMonthlyAmt(){
+  const amt=parseFloat(document.getElementById('fxAmt').value)||0;
+  const months=parseInt(document.getElementById('fxiMonths').value)||0;
+  const el=document.getElementById('fxiMonthlyAmt');
+  el.value=amt>0&&months>0?fmt(Math.round(amt/months)):'';
+}
+function resetFxInstallToggle(){
+  document.getElementById('fxInstallCheck').checked=false;
+  document.getElementById('fxInstallFields').className='install-fields';
+  ['fxiMonths','fxiPayDay','fxiCard','fxiMonthlyAmt'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('fxCycleGroup').style.display='';
+  document.getElementById('fxEndYmWrap').style.display='';
+  document.getElementById('fxStartYmLabel').innerHTML='시작월 <span style="color:var(--red)">*</span>';
+}
 function openFixedModal(){
   editingFixedId=null;
   document.getElementById('fixedModalTitle').textContent='고정지출 등록';
@@ -2172,6 +2215,7 @@ function openFixedModal(){
   document.getElementById('fxStartYm').value=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
   document.getElementById('fxCat').innerHTML=S.cats.expense.map(c=>`<option>${c}</option>`).join('');
   setFxCycle('monthly');
+  resetFxInstallToggle();
   openOverlay('fixedModal');
 }
 function openEditFixed(id){
@@ -2186,13 +2230,13 @@ function openEditFixed(id){
   document.getElementById('fxMemo').value=f.memo||'';
   document.getElementById('fxStartYm').value=f.startYm||'';
   document.getElementById('fxEndYm').value=f.endYm||'';
-  // 주기 복원
   const cycle=f.cycle||'monthly';
   setFxCycle(cycle);
   if(cycle==='yearly'){
     document.getElementById('fxYearMonth').value=f.yearMonth||'';
     document.getElementById('fxYearDay').value=f.yearDay||'';
   }
+  resetFxInstallToggle();
   openOverlay('fixedModal');
 }
 let editingFixedId=null;
@@ -2209,6 +2253,35 @@ function saveFixed(){
   const yearDay=cycle==='yearly'?(parseInt(document.getElementById('fxYearDay').value)||1):null;
   if(!name||!amt||amt<=0){toast('이름과 금액을 입력해주세요.');return;}
   if(!startYm){toast('시작월을 입력해주세요.');return;}
+
+  // 할부 토글 ON → installPlan으로 등록 (신규만)
+  if(document.getElementById('fxInstallCheck').checked && !editingFixedId){
+    const months=parseInt(document.getElementById('fxiMonths').value)||0;
+    const payDay=parseInt(document.getElementById('fxiPayDay').value)||0;
+    const card=document.getElementById('fxiCard').value.trim();
+    if(!months||months<2){toast('할부 개월을 2개월 이상 입력해주세요.');return;}
+    if(!payDay||payDay<1||payDay>31){toast('카드 결제일을 1~31 사이로 입력해주세요.');return;}
+    const planId='plan_'+Date.now();
+    const monthlyAmt=Math.round(amt/months);
+    const plan={id:planId,desc:name,totalAmt:amt,months,monthlyAmt,payDay,card,category:cat,startYm,memo};
+    if(!S.installPlans)S.installPlans=[];
+    S.installPlans.push(plan);
+    for(let i=1;i<=months;i++){
+      const billYm=addMonths(startYm,i);
+      const [by,bm]=billYm.split('-').map(Number);
+      const billDay=Math.min(payDay,new Date(by,bm,0).getDate());
+      const billDate=billYm+'-'+String(billDay).padStart(2,'0');
+      const isLast=i===months;
+      const thisAmt=isLast?amt-(monthlyAmt*(months-1)):monthlyAmt;
+      S.txs.push({id:planId+'_'+i,type:'expense',date:billDate,
+        desc:name+(months>1?` (${i}/${months}회)`:''),amount:thisAmt,category:cat,
+        memo:(card?card+' ':'')+'할부'+(memo?' '+memo:''),
+        installPlanId:planId,installSeq:i,installMonths:months});
+    }
+    save();closeOverlay('fixedModal');renderAll();toast('카드 할부가 등록됐어요.');
+    return;
+  }
+
   if(editingFixedId){
     const idx=S.fixedItems.findIndex(f=>f.id===editingFixedId); if(idx<0)return;
     S.fixedItems[idx]={...S.fixedItems[idx],name,amount:amt,category:cat,day,memo,startYm,endYm,cycle,yearMonth,yearDay};
